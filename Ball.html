@@ -60,14 +60,14 @@ function onDocumentKeyDown(event) {
     } else if (keyCode == 40) {
                 rotateX(0.05)
     } else if (keyCode == 39) {
-        rotateZ(-0.05);
+        rotateZ(-0.01);
     } else if (keyCode == 37) {
-        rotateZ(0.05);
+        rotateZ(0.01);
     } else if (keyCode == 32) {
         //blockPlane.position.set(0, 0, 0);
     
 	} else if (keyCode == 65) {//a
-        rotateZ(0.2);
+       // rotateZ(0.2);
     }
 };
 
@@ -170,6 +170,7 @@ function rotateX(deltaX) {
 
             function start (){
 
+
                 tmpTrans = new Ammo.btTransform();
 
                 setupPhysicsWorld();
@@ -182,10 +183,10 @@ function rotateX(deltaX) {
 				createGround();
 				
                 //createBlock2( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
-				createBlock2({x: 0, y: 2, z: -24},{x: 50, y: 6, z: 2});
-				createBlock2({x: 0, y: 2, z: 24},{x: 50, y: 6, z: 2});
-				createBlock2({x: -24, y: 2, z: 0},{x: 2, y: 6, z: 50});
-				createBlock2({x: 24, y: 2, z: 0},{x: 2, y: 6, z: 50});
+				createBlock2({x: 0, y: 2, z: -26},{x: 62, y: 6, z: 2});
+				createBlock2({x: 0, y: 2, z: 26},{x: 62, y: 6, z: 2});
+				createBlock2({x: -31, y: 2, z: 0},{x: 2, y: 6, z: 54});
+				createBlock2({x: 31, y: 2, z: 0},{x: 2, y: 6, z: 54});
 					
 				scene.add( group );
 								
@@ -205,6 +206,7 @@ function rotateX(deltaX) {
                 //createMaskBall();
 
                 renderFrame();
+			
             }
 
             function setupPhysicsWorld(){
@@ -333,7 +335,15 @@ function rotateX(deltaX) {
                 let mass = 0;
 
                 //threeJS Section
-				var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
+				
+					
+				
+			var material = new THREE.MeshPhongMaterial( { color: 0xa0afa4 } );
+			//var material = new THREE.MeshPhongMaterial( { map: texture  } );
+			//var material = new THREE.MeshBasicMaterial( { map: texture  } );
+			
+			//	var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
+				var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), material);
                 block1.position.set(pos.x, pos.y, pos.z);
                 block1.scale.set(scale.x, scale.y, scale.z);
 				const quaternion = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
@@ -381,30 +391,83 @@ function rotateX(deltaX) {
 
            function createGround(){
 
+		   
+		   	var loader = new THREE.TextureLoader();
+			
+			loader.load(
+				// resource URL
+				'img/Background.jpg',
+
+				// onLoad callback
+				function ( texture ) {
+				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set( 1/60, 1/50 );
+				//texture.rotation=Math.PI;
+				//texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+			//	texture.matrixAutoUpdate=true;
+				var API = {
+				offsetX: 100,
+				offsetY: 100,
+				repeatX: 100,
+				repeatY: 100,
+				rotation: 0, // positive is counter-clockwise
+				centerX: 0.5,
+				centerY: 0.5
+			};
+			/*
+				texture.matrix	
+					    .identity()
+					    //.translate( - API.centerX, - API.centerY )
+					    //.rotate( API.rotation )					// I don't understand how rotation can preceed scale, but it seems to be required...
+					    .scale( API.repeatX, API.repeatY )
+					    //.translate( API.centerX, API.centerY )
+					    .translate( API.offsetX, API.offsetY );
+					// in this example we create the material when the texture is loaded
+				*/	
+					var material = new THREE.MeshBasicMaterial( {
+						map: texture
+					 } );
+					 createGroundM(material);
+				},
+
+				// onProgress callback currently not supported
+				undefined,
+
+				// onError callback
+				function ( err ) {
+					var material = new THREE.MeshPhongMaterial( {color: 0xa0afa4 } );
+					createGroundM(material);
+				}
+			);
+		}
+		function createGroundM(material)
+		{
 			let scale = {x: 50, y: 2, z: 50};
 			 let mass = 0;
+				let quat = {x: 0, y: 0, z: 0, w: 1};
 			
+			//------------------------
+			/*
+			var blockPlane = new THREE.Mesh(new THREE.BoxBufferGeometry(), material);
+                blockPlane.position.set(10, 10, 10);
+                blockPlane.scale.set(scale.x, scale.y, scale.z);
+				const quaternion = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
+				blockPlane.applyQuaternion(quaternion); // Apply Quaternion
+                blockPlane.castShadow = true;
+                blockPlane.receiveShadow = true;
+				group.add( blockPlane );
+*/
+			
+			//-------------
 			var shape = new THREE.Shape();
 			//...define your shape
 			shape.moveTo( 0,0 );
 			shape.lineTo( 0, 50 );
-			shape.lineTo( 50,50 );
-			shape.lineTo( 50,0 );
+			shape.lineTo( 60,50 );
+			shape.lineTo( 60,0 );
 			shape.lineTo( 0,0 );
  
-/*
-			var hole = new THREE.Shape();
-			//...define your hole
-			hole.moveTo( 20,20 );
-			hole.lineTo( 20, 30 );
-			hole.lineTo( 30,30 );
-			hole.lineTo( 30,20 );
-			hole.lineTo( 20,20 );
- 
 
-			shape.holes.push( hole );
-			//shape.extrude( extrusionSettings );
-	*/
 	
 			AddHole(shape,10,10,2.5);
 			
@@ -415,14 +478,26 @@ function rotateX(deltaX) {
 			  bevelThickness: 1,
 			  bevelSize: 1,
 			  bevelSegments: 2,
+			  material:0, //material index of the front and back face
+              //  extrudeMaterial : 1 //material index of the side faces
 			};
 
 			const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 			
-			var material = new THREE.MeshPhongMaterial( { color: 0xa0afa4 } );
+		
+			
+			
+			
+			//loader.load('img/Background.jpg', function ( texture ) {
+			//	});
+			//var texture = new THREE.TextureLoader().load( 'tfumey.free.fr/images/Background.jpg' );
+			//var material = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture("img/Background.png"),color: 0xa0afa4 } );
+			//var material = new THREE.MeshPhongMaterial( { map: texture  } );
+			//var material = new THREE.MeshBasicMaterial( { map: texture  } );
+			
 			var mesh = new THREE.Mesh( geometry, material ) ;
 			mesh.rotation.x= THREE.Math.degToRad( 90 );
-			mesh.position.x=-25;
+			mesh.position.x=-30;
 			mesh.position.z=-25;
 			mesh.position.y=1;
 			
@@ -432,7 +507,7 @@ function rotateX(deltaX) {
 			group.add( mesh );
 
 
-				let quat = {x: 0, y: 0, z: 0, w: 1};
+			
 				//Ammojs Section
                 let transform = new Ammo.btTransform();
                 transform.setIdentity();
@@ -458,7 +533,7 @@ function rotateX(deltaX) {
                 let mass = 2;
 
                 //threeJS Section
-                let ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius), new THREE.MeshPhongMaterial({color: 0xff0505}));
+                let ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius,20,20), new THREE.MeshPhongMaterial({color: 0xff0505}));
 
                 ball.position.set(pos.x, pos.y, pos.z);
                 
