@@ -11,6 +11,10 @@
         <script src="js/ammo.js"></script>
         <script>
 		
+		//substract 3d
+		//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
+		
+		
 		
 		//https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
 //http://lo-th.github.io/Ammo.lab/#basketball
@@ -175,8 +179,13 @@ function rotateX(deltaX) {
                 compoundShape = new Ammo.btCompoundShape();
 				
 				
-                createBlock2( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
-				createBlock2({x: 0, y: 0, z: -24},{x: 50, y: 8, z: 2});
+				createGround();
+				
+                //createBlock2( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
+				createBlock2({x: 0, y: 2, z: -24},{x: 50, y: 6, z: 2});
+				createBlock2({x: 0, y: 2, z: 24},{x: 50, y: 6, z: 2});
+				createBlock2({x: -24, y: 2, z: 0},{x: 2, y: 6, z: 50});
+				createBlock2({x: 24, y: 2, z: 0},{x: 2, y: 6, z: 50});
 					
 				scene.add( group );
 								
@@ -193,7 +202,7 @@ function rotateX(deltaX) {
 				physicsWorld.addRigidBody( BlockBody, colGroupPlane, colGroupRedBall );
 				
                 createBall();
-                createMaskBall();
+                //createMaskBall();
 
                 renderFrame();
             }
@@ -350,7 +359,98 @@ function rotateX(deltaX) {
 				
             }
 
-            function createBall(){
+		function AddHole(shape,ox,oy,radius){
+
+			var circleTri = new THREE.Shape();
+			var circle = new THREE.Shape();
+			var segments = 32;
+			var theta, x, y;
+			for (var i = 0; i < segments; i++) {
+				theta = ((i + 1) / segments) * Math.PI * 2.0;
+				x = radius * Math.cos(theta);
+				y = radius * Math.sin(theta);
+				if (i == 0) {
+					circle.moveTo(x+ox, y+oy);
+				} else {
+					circle.lineTo(x+ox, y+oy);
+				}
+			}
+			shape.holes.push( circle );
+		}
+
+
+           function createGround(){
+
+			let scale = {x: 50, y: 2, z: 50};
+			 let mass = 0;
+			
+			var shape = new THREE.Shape();
+			//...define your shape
+			shape.moveTo( 0,0 );
+			shape.lineTo( 0, 50 );
+			shape.lineTo( 50,50 );
+			shape.lineTo( 50,0 );
+			shape.lineTo( 0,0 );
+ 
+/*
+			var hole = new THREE.Shape();
+			//...define your hole
+			hole.moveTo( 20,20 );
+			hole.lineTo( 20, 30 );
+			hole.lineTo( 30,30 );
+			hole.lineTo( 30,20 );
+			hole.lineTo( 20,20 );
+ 
+
+			shape.holes.push( hole );
+			//shape.extrude( extrusionSettings );
+	*/
+	
+			AddHole(shape,10,10,2.5);
+			
+			const extrudeSettings = {
+			  steps: 2,
+			  depth: 2,
+			  bevelEnabled: false,
+			  bevelThickness: 1,
+			  bevelSize: 1,
+			  bevelSegments: 2,
+			};
+
+			const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
+			
+			var material = new THREE.MeshPhongMaterial( { color: 0xa0afa4 } );
+			var mesh = new THREE.Mesh( geometry, material ) ;
+			mesh.rotation.x= THREE.Math.degToRad( 90 );
+			mesh.position.x=-25;
+			mesh.position.z=-25;
+			mesh.position.y=1;
+			
+			mesh.castShadow = true;
+            mesh.receiveShadow = true;
+			//scene.add( mesh );
+			group.add( mesh );
+
+
+				let quat = {x: 0, y: 0, z: 0, w: 1};
+				//Ammojs Section
+                let transform = new Ammo.btTransform();
+                transform.setIdentity();
+                transform.setOrigin( new Ammo.btVector3(0, 0, 0 ) );
+                transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
+                //let motionState = new Ammo.btDefaultMotionState( transform );
+                var colShape1 = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );
+                colShape1.setMargin( 0.05 );
+                let localInertia = new Ammo.btVector3( 0, 0, 0 );
+                colShape1.calculateLocalInertia( mass, localInertia );
+					
+				//let transform2 = new Ammo.btTransform();
+				//transform2.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+				compoundShape.addChildShape(transform, colShape1);
+			}
+
+
+		   function createBall(){
                 
                 let pos = {x: 0, y: 20, z: 0};
                 let radius = 2;
