@@ -43,7 +43,8 @@
             let physicsWorld, scene, camera, renderer, rigidBodies = [];
             let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
 
-		
+			var woodcolor=0x521C1A;
+			var materialWood;
 			var BlockBody;
 			var compoundShape;
 			
@@ -180,7 +181,17 @@ function rotateX(deltaX) {
                 compoundShape = new Ammo.btCompoundShape();
 				
 				
-				createGround();
+				
+				var loader = new THREE.TextureLoader();
+				var texture1 =loader.load('img/Background.jpg');
+				console.log("texture="+texture1);
+				texture1.wrapS = texture1.wrapT = THREE.RepeatWrapping;
+				texture1.repeat.set( 1/60, -1/50 );
+				var materialBase = new THREE.MeshBasicMaterial( {map: texture1 } );
+				var texture2 =loader.load('img/wood.jpg');
+				materialWood = new THREE.MeshBasicMaterial( {map: texture2 } );
+				
+				createGround(materialBase);
 				
                 //createBlock2( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
 				createBlock2({x: 0, y: 2, z: -26},{x: 62, y: 6, z: 2});
@@ -199,6 +210,7 @@ function rotateX(deltaX) {
 				BlockBody.setFriction(.1);
 				BlockBody.setRestitution(.8);
 				BlockBody.setDamping(0.2, 0.2);
+				BlockBody.setCollisionFlags( 2 )
 
 				physicsWorld.addRigidBody( BlockBody, colGroupPlane, colGroupRedBall );
 				
@@ -338,12 +350,14 @@ function rotateX(deltaX) {
 				
 					
 				
-			var material = new THREE.MeshPhongMaterial( { color: 0xa0afa4 } );
+			//var material = new THREE.MeshPhongMaterial( { color: 0xa0afa4 } );
+			//var material = new THREE.MeshBasicMaterial( { color: woodcolor } );
+			//521C1A
 			//var material = new THREE.MeshPhongMaterial( { map: texture  } );
 			//var material = new THREE.MeshBasicMaterial( { map: texture  } );
 			
 			//	var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
-				var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), material);
+				var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), materialWood);
                 block1.position.set(pos.x, pos.y, pos.z);
                 block1.scale.set(scale.x, scale.y, scale.z);
 				const quaternion = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
@@ -389,60 +403,9 @@ function rotateX(deltaX) {
 		}
 
 
-           function createGround(){
-
-		   
-		   	var loader = new THREE.TextureLoader();
-			
-			loader.load(
-				// resource URL
-				'img/Background.jpg',
-
-				// onLoad callback
-				function ( texture ) {
-				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-				texture.repeat.set( 1/60, 1/50 );
-				//texture.rotation=Math.PI;
-				//texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-			//	texture.matrixAutoUpdate=true;
-				var API = {
-				offsetX: 100,
-				offsetY: 100,
-				repeatX: 100,
-				repeatY: 100,
-				rotation: 0, // positive is counter-clockwise
-				centerX: 0.5,
-				centerY: 0.5
-			};
-			/*
-				texture.matrix	
-					    .identity()
-					    //.translate( - API.centerX, - API.centerY )
-					    //.rotate( API.rotation )					// I don't understand how rotation can preceed scale, but it seems to be required...
-					    .scale( API.repeatX, API.repeatY )
-					    //.translate( API.centerX, API.centerY )
-					    .translate( API.offsetX, API.offsetY );
-					// in this example we create the material when the texture is loaded
-				*/	
-					var material = new THREE.MeshBasicMaterial( {
-						map: texture
-					 } );
-					 createGroundM(material);
-				},
-
-				// onProgress callback currently not supported
-				undefined,
-
-				// onError callback
-				function ( err ) {
-					var material = new THREE.MeshPhongMaterial( {color: 0xa0afa4 } );
-					createGroundM(material);
-				}
-			);
-		}
-		function createGroundM(material)
+		function createGround(material)
 		{
-			let scale = {x: 50, y: 2, z: 50};
+			let scale = {x: 60, y: 2, z: 50};
 			 let mass = 0;
 				let quat = {x: 0, y: 0, z: 0, w: 1};
 			
@@ -479,7 +442,7 @@ function rotateX(deltaX) {
 			  bevelSize: 1,
 			  bevelSegments: 2,
 			  material:0, //material index of the front and back face
-              //  extrudeMaterial : 1 //material index of the side faces
+              extrudeMaterial : 1 //material index of the side faces
 			};
 
 			const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
@@ -494,8 +457,8 @@ function rotateX(deltaX) {
 			//var material = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture("img/Background.png"),color: 0xa0afa4 } );
 			//var material = new THREE.MeshPhongMaterial( { map: texture  } );
 			//var material = new THREE.MeshBasicMaterial( { map: texture  } );
-			
-			var mesh = new THREE.Mesh( geometry, material ) ;
+			var materialSide = new THREE.MeshBasicMaterial( { color: 0x521C1A } );
+			var mesh = new THREE.Mesh( geometry, [material,materialSide] ) ;
 			mesh.rotation.x= THREE.Math.degToRad( 90 );
 			mesh.position.x=-30;
 			mesh.position.z=-25;
@@ -560,6 +523,8 @@ function rotateX(deltaX) {
                 let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, colShape, localInertia );
                 let body = new Ammo.btRigidBody( rbInfo );
 
+				body.setActivationState( 4 ) // never sleep
+				 
 				body.setFriction(.1);
 				body.setRestitution(.8);
 				body.setDamping(0.2, 0.2);
