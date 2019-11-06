@@ -217,7 +217,8 @@ function rotateX(deltaX) {
 				BlockBody.setFriction(.1);
 				BlockBody.setRestitution(.8);
 				BlockBody.setDamping(0.2, 0.2);
-				BlockBody.setCollisionFlags( 2 )
+				BlockBody.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
+				BlockBody.setActivationState( 4 );//never sleep
 
 				physicsWorld.addRigidBody( BlockBody, colGroupPlane, colGroupRedBall );
 				
@@ -241,74 +242,7 @@ function rotateX(deltaX) {
             }
 
 
-            function setupGraphics(){
 
-                //create clock for timing
-                clock = new THREE.Clock();
-
-                //create the scene
-                scene = new THREE.Scene();
-                scene.background = new THREE.Color( 0xbfd1e5 );
-
-                //create camera
-                camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 5000 );
-                camera.position.set( 0, 30, 70 );
-                camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-                //Add hemisphere light
-                let hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.1 );
-                hemiLight.color.setHSL( 0.6, 0.6, 0.6 );
-                hemiLight.groundColor.setHSL( 0.1, 1, 0.4 );
-                hemiLight.position.set( 0, 50, 0 );
-                scene.add( hemiLight );
-
-                //Add directional light
-                let dirLight = new THREE.DirectionalLight( 0xffffff , 1);
-                dirLight.color.setHSL( 0.1, 1, 0.95 );
-                dirLight.position.set( -1, 1.75, 1 );
-                dirLight.position.multiplyScalar( 100 );
-                scene.add( dirLight );
-
-                dirLight.castShadow = true;
-
-                dirLight.shadow.mapSize.width = 2048;
-                dirLight.shadow.mapSize.height = 2048;
-
-                let d = 50;
-
-                dirLight.shadow.camera.left = -d;
-                dirLight.shadow.camera.right = d;
-                dirLight.shadow.camera.top = d;
-                dirLight.shadow.camera.bottom = -d;
-
-                dirLight.shadow.camera.far = 13500;
-
-                //Setup the renderer
-                renderer = new THREE.WebGLRenderer( { antialias: true } );
-                renderer.setClearColor( 0xbfd1e5 );
-                renderer.setPixelRatio( window.devicePixelRatio );
-                renderer.setSize( window.innerWidth, window.innerHeight );
-                document.body.appendChild( renderer.domElement );
-
-                renderer.gammaInput = true;
-                renderer.gammaOutput = true;
-
-                renderer.shadowMap.enabled = true;
-
-            }
-
-        
-            function renderFrame(){
-
-                let deltaTime = clock.getDelta();
-
-                updatePhysics( deltaTime );
-
-                renderer.render( scene, camera );
-
-                requestAnimationFrame( renderFrame );
-
-            }
 
 /*
             function createBlock(pos,scale){
@@ -390,8 +324,12 @@ function rotateX(deltaX) {
 				
             }
 
-		function AddHole(shape,ox,oy,radius){
+		//function AddHole(shape,ox,oy,radius){
+		function AddHole(shape,hole,radius){
 
+			var ox=hole.x;
+			var oy=hole.y;
+			
 			var circleTri = new THREE.Shape();
 			var circle = new THREE.Shape();
 			var segments = 32;
@@ -437,13 +375,16 @@ function rotateX(deltaX) {
 			shape.lineTo( 60,0 );
 			shape.lineTo( 0,0 );
  
-
+			var holes=[{x:15.5,y:9.5},{x:11,y:9.5}];
 	
-			AddHole(shape,10,10,2.5);
+			//AddHole(shape,10,10,2.5);
+			var h;
+			for(h=0;h<holes.length;h++)
+				AddHole(shape,holes[h],1.25);
 			
 			const extrudeSettings = {
 			  steps: 2,
-			  depth: 2,
+			  depth: 0.5,
 			  bevelEnabled: false,
 			  bevelThickness: 1,
 			  bevelSize: 1,
@@ -455,16 +396,6 @@ function rotateX(deltaX) {
 			//const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 			var geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 			
-		
-			
-			
-			
-			//loader.load('img/Background.jpg', function ( texture ) {
-			//	});
-			//var texture = new THREE.TextureLoader().load( 'tfumey.free.fr/images/Background.jpg' );
-			//var material = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture("img/Background.png"),color: 0xa0afa4 } );
-			//var material = new THREE.MeshPhongMaterial( { map: texture  } );
-			//var material = new THREE.MeshBasicMaterial( { map: texture  } );
 			var materialSide = new THREE.MeshBasicMaterial( { color: 0x521C1A } );
 			var mesh = new THREE.Mesh( geometry, [material,materialSide] ) ;
 			mesh.rotation.x= THREE.Math.degToRad( 90 );
@@ -487,8 +418,15 @@ function rotateX(deltaX) {
                 //let motionState = new Ammo.btDefaultMotionState( transform );
 				
 				
-                //var colShape1 = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );
-				var colShape1=getMesh(geometry);
+				
+
+				//var geometry2 = new THREE.Geometry().fromBufferGeometry( geometry );
+				//var colShape1=getMesh(geometry2);
+				//var colShape1=createTriangleShapeByGeometry(geometry2);
+				
+				var colShape1 = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );				
+							
+				
                 colShape1.setMargin( 0.05 );
                 let localInertia = new Ammo.btVector3( 0, 0, 0 );
                 colShape1.calculateLocalInertia( mass, localInertia );
@@ -502,12 +440,14 @@ function rotateX(deltaX) {
 		   function createBall(){
                 
                 let pos = {x: 0, y: 20, z: 0};
-                let radius = 2;
+                let radius = 1;
                 let quat = {x: 0, y: 0, z: 0, w: 1};
                 let mass = 2;
 
                 //threeJS Section
-                let ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius,20,20), new THREE.MeshPhongMaterial({color: 0xff0505}));
+				
+				let ballMaterial = new THREE.MeshStandardMaterial ({color: 0xECECEC, roughness:0.2, metalness:0.8});
+                let ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius,20,20), ballMaterial);
 
                 ball.position.set(pos.x, pos.y, pos.z);
                 
@@ -524,8 +464,9 @@ function rotateX(deltaX) {
                 transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
                 let motionState = new Ammo.btDefaultMotionState( transform );
 
-                let colShape = new Ammo.btSphereShape( radius );
+                let colShape = new Ammo.btSphereShape( radius*1.5 );
                 colShape.setMargin( 0.05 );
+			    
 	
 
                 let localInertia = new Ammo.btVector3( 1, 1, 1 );
@@ -534,7 +475,8 @@ function rotateX(deltaX) {
                 let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, colShape, localInertia );
                 bodyBall = new Ammo.btRigidBody( rbInfo );
 
-				bodyBall.setActivationState( 4 ) // never sleep, alow physics after a stedy state period
+				bodyBall.setCollisionFlags( 0 );// 0 is static, 1 is dynamic, 2 is kinematic
+				bodyBall.setActivationState( 4 ); // never sleep, alow physics after a stedy state period
 				 
 				bodyBall.setFriction(.1);
 				bodyBall.setRestitution(.8);
@@ -620,6 +562,40 @@ function rotateX(deltaX) {
 
 //https://stackoverflow.com/questions/39441459/rigid-body-shape-in-bullet-ammo-js-from-a-mesh-in-three-js
 
+//
+
+function createTriangleShapeByGeometry(geometry) {
+    var mesh = new Ammo.btTriangleMesh(true, true);
+    var vertices = geometry.vertices;
+    for (var i = 0; i < geometry.faces.length; i++) {
+        var face = geometry.faces[i];
+        if (face instanceof THREE.Face3) {
+            mesh.addTriangle(
+                new Ammo.btVector3(vertices[face.a].x, vertices[face.a].y, vertices[face.a].z),
+                new Ammo.btVector3(vertices[face.b].x, vertices[face.b].y, vertices[face.b].z),
+                new Ammo.btVector3(vertices[face.c].x, vertices[face.c].y, vertices[face.c].z),
+                false
+            );
+        } else if (face instanceof THREE.Face4) {
+            mesh.addTriangle(
+                new Ammo.btVector3(vertices[face.a].x, vertices[face.a].y, vertices[face.a].z),
+                new Ammo.btVector3(vertices[face.b].x, vertices[face.b].y, vertices[face.b].z),
+                new Ammo.btVector3(vertices[face.d].x, vertices[face.d].y, vertices[face.d].z),
+                false
+            );
+            mesh.addTriangle(
+                new Ammo.btVector3(vertices[face.b].x, vertices[face.b].y, vertices[face.b].z),
+                new Ammo.btVector3(vertices[face.c].x, vertices[face.c].y, vertices[face.c].z),
+                new Ammo.btVector3(vertices[face.d].x, vertices[face.d].y, vertices[face.d].z),
+                false
+            );
+        }
+    }
+    var shape = new Ammo.btBvhTriangleMeshShape(mesh, true, true);
+    return shape;
+}
+
+
 function getMesh( geometry ) {
 
 		var i,
@@ -627,38 +603,39 @@ function getMesh( geometry ) {
 			vertices, face, triangles = [];
 			geometry.elementsNeedUpdate=true;
 			console.log(geometry.faces);
-				
+			vertices = geometry.vertices;
 			for ( i = 0; i < geometry.faces.length; i++ ) {
-			face = geometry.faces[i];
-			if ( face instanceof THREE.Face3) {
+				face = geometry.faces[i];
+				if ( face instanceof THREE.Face3) {
 
-				triangles.push([
-					{ x: vertices[face.a].x, y: vertices[face.a].y, z: vertices[face.a].z },
-					{ x: vertices[face.b].x, y: vertices[face.b].y, z: vertices[face.b].z },
-					{ x: vertices[face.c].x, y: vertices[face.c].y, z: vertices[face.c].z }
-				]);
+					triangles.push([
+						{ x: vertices[face.a].x, y: vertices[face.a].y, z: vertices[face.a].z },
+						{ x: vertices[face.b].x, y: vertices[face.b].y, z: vertices[face.b].z },
+						{ x: vertices[face.c].x, y: vertices[face.c].y, z: vertices[face.c].z }
+					]);
 
-			} else if ( face instanceof THREE.Face4 ) {
+				} else if ( face instanceof THREE.Face4 ) {
 
-				triangles.push([
-					{ x: vertices[face.a].x, y: vertices[face.a].y, z: vertices[face.a].z },
-					{ x: vertices[face.b].x, y: vertices[face.b].y, z: vertices[face.b].z },
-					{ x: vertices[face.d].x, y: vertices[face.d].y, z: vertices[face.d].z }
-				]);
-				triangles.push([
-					{ x: vertices[face.b].x, y: vertices[face.b].y, z: vertices[face.b].z },
-					{ x: vertices[face.c].x, y: vertices[face.c].y, z: vertices[face.c].z },
-					{ x: vertices[face.d].x, y: vertices[face.d].y, z: vertices[face.d].z }
-				]);
+					triangles.push([
+						{ x: vertices[face.a].x, y: vertices[face.a].y, z: vertices[face.a].z },
+						{ x: vertices[face.b].x, y: vertices[face.b].y, z: vertices[face.b].z },
+						{ x: vertices[face.d].x, y: vertices[face.d].y, z: vertices[face.d].z }
+					]);
+					triangles.push([
+						{ x: vertices[face.b].x, y: vertices[face.b].y, z: vertices[face.b].z },
+						{ x: vertices[face.c].x, y: vertices[face.c].y, z: vertices[face.c].z },
+						{ x: vertices[face.d].x, y: vertices[face.d].y, z: vertices[face.d].z }
+					]);
 
+				}
 			}
-		}
 		var triangle, triangle_mesh = new Ammo.btTriangleMesh;
 		
-		var _vec3_1,
-		_vec3_2,
-		_vec3_3;
 			
+		var _vec3_1 = new Ammo.btVector3(0,0,0);
+		var _vec3_2 = new Ammo.btVector3(0,0,0);
+		var _vec3_3 = new Ammo.btVector3(0,0,0);
+	
 		for ( i = 0; i < triangles.length; i++ ) {
 				triangle = triangles[i];
 
@@ -689,6 +666,76 @@ function getMesh( geometry ) {
 			);
 			return shape;
 	}
+	
+	
+	            function setupGraphics(){
+
+                //create clock for timing
+                clock = new THREE.Clock();
+
+                //create the scene
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color( 0xbfd1e5 );
+
+                //create camera
+                camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 5000 );
+                camera.position.set( 0, 30, 70 );
+                camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+                //Add hemisphere light
+                let hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.1 );
+                hemiLight.color.setHSL( 0.6, 0.6, 0.6 );
+                hemiLight.groundColor.setHSL( 0.1, 1, 0.4 );
+                hemiLight.position.set( 0, 50, 0 );
+                scene.add( hemiLight );
+
+                //Add directional light
+                let dirLight = new THREE.DirectionalLight( 0xffffff , 1);
+                dirLight.color.setHSL( 0.1, 1, 0.95 );
+                dirLight.position.set( -1, 1.75, 1 );
+                dirLight.position.multiplyScalar( 100 );
+                scene.add( dirLight );
+
+                dirLight.castShadow = true;
+
+                dirLight.shadow.mapSize.width = 2048;
+                dirLight.shadow.mapSize.height = 2048;
+
+                let d = 50;
+
+                dirLight.shadow.camera.left = -d;
+                dirLight.shadow.camera.right = d;
+                dirLight.shadow.camera.top = d;
+                dirLight.shadow.camera.bottom = -d;
+
+                dirLight.shadow.camera.far = 13500;
+
+                //Setup the renderer
+                renderer = new THREE.WebGLRenderer( { antialias: true } );
+                renderer.setClearColor( 0xbfd1e5 );
+                renderer.setPixelRatio( window.devicePixelRatio );
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                document.body.appendChild( renderer.domElement );
+
+                renderer.gammaInput = true;
+                renderer.gammaOutput = true;
+
+                renderer.shadowMap.enabled = true;
+
+            }
+
+        
+            function renderFrame(){
+
+                let deltaTime = clock.getDelta();
+
+                updatePhysics( deltaTime );
+
+                renderer.render( scene, camera );
+
+                requestAnimationFrame( renderFrame );
+
+            }
 
 
         </script>
