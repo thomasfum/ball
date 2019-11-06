@@ -56,15 +56,16 @@
 document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
     var keyCode = event.which;
+	var delta=0.005;
 	//console.log("key pressed" +keyCode);
     if (keyCode == 38) {
-                rotateX(-0.05);
+                rotateX(-delta);
     } else if (keyCode == 40) {
-                rotateX(0.05)
+                rotateX(delta)
     } else if (keyCode == 39) {
-        rotateZ(-0.01);
+        rotateZ(-delta);
     } else if (keyCode == 37) {
-        rotateZ(0.01);
+        rotateZ(delta);
     } else if (keyCode == 32) {
         //blockPlane.position.set(0, 0, 0);
     
@@ -109,10 +110,11 @@ function rotateZ(deltaZ) {
 	var myAxis = new THREE.Vector3(0, 0, 1);
 // rotate the mesh 45 on this axis
 //this.mesh.rotateOnWorldAxis(this.myAxis, Math.degToRad(45));
-	console.log("key pressed" +AngleX+", "+AngleZ);
+	
 	AngleZ=AngleZ+deltaZ;
+	console.log("key pressed" +AngleX+", "+AngleZ);
 		 let pos = {x: 0, y: 0, z: 0};
-                let scale = {x: 50, y: 2, z: 50};
+              //  let scale = {x: 50, y: 2, z: 50};
                 let quat = {x: 0, y: 0, z: -0.2, w: 1};
 				 const quaternion = new THREE.Quaternion(0, 0,deltaZ, 1);
 			//	blockPlane.applyQuaternion(quaternion); // Apply Quaternion
@@ -137,11 +139,12 @@ function rotateZ(deltaZ) {
 }
 
 function rotateX(deltaX) {
-	console.log("key pressed" +AngleX+", "+AngleZ);
+
 		var myAxis = new THREE.Vector3(1, 0, 0);
 	AngleX=AngleX+deltaX;
+		console.log("key pressed" +AngleX+", "+AngleZ);
 		 let pos = {x: 0, y: 0, z: 0};
-                let scale = {x: 50, y: 2, z: 50};
+              //  let scale = {x: 50, y: 2, z: 50};
                 let quat = {x: 0, y: 0, z: -0.2, w: 1};
 				 const quaternion = new THREE.Quaternion(deltaX, 0,0, 1);
 				//blockPlane.applyQuaternion(quaternion); // Apply Quaternion
@@ -464,7 +467,7 @@ function rotateX(deltaX) {
                 transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
                 let motionState = new Ammo.btDefaultMotionState( transform );
 
-                let colShape = new Ammo.btSphereShape( radius*1.5 );
+                let colShape = new Ammo.btSphereShape( radius*1.0 );
                 colShape.setMargin( 0.05 );
 			    
 	
