@@ -203,11 +203,18 @@ function rotateX(deltaX) {
 				
 				createGround(materialBase);
 				
-                //createBlock2( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
-				createBlock2({x: 0, y: 2, z: -26},{x: 62, y: 6, z: 2});
-				createBlock2({x: 0, y: 2, z: 26},{x: 62, y: 6, z: 2});
-				createBlock2({x: -31, y: 2, z: 0},{x: 2, y: 6, z: 54});
-				createBlock2({x: 31, y: 2, z: 0},{x: 2, y: 6, z: 54});
+                //createBlock( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
+				createBlock({x: 0, y: 2, z: -26},{x: 62, y: 6, z: 2});
+				createBlock({x: 0, y: 2, z: 26},{x: 62, y: 6, z: 2});
+				createBlock({x: -31, y: 2, z: 0},{x: 2, y: 6, z: 54});
+				createBlock({x: 31, y: 2, z: 0},{x: 2, y: 6, z: 54});
+					
+				createWall_y(4,-14,23);//grand vertical pres du start
+				createWall_x(-3.5,-21,16);//grand horizontal sous le start
+				createWall_y(-11,-18.5,5.5);//au bout du precedent
+				createWall_y(-16,-23,5);//en face du start
+				createWall_y(-16.5,-16,4);//en dessous du precedent
+				
 					
 				scene.add( group );
 								
@@ -240,7 +247,7 @@ function rotateX(deltaX) {
                     solver                  = new Ammo.btSequentialImpulseConstraintSolver();
 
                 physicsWorld           = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-                physicsWorld.setGravity(new Ammo.btVector3(0, -10, 0));
+                physicsWorld.setGravity(new Ammo.btVector3(0, -20, 0));//2g to speed up the gameplay
 
             }
 
@@ -283,7 +290,62 @@ function rotateX(deltaX) {
 				
             }
 */
-	     function createBlock2(pos,scale){
+
+
+		function createWallExtrude()
+		{
+			var shape = new THREE.Shape();
+			//...define your shape
+			shape.moveTo( 10,10 );
+			shape.lineTo( 10, 12 );
+			shape.absarc(10.25, 12, 0.25, 0, Math.PI*2 , false);
+			
+			//shape.lineTo( 10.5,12 );
+			shape.lineTo( 10.5,10 );
+			shape.lineTo( 10,10 );
+			
+			const extrudeSettings = {
+			  steps: 2,
+			  depth: 30,
+			  bevelEnabled: false,
+			  bevelThickness: 1,
+			  bevelSize: 1,
+			  bevelSegments: 2,
+			};
+			
+			var geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
+			
+			
+			var mesh = new THREE.Mesh( geometry, materialWood) ;
+			mesh.rotation.x= THREE.Math.degToRad( 0 );
+			mesh.position.x=-30;
+			mesh.position.z=-25;
+			mesh.position.y=5;
+			
+			mesh.castShadow = true;
+            mesh.receiveShadow = true;
+			//scene.add( mesh );
+			group.add( mesh );
+			
+		}
+		function createWall_x(pos_x,pos_z,len)
+		{
+			
+			createBlock2({x: pos_x, y: 2, z: pos_z},{x: len, y: 1, z: 1},2);
+		}
+		
+		function createWall_y(pos_x,pos_z,len)
+		{
+			
+			createBlock2({x: pos_x, y: 2, z: pos_z},{x: 1, y: 1, z: len},2);
+		}
+		
+		function createBlock(pos,scale)
+		{
+			createBlock2(pos,scale,1);
+		}
+		
+	     function createBlock2(pos,scale, type){
                 
                 //let pos = {x: 0, y: 0, z: -24};
                 //let scale = {x: 50, y: 8, z: 2};
@@ -301,7 +363,12 @@ function rotateX(deltaX) {
 			//var material = new THREE.MeshBasicMaterial( { map: texture  } );
 			
 			//	var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
-				var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), materialWood);
+			var block1;
+			//if(type==1)
+				block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), materialWood);
+			//else
+			//	block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
+				
                 block1.position.set(pos.x, pos.y, pos.z);
                 block1.scale.set(scale.x, scale.y, scale.z);
 				const quaternion = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
@@ -350,9 +417,9 @@ function rotateX(deltaX) {
 			shape.holes.push( circle );
 		}
 
+	
 
-		function createGround(material)
-		{
+		function createGround(material){
 			let scale = {x: 60, y: 2, z: 50};
 			 let mass = 0;
 				let quat = {x: 0, y: 0, z: 0, w: 1};
@@ -384,7 +451,9 @@ function rotateX(deltaX) {
 			var h;
 			for(h=0;h<holes.length;h++)
 				AddHole(shape,holes[h],1.25);
-			
+						
+		
+						
 			const extrudeSettings = {
 			  steps: 2,
 			  depth: 0.5,
@@ -421,8 +490,6 @@ function rotateX(deltaX) {
                 //let motionState = new Ammo.btDefaultMotionState( transform );
 				
 				
-				
-
 				//var geometry2 = new THREE.Geometry().fromBufferGeometry( geometry );
 				//var colShape1=getMesh(geometry2);
 				//var colShape1=createTriangleShapeByGeometry(geometry2);
@@ -442,7 +509,7 @@ function rotateX(deltaX) {
 
 		   function createBall(){
                 
-                let pos = {x: 0, y: 20, z: 0};
+                let pos = {x: 2, y: 10, z: -23};
                 let radius = 1;
                 let quat = {x: 0, y: 0, z: 0, w: 1};
                 let mass = 2;
@@ -481,9 +548,9 @@ function rotateX(deltaX) {
 				bodyBall.setCollisionFlags( 0 );// 0 is static, 1 is dynamic, 2 is kinematic
 				bodyBall.setActivationState( 4 ); // never sleep, alow physics after a stedy state period
 				 
-				bodyBall.setFriction(.1);
-				bodyBall.setRestitution(.8);
-				bodyBall.setDamping(0.2, 0.2);
+				//bodyBall.setFriction(.1);
+				bodyBall.setRestitution(.6);
+				//bodyBall.setDamping(0.2, 0.2);
 				
                 physicsWorld.addRigidBody( bodyBall, colGroupRedBall, colGroupPlane | colGroupGreenBall );
                 
@@ -493,49 +560,7 @@ function rotateX(deltaX) {
 
 
 
-            function createMaskBall(){
-                
-                let pos = {x: 10, y: 20, z: 0};
-                let radius = 2;
-                let quat = {x: 0, y: 0, z: 0, w: 1};
-                let mass = 10;
-
-                //threeJS Section
-                let ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius), new THREE.MeshPhongMaterial({color: 0x00ff08}));
-
-                ball.position.set(pos.x, pos.y, pos.z);
-                
-                ball.castShadow = true;
-                ball.receiveShadow = true;
-
-                scene.add(ball);
-
-
-                //Ammojs Section
-                let transform = new Ammo.btTransform();
-                transform.setIdentity();
-                transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-                transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-                let motionState = new Ammo.btDefaultMotionState( transform );
-
-                let colShape = new Ammo.btSphereShape( radius );
-                colShape.setMargin( 0.05 );
-                let localInertia = new Ammo.btVector3( 0, 0, 0 );
-                colShape.calculateLocalInertia( mass, localInertia );
-
-                let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, colShape, localInertia );
-                let body = new Ammo.btRigidBody( rbInfo );
-//  friction: friction, restitution:bounce, 
-
-				body.setFriction(.5);
-				body.setRestitution(.5);
-				body.setDamping(0.2, 0.2);
-				
-                physicsWorld.addRigidBody( body, colGroupGreenBall, colGroupRedBall);
-                
-                ball.userData.physicsBody = body;
-                rigidBodies.push(ball);
-            }
+            
 
 
             function updatePhysics( deltaTime ){
@@ -682,7 +707,9 @@ function getMesh( geometry ) {
 
                 //create camera
                 camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 5000 );
-                camera.position.set( 0, 30, 70 );
+                //camera.position.set( 0, 30, 70 );
+				camera.position.set( 0, 80, 20 );
+				
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
                 //Add hemisphere light
