@@ -106,75 +106,36 @@ function rotateAboutPoint(obj, point, axis, theta, pointIsWorld){
 
 function rotateZ(deltaZ) {
 
-//// select the Z world axis
-	var myAxis = new THREE.Vector3(0, 0, 1);
-// rotate the mesh 45 on this axis
-//this.mesh.rotateOnWorldAxis(this.myAxis, Math.degToRad(45));
-	
-	AngleZ=AngleZ+deltaZ;
-	console.log("key pressed" +AngleX+", "+AngleZ);
-		 let pos = {x: 0, y: 0, z: 0};
-              //  let scale = {x: 50, y: 2, z: 50};
-                let quat = {x: 0, y: 0, z: -0.2, w: 1};
-				 const quaternion = new THREE.Quaternion(0, 0,deltaZ, 1);
-			//	blockPlane.applyQuaternion(quaternion); // Apply Quaternion
-			//	blockPlane.rotateOnWorldAxis(myAxis,deltaZ*2);
-				
-		let transform = new Ammo.btTransform();
-                transform.setIdentity();
-                transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-                transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
-				
-        BlockBody.setWorldTransform(transform);
-     //   BlockBody.getMotionState().setWorldTransform(transform);
-
-        BlockBody.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-        BlockBody.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-       // BlockBody.clearForces();
-	   
-	   //block1.rotateOnWorldAxis(myAxis,deltaZ*2);
-	   //rotateAboutPoint(block1,new THREE.Vector3(0,0,0),myAxis,deltaZ*2, false);
-	   group.rotateOnWorldAxis(myAxis,deltaZ*2);
-	   
+		var myAxis = new THREE.Vector3(0, 0, 1);
+		AngleZ=AngleZ+deltaZ;
+		console.log("key pressed" +AngleX+", "+AngleZ);
+		rotateXZ()
 }
 
 function rotateX(deltaX) {
 
 		var myAxis = new THREE.Vector3(1, 0, 0);
-	AngleX=AngleX+deltaX;
+		AngleX=AngleX+deltaX;
 		console.log("key pressed" +AngleX+", "+AngleZ);
-		 let pos = {x: 0, y: 0, z: 0};
-              //  let scale = {x: 50, y: 2, z: 50};
-                let quat = {x: 0, y: 0, z: -0.2, w: 1};
-				 const quaternion = new THREE.Quaternion(deltaX, 0,0, 1);
-				//blockPlane.applyQuaternion(quaternion); // Apply Quaternion
-				//blockPlane.rotateOnWorldAxis(myAxis,deltaX*2);
-				//blockPlane.setRotation(quaternion); // Apply Quaternion
-				//blockPlane.rotation.z= quat.z;
-				//blockPlane.rotation.w= quat.w;
-				
-		 let transform = new Ammo.btTransform();
-		 
-                transform.setIdentity();
-		
-                transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-		
-                transform.setRotation( new Ammo.btQuaternion( AngleX,0, AngleZ, 1 ) );
-		
+	 rotateXZ() 
+}
+function rotateXZ() {
+		let pos = {x: 0, y: 0, z: 0};
+		let transform = new Ammo.btTransform();
+        transform.setIdentity();
+        transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+        transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
 				
         BlockBody.setWorldTransform(transform);
-		
-        //BlockBody.getMotionState().setWorldTransform(transform);
-
         BlockBody.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
         BlockBody.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-       // BlockBody.clearForces();
-	   
-	     // block1.rotateOnWorldAxis(myAxis,deltaX*2);
-		// rotateAboutPoint(block1,new THREE.Vector3(0,0,0),myAxis,deltaX*2, false);
-		group.rotateOnWorldAxis(myAxis,deltaX*2);
-		  
+	
+		let p = transform.getOrigin();
+		let q = transform.getRotation();
+		group.position.set( p.x(), p.y(), p.z() );
+		group.quaternion.set( q.x(), q.y(), q.z(), q.w() );
 }
+
 			
             //Ammojs Initialization
             Ammo().then(start)
