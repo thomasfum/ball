@@ -56,7 +56,8 @@
 document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
     var keyCode = event.which;
-	var delta=0.005;
+	//var delta=0.005;
+	var delta=0.02;
 	//console.log("key pressed" +keyCode);
     if (keyCode == 38) {
                 rotateX(-delta);
@@ -406,12 +407,15 @@ function rotateXZ() {
 			shape.lineTo( 60,0 );
 			shape.lineTo( 0,0 );
  
-			var holes=[{x:15.5,y:9.5},{x:11,y:9.5}];
+			var holes=[ {x:15.5,y:9.5,l:"1"},	{x:10.75,y:9.5,l:"2,22"},{x:3,y:3,l:"3"},	{x:6,y:10,l:"4,5"},			{x:2.5,y:25.5,l:"6,9"},
+						{x:2,y:39.5,l:"10"},	{x:6,y:35.5,l:"11"},	 {x:5.5,y:44,l:"12"},{x:10.75,y:40.75,l:"13"},	{x:15.25,y:46.75,l:"14,33"},
+						{x:15.5,y:34.5,l:"15"},	{x:11.25,y:30.5,l:"8,16"},{x:16,y:25.5,l:"17,20"},{x:11,y:22,l:"7,21"},{x:14.75,y:16.5,l:"23"}
+						];
 	
-			//AddHole(shape,10,10,2.5);
+			
 			var h;
 			for(h=0;h<holes.length;h++)
-				AddHole(shape,holes[h],1.25);
+				AddHole(shape,holes[h],1.15);
 						
 		
 						
