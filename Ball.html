@@ -176,8 +176,14 @@ function rotateXZ() {
 				createWall_y(-11,-18.5,5.5);//au bout du precedent
 				createWall_y(-16,-23,5);//en face du start
 				createWall_y(-16.5,-16,4);//en dessous du precedent
+				createWall_y(-21.5,-18.5,4);//entre 2 et 4
+				createWall_x(-28,-19,4.5);//sous le 3
+				createWall_x(-28,-9.5,4.5);//en desous du precedent
+				createWall_y(-21,-8.75,8);//entre 5 et 22
+				createWall_x(-23,-5.25,5);//ptres du 7
+				createWall_y(-25,2,4);//pres du 6 et du 9
+				createWall_y(-21,2,4);//au dessus du 8
 				
-					
 				scene.add( group );
 								
 				var mass=0;
@@ -326,10 +332,10 @@ function rotateXZ() {
 			
 			//	var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
 			var block1;
-			//if(type==1)
+			if(type==1)
 				block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), materialWood);
-			//else
-			//	block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
+			else
+				block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
 				
                 block1.position.set(pos.x, pos.y, pos.z);
                 block1.scale.set(scale.x, scale.y, scale.z);
@@ -562,7 +568,7 @@ function rotateXZ() {
 			for(h=0;h<holes.length;h++)
 				AddHole(shape,holes[h],1.15);
 						
-			CreateBlockDemo(holes);
+			//CreateBlockDemo(holes);
 						
 			const extrudeSettings = {
 			  steps: 2,
