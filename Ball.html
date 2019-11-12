@@ -56,7 +56,8 @@
 document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
     var keyCode = event.which;
-	var delta=0.005;
+	//var delta=0.005;
+	var delta=0.02;
 	//console.log("key pressed" +keyCode);
     if (keyCode == 38) {
                 rotateX(-delta);
@@ -106,75 +107,36 @@ function rotateAboutPoint(obj, point, axis, theta, pointIsWorld){
 
 function rotateZ(deltaZ) {
 
-//// select the Z world axis
-	var myAxis = new THREE.Vector3(0, 0, 1);
-// rotate the mesh 45 on this axis
-//this.mesh.rotateOnWorldAxis(this.myAxis, Math.degToRad(45));
-	
-	AngleZ=AngleZ+deltaZ;
-	console.log("key pressed" +AngleX+", "+AngleZ);
-		 let pos = {x: 0, y: 0, z: 0};
-              //  let scale = {x: 50, y: 2, z: 50};
-                let quat = {x: 0, y: 0, z: -0.2, w: 1};
-				 const quaternion = new THREE.Quaternion(0, 0,deltaZ, 1);
-			//	blockPlane.applyQuaternion(quaternion); // Apply Quaternion
-			//	blockPlane.rotateOnWorldAxis(myAxis,deltaZ*2);
-				
-		let transform = new Ammo.btTransform();
-                transform.setIdentity();
-                transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-                transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
-				
-        BlockBody.setWorldTransform(transform);
-     //   BlockBody.getMotionState().setWorldTransform(transform);
-
-        BlockBody.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-        BlockBody.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-       // BlockBody.clearForces();
-	   
-	   //block1.rotateOnWorldAxis(myAxis,deltaZ*2);
-	   //rotateAboutPoint(block1,new THREE.Vector3(0,0,0),myAxis,deltaZ*2, false);
-	  // group.rotateOnWorldAxis(myAxis,deltaZ*2);
-	   
+		var myAxis = new THREE.Vector3(0, 0, 1);
+		AngleZ=AngleZ+deltaZ;
+		console.log("key pressed" +AngleX+", "+AngleZ);
+		rotateXZ()
 }
 
 function rotateX(deltaX) {
 
 		var myAxis = new THREE.Vector3(1, 0, 0);
-	AngleX=AngleX+deltaX;
+		AngleX=AngleX+deltaX;
 		console.log("key pressed" +AngleX+", "+AngleZ);
-		 let pos = {x: 0, y: 0, z: 0};
-              //  let scale = {x: 50, y: 2, z: 50};
-                let quat = {x: 0, y: 0, z: -0.2, w: 1};
-				 const quaternion = new THREE.Quaternion(deltaX, 0,0, 1);
-				//blockPlane.applyQuaternion(quaternion); // Apply Quaternion
-				//blockPlane.rotateOnWorldAxis(myAxis,deltaX*2);
-				//blockPlane.setRotation(quaternion); // Apply Quaternion
-				//blockPlane.rotation.z= quat.z;
-				//blockPlane.rotation.w= quat.w;
-				
-		 let transform = new Ammo.btTransform();
-		 
-                transform.setIdentity();
-		
-                transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-		
-                transform.setRotation( new Ammo.btQuaternion( AngleX,0, AngleZ, 1 ) );
-		
+	 rotateXZ() 
+}
+function rotateXZ() {
+		let pos = {x: 0, y: 0, z: 0};
+		let transform = new Ammo.btTransform();
+        transform.setIdentity();
+        transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+        transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
 				
         BlockBody.setWorldTransform(transform);
-		
-        //BlockBody.getMotionState().setWorldTransform(transform);
-
         BlockBody.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
         BlockBody.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-       // BlockBody.clearForces();
-	   
-	     // block1.rotateOnWorldAxis(myAxis,deltaX*2);
-		// rotateAboutPoint(block1,new THREE.Vector3(0,0,0),myAxis,deltaX*2, false);
-		//group.rotateOnWorldAxis(myAxis,deltaX*2);
-		  
+	
+		let p = transform.getOrigin();
+		let q = transform.getRotation();
+		group.position.set( p.x(), p.y(), p.z() );
+		group.quaternion.set( q.x(), q.y(), q.z(), q.w() );
 }
+
 			
             //Ammojs Initialization
             Ammo().then(start)
@@ -227,13 +189,10 @@ function rotateX(deltaX) {
 				BlockBody.setFriction(.1);
 				BlockBody.setRestitution(.8);
 				BlockBody.setDamping(0.2, 0.2);
-				BlockBody.setCollisionFlags( 2 );// 0 is static, 1 is dynamic, 2 is kinematic
+				BlockBody.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
 				BlockBody.setActivationState( 4 );//never sleep
 
 				physicsWorld.addRigidBody( BlockBody, colGroupPlane, colGroupRedBall );
-				
-				group.userData.physicsBody = BlockBody;
-				rigidBodies.push(group);
 				
                 createBall();
                 //createMaskBall();
@@ -448,12 +407,20 @@ function rotateX(deltaX) {
 			shape.lineTo( 60,0 );
 			shape.lineTo( 0,0 );
  
-			var holes=[{x:15.5,y:9.5},{x:11,y:9.5}];
+			var holes=[ {x:15.5,y:9.5,l:"1"},	{x:10.75,y:9.5,l:"2,22"},	{x:3,y:3,l:"3"},		{x:6,y:10,l:"4,5"},			{x:2.5,y:25.5,l:"6,9"},
+						{x:2,y:39.5,l:"10"},	{x:6,y:35.5,l:"11"},	 	{x:5.5,y:44,l:"12"},	{x:10.75,y:40.75,l:"13"},	{x:15.25,y:46.75,l:"14,33"},
+						{x:15.5,y:34.5,l:"15"},	{x:11.25,y:30.5,l:"8,16"},	{x:16,y:25.5,l:"17,20"},{x:11,y:22,l:"7,21"},		{x:14.75,y:16.5,l:"23"},
+						{x:20.25,y:34.5,l:"18,31"},{x:21,y:17.75,l:"19"},	{x:30.5,y:6.85,l:"24,26"},{x:25.75,y:17,l:"25,28"},{x:31,y:26,l:"27,29,49"},
+						{x:30.5,y:38.5,l:"30,36"},{x:25.25,y:43.75,l:"32,34"},{x:35.5,y:47.75,l:"35,39"},{x:35.75,y:42.5,l:"37"},{x:35.35,y:34.85,l:"38,48"},
+						{x:35.85,y:18,l:"50"},{x:36.5,y:12,l:"54"},{x:36.75,y:2.75,l:"55"},{x:46.5,y:2.25,l:"56"},{x:52.5,y:2,l:"57"},{x:56.5,y:6.75,l:"58,60"},
+						{x:46.5,y:12.25,l:"53"},{x:52,y:19.5,l:"45,59"},{x:45.75,y:21.5,l:"46,52"},{x:40.65,y:22.75,l:"51"},{x:45.75,y:38.5,l:"41,47"},
+						{x:51,y:37,l:"42"},{x:51,y:46.25,l:"40"},{x:55.5,y:43,l:"43"},{x:55.5,y:32.5,l:"44"}
+						];
 	
-			//AddHole(shape,10,10,2.5);
+			
 			var h;
 			for(h=0;h<holes.length;h++)
-				AddHole(shape,holes[h],1.25);
+				AddHole(shape,holes[h],1.15);
 						
 		
 						
@@ -573,29 +540,18 @@ function rotateX(deltaX) {
 
                 // Update rigid bodies
                 for ( let i = 0; i < rigidBodies.length; i++ ) {
-					console.log(1);
                     let objThree = rigidBodies[ i ];
-					console.log(2);
                     let objAmmo = objThree.userData.physicsBody;
-					console.log(3);
                     let ms = objAmmo.getMotionState();
-					console.log(4);
                     if ( ms ) {
 
-						console.log(5);
                         ms.getWorldTransform( tmpTrans );
-						console.log(6);
                         let p = tmpTrans.getOrigin();
-						console.log(7);
                         let q = tmpTrans.getRotation();
-						console.log(8);
                         objThree.position.set( p.x(), p.y(), p.z() );
-						console.log(9);
                         objThree.quaternion.set( q.x(), q.y(), q.z(), q.w() );
-						console.log(10);
 
                     }
-					console.log("end");
                 }
 
             }
