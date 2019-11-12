@@ -379,7 +379,147 @@ function rotateXZ() {
 			shape.holes.push( circle );
 		}
 
-	
+	function CreateBlockDemo(holes)
+	{
+		var h;
+		//for(h=0;h<holes.length;h++)
+		h=9;
+		{
+			var block1;
+			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa00f04}));
+			block1.position.set(holes[h].x-30, 1, holes[h].y-25);
+			block1.scale.set(2.30, 1, 2.30);
+			group.add( block1 );
+		}
+		
+		//recherche en haut
+		for(h=0;h<holes.length;h++)
+		//h=0;
+		{
+			var y=0;
+			for(h2=0;h2<holes.length;h2++)
+			{
+				if(h!=h2)
+				{
+					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+2.3)&& (holes[h2].y+2.3<holes[h].y))//en cube en haut dand le fuseau
+					{
+						if(holes[h2].y+2.3>y)
+						{
+							y=holes[h2].y+2.3;
+							console.log("j'ai UP"+y);
+						}
+					}
+					if((holes[h2].x+2.3>=holes[h].x)&&(holes[h2].x+2.3<=holes[h].x+2.3)&& (holes[h2].y+2.3<holes[h].y))//en cube en haut dand le fuseau
+					{
+						if(holes[h2].y+2.3>y)
+						{
+							y=holes[h2].y+2.3;
+							console.log("j'ai UP "+y);
+						}
+					}
+				}
+			}
+			var block1;
+			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0x00f004}));
+			block1.position.set(holes[h].x-30, 1, (holes[h].y-y)/2+y -25-1.15);
+			block1.scale.set(2.30, 1, holes[h].y-y);
+			group.add( block1 );
+			
+		}
+		
+		//x=holes[h].x;
+		//recherche en bas
+
+		//for(h=0;h<holes.length;h++)
+		h=0;
+		{
+			x=0;
+			var y=0;
+			for(h2=0;h2<holes.length;h2++)
+			{
+				if(h!=h2)
+				{
+					if((holes[h2].x<holes[h].x)/*&& (holes[h2].y>holes[h].y+2.3)*/)
+					{
+						if((holes[h2].x>x))
+						{
+							x=holes[h2].x;
+							console.log("j'ai Left"+x +":" +h +"/"+h2);
+						}
+					}
+/*
+					if((holes[h2].x+2.3>=holes[h].x)&&(holes[h2].x+2.3<=holes[h].x+2.3)&& (holes[h2].y>holes[h].y+2.3))//en cube en haut dand le fuseau
+					{
+						if(holes[h2].y+2.3<y)
+						{
+							y=holes[h2].y+2.3;
+							console.log("j'ai DOWN"+y);
+							x=holes[h2].x;
+						}
+					}
+	*/			
+				}
+			}
+			var block1;
+			console.log(holes[h].x-x);
+			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0x0000f4}));
+			block1.position.set(x-30, 1, (y-holes[h].y)/2+holes[h].y -25);
+			block1.scale.set(holes[h].x-x, 1, y-holes[h].y-2.3);
+			group.add( block1 );
+			
+		}
+		
+		/*
+		y=50;
+		//recherche en bas
+
+		for(h=0;h<holes.length;h++)
+		//h=0;
+		
+		{
+			x=holes[h].x;
+			var y=50;
+			for(h2=0;h2<holes.length;h2++)
+			{
+				if(h!=h2)
+				{
+				
+					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+2.3)&& (holes[h2].y>holes[h].y+2.3))//en cube en bas dans le fuseau
+					{
+						if(holes[h2].y+2.3<y)
+						{
+							y=holes[h2].y+2.3;
+							console.log("j'ai DOWN"+y +":" +h +"/"+h2);
+							x=holes[h2].x;
+						}
+					}
+
+					if((holes[h2].x+2.3>=holes[h].x)&&(holes[h2].x+2.3<=holes[h].x+2.3)&& (holes[h2].y>holes[h].y+2.3))//en cube en haut dand le fuseau
+					{
+						if(holes[h2].y+2.3<y)
+						{
+							y=holes[h2].y+2.3;
+							console.log("j'ai DOWN"+y);
+							x=holes[h2].x;
+						}
+					}
+					
+					
+					
+				}
+			}
+			var block1;
+			console.log(holes[h].x-x);
+			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0x0000f4}));
+			block1.position.set(x+((holes[h].x+2.3-x)/2)-30, 1, (y-holes[h].y)/2+holes[h].y -25);
+			block1.scale.set(holes[h].x-x, 1, y-holes[h].y-2.3);
+			group.add( block1 );
+			
+		}
+		*/
+		
+			
+	}
 
 		function createGround(material){
 			let scale = {x: 60, y: 2, z: 50};
@@ -422,7 +562,7 @@ function rotateXZ() {
 			for(h=0;h<holes.length;h++)
 				AddHole(shape,holes[h],1.15);
 						
-		
+			CreateBlockDemo(holes);
 						
 			const extrudeSettings = {
 			  steps: 2,
