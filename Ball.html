@@ -134,7 +134,7 @@ function rotateZ(deltaZ) {
 	   
 	   //block1.rotateOnWorldAxis(myAxis,deltaZ*2);
 	   //rotateAboutPoint(block1,new THREE.Vector3(0,0,0),myAxis,deltaZ*2, false);
-	   group.rotateOnWorldAxis(myAxis,deltaZ*2);
+	  // group.rotateOnWorldAxis(myAxis,deltaZ*2);
 	   
 }
 
@@ -172,7 +172,7 @@ function rotateX(deltaX) {
 	   
 	     // block1.rotateOnWorldAxis(myAxis,deltaX*2);
 		// rotateAboutPoint(block1,new THREE.Vector3(0,0,0),myAxis,deltaX*2, false);
-		group.rotateOnWorldAxis(myAxis,deltaX*2);
+		//group.rotateOnWorldAxis(myAxis,deltaX*2);
 		  
 }
 			
@@ -227,10 +227,13 @@ function rotateX(deltaX) {
 				BlockBody.setFriction(.1);
 				BlockBody.setRestitution(.8);
 				BlockBody.setDamping(0.2, 0.2);
-				BlockBody.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
+				BlockBody.setCollisionFlags( 2 );// 0 is static, 1 is dynamic, 2 is kinematic
 				BlockBody.setActivationState( 4 );//never sleep
 
 				physicsWorld.addRigidBody( BlockBody, colGroupPlane, colGroupRedBall );
+				
+				group.userData.physicsBody = BlockBody;
+				rigidBodies.push(group);
 				
                 createBall();
                 //createMaskBall();
@@ -570,18 +573,29 @@ function rotateX(deltaX) {
 
                 // Update rigid bodies
                 for ( let i = 0; i < rigidBodies.length; i++ ) {
+					console.log(1);
                     let objThree = rigidBodies[ i ];
+					console.log(2);
                     let objAmmo = objThree.userData.physicsBody;
+					console.log(3);
                     let ms = objAmmo.getMotionState();
+					console.log(4);
                     if ( ms ) {
 
+						console.log(5);
                         ms.getWorldTransform( tmpTrans );
+						console.log(6);
                         let p = tmpTrans.getOrigin();
+						console.log(7);
                         let q = tmpTrans.getRotation();
+						console.log(8);
                         objThree.position.set( p.x(), p.y(), p.z() );
+						console.log(9);
                         objThree.quaternion.set( q.x(), q.y(), q.z(), q.w() );
+						console.log(10);
 
                     }
+					console.log("end");
                 }
 
             }
