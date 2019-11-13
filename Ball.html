@@ -185,26 +185,7 @@ function rotateXZ() {
 				materialWood = new THREE.MeshBasicMaterial( {map: texture2 } );
 				
 				createGround(materialBase);
-				
-                //createBlock( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
-				createBlock({x: 0, y: 2, z: -26},{x: 62, y: 6, z: 2});
-				createBlock({x: 0, y: 2, z: 26},{x: 62, y: 6, z: 2});
-				createBlock({x: -31, y: 2, z: 0},{x: 2, y: 6, z: 54});
-				createBlock({x: 31, y: 2, z: 0},{x: 2, y: 6, z: 54});
-					
-				createWall_y(4,-14,23);//grand vertical pres du start
-				createWall_x(-3.5,-21,16);//grand horizontal sous le start
-				createWall_y(-11,-18.5,5.5);//au bout du precedent
-				createWall_y(-16,-23,5);//en face du start
-				createWall_y(-16.5,-16,4);//en dessous du precedent
-				createWall_y(-21.5,-18.5,4);//entre 2 et 4
-				createWall_x(-28,-19,4.5);//sous le 3
-				createWall_x(-28,-9.5,4.5);//en desous du precedent
-				createWall_y(-21,-8.75,8);//entre 5 et 22
-				createWall_x(-23,-5.25,5);//ptres du 7
-				createWall_y(-25,2,4);//pres du 6 et du 9
-				createWall_y(-21,2,4);//au dessus du 8
-				
+				//createWalls();
 				scene.add( group );
 								
 				var mass=0;
@@ -281,6 +262,28 @@ function rotateXZ() {
 */
 
 
+		function createWalls()
+		{
+			//createBlock( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
+			createBlock({x: 0, y: 2, z: -26},{x: 62, y: 6, z: 2});
+			createBlock({x: 0, y: 2, z: 26},{x: 62, y: 6, z: 2});
+			createBlock({x: -31, y: 2, z: 0},{x: 2, y: 6, z: 54});
+			createBlock({x: 31, y: 2, z: 0},{x: 2, y: 6, z: 54});
+				
+			createWall_y(4,-14,23);//grand vertical pres du start
+			createWall_x(-3.5,-21,16);//grand horizontal sous le start
+			createWall_y(-11,-18.5,5.5);//au bout du precedent
+			createWall_y(-16,-23,5);//en face du start
+			createWall_y(-16.5,-16,4);//en dessous du precedent
+			createWall_y(-21.5,-18.5,4);//entre 2 et 4
+			createWall_x(-28,-19,4.5);//sous le 3
+			createWall_x(-28,-9.5,4.5);//en desous du precedent
+			createWall_y(-21,-8.75,8);//entre 5 et 22
+			createWall_x(-23,-5.25,5);//ptres du 7
+			createWall_y(-25,2,4);//pres du 6 et du 9
+			createWall_y(-21,2,4);//au dessus du 8
+		}
+
 		function createWallExtrude()
 		{
 			var shape = new THREE.Shape();
@@ -319,13 +322,11 @@ function rotateXZ() {
 		}
 		function createWall_x(pos_x,pos_z,len)
 		{
-			
 			createBlock2({x: pos_x, y: 2, z: pos_z},{x: len, y: 1, z: 1},2);
 		}
 		
 		function createWall_y(pos_x,pos_z,len)
 		{
-			
 			createBlock2({x: pos_x, y: 2, z: pos_z},{x: 1, y: 1, z: len},2);
 		}
 		
@@ -336,22 +337,10 @@ function rotateXZ() {
 		
 	     function createBlock2(pos,scale, type){
                 
-                //let pos = {x: 0, y: 0, z: -24};
-                //let scale = {x: 50, y: 8, z: 2};
-                let quat = {x: 0, y: 0, z: 0, w: 1};
-                let mass = 0;
+            let quat = {x: 0, y: 0, z: 0, w: 1};
+            let mass = 0;
 
-                //threeJS Section
-				
-					
-				
-			//var material = new THREE.MeshPhongMaterial( { color: 0xa0afa4 } );
-			//var material = new THREE.MeshBasicMaterial( { color: woodcolor } );
-			//521C1A
-			//var material = new THREE.MeshPhongMaterial( { map: texture  } );
-			//var material = new THREE.MeshBasicMaterial( { map: texture  } );
-			
-			//	var block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
+            //threeJS Section
 			var block1;
 			if(type==1)
 				block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), materialWood);
@@ -409,8 +398,8 @@ function rotateXZ() {
 	function CreateBlockDemo(holes)
 	{
 		var h;
-		//for(h=0;h<holes.length;h++)
-		h=9;
+		for(h=0;h<holes.length;h++)
+		//h=9;
 		{
 			var block1;
 			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa00f04}));
@@ -420,28 +409,44 @@ function rotateXZ() {
 		}
 		
 		//recherche en haut
+		//
+		
 		for(h=0;h<holes.length;h++)
-		//h=0;
+		//h=23;
 		{
 			var y=0;
+			var sideL=0;
+			var sideR=0;
+			var maxX=0;
+			var minX=45555;
 			for(h2=0;h2<holes.length;h2++)
 			{
 				if(h!=h2)
 				{
-					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+2.3)&& (holes[h2].y+2.3<holes[h].y))//en cube en haut dand le fuseau
+					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+2.3)&& (holes[h2].y+2.3<holes[h].y))//en cube en haut dand le fuseau a droite
 					{
+						if(holes[h2].x>maxX)
+						{
+							maxX=holes[h2].x;
+							sideR=1;
+						}
 						if(holes[h2].y+2.3>y)
 						{
 							y=holes[h2].y+2.3;
-							console.log("j'ai UP"+y);
+							console.log("j'ai UP+1"+y);
 						}
 					}
-					if((holes[h2].x+2.3>=holes[h].x)&&(holes[h2].x+2.3<=holes[h].x+2.3)&& (holes[h2].y+2.3<holes[h].y))//en cube en haut dand le fuseau
+					if((holes[h2].x+2.3>=holes[h].x)&&(holes[h2].x+2.3<=holes[h].x+2.3)&& (holes[h2].y+2.3<holes[h].y))//en cube en haut dans le fuseau a gauche
 					{
+						if(holes[h2].x<minX)
+						{
+							minX=holes[h2].x;
+							sideL=-1;
+						}
 						if(holes[h2].y+2.3>y)
 						{
 							y=holes[h2].y+2.3;
-							console.log("j'ai UP "+y);
+							console.log("j'ai UP-1 "+y);
 						}
 					}
 				}
@@ -452,11 +457,35 @@ function rotateXZ() {
 			block1.scale.set(2.30, 1, holes[h].y-y);
 			group.add( block1 );
 			
+			if(sideR==1)
+			{	if(maxX-holes[h].x>0)
+				{
+					console.log("R "+(maxX-holes[h].x)/2);
+					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xf0f004}));
+					block1.position.set(holes[h].x-30+1.15+((maxX-holes[h].x)/2), 1, (holes[h].y-y)/2+y -25);
+					block1.scale.set((maxX-holes[h].x), 1, holes[h].y-y+2.30);
+					group.add( block1 );
+				}			
+			}
+			
+			if(sideL==-1)
+			{	if(holes[h].x-minX>0)
+				{
+					console.log("L "+(holes[h].x-minX)/2);
+					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xf0f004}));
+					block1.position.set(holes[h].x-30-1.15-((holes[h].x-minX)/2), 1, (holes[h].y-y)/2+y -25);
+					block1.scale.set((holes[h].x-minX), 1, holes[h].y-y+2.30);
+					group.add( block1 );
+				}			
+			}
+			
 		}
+		//premier a droite, premier en haut
+		
 		
 		//x=holes[h].x;
 		//recherche en bas
-
+/*
 		//for(h=0;h<holes.length;h++)
 		h=0;
 		{
@@ -466,7 +495,7 @@ function rotateXZ() {
 			{
 				if(h!=h2)
 				{
-					if((holes[h2].x<holes[h].x)/*&& (holes[h2].y>holes[h].y+2.3)*/)
+					if((holes[h2].x<holes[h].x))
 					{
 						if((holes[h2].x>x))
 						{
@@ -474,17 +503,7 @@ function rotateXZ() {
 							console.log("j'ai Left"+x +":" +h +"/"+h2);
 						}
 					}
-/*
-					if((holes[h2].x+2.3>=holes[h].x)&&(holes[h2].x+2.3<=holes[h].x+2.3)&& (holes[h2].y>holes[h].y+2.3))//en cube en haut dand le fuseau
-					{
-						if(holes[h2].y+2.3<y)
-						{
-							y=holes[h2].y+2.3;
-							console.log("j'ai DOWN"+y);
-							x=holes[h2].x;
-						}
-					}
-	*/			
+
 				}
 			}
 			var block1;
@@ -495,7 +514,7 @@ function rotateXZ() {
 			group.add( block1 );
 			
 		}
-		
+*/		
 		/*
 		y=50;
 		//recherche en bas
@@ -548,10 +567,11 @@ function rotateXZ() {
 			
 	}
 
-		function createGround(material){
+		function createGround(material)
+		{
 			let scale = {x: 60, y: 2, z: 50};
-			 let mass = 0;
-				let quat = {x: 0, y: 0, z: 0, w: 1};
+			let mass = 0;
+			let quat = {x: 0, y: 0, z: 0, w: 1};
 			
 			//------------------------
 			/*
@@ -581,7 +601,7 @@ function rotateXZ() {
 			for(h=0;h<holes.length;h++)
 				AddHole(shape,holes[h],1.15);
 						
-			//CreateBlockDemo(holes);
+			CreateBlockDemo(holes);
 						
 			const extrudeSettings = {
 			  steps: 2,
@@ -611,29 +631,29 @@ function rotateXZ() {
 
 
 			
-				//Ammojs Section
-                let transform = new Ammo.btTransform();
-                transform.setIdentity();
-                transform.setOrigin( new Ammo.btVector3(0, 0, 0 ) );
-                transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-                //let motionState = new Ammo.btDefaultMotionState( transform );
+			//Ammojs Section
+			let transform = new Ammo.btTransform();
+			transform.setIdentity();
+			transform.setOrigin( new Ammo.btVector3(0, 0, 0 ) );
+			transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
+			//let motionState = new Ammo.btDefaultMotionState( transform );
+			
+			
+			//var geometry2 = new THREE.Geometry().fromBufferGeometry( geometry );
+			//var colShape1=getMesh(geometry2);
+			//var colShape1=createTriangleShapeByGeometry(geometry2);
+			
+			var colShape1 = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );				
+						
+			
+			colShape1.setMargin( 0.05 );
+			let localInertia = new Ammo.btVector3( 0, 0, 0 );
+			colShape1.calculateLocalInertia( mass, localInertia );
 				
-				
-				//var geometry2 = new THREE.Geometry().fromBufferGeometry( geometry );
-				//var colShape1=getMesh(geometry2);
-				//var colShape1=createTriangleShapeByGeometry(geometry2);
-				
-				var colShape1 = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );				
-							
-				
-                colShape1.setMargin( 0.05 );
-                let localInertia = new Ammo.btVector3( 0, 0, 0 );
-                colShape1.calculateLocalInertia( mass, localInertia );
-					
-				//let transform2 = new Ammo.btTransform();
-				//transform2.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-				compoundShape.addChildShape(transform, colShape1);
-			}
+			//let transform2 = new Ammo.btTransform();
+			//transform2.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+			compoundShape.addChildShape(transform, colShape1);
+		}
 
 
 		   function createBall(){
