@@ -397,6 +397,7 @@ function rotateXZ() {
 
 	function CreateBlockDemo(holes)
 	{
+		var Column=[];
 		var h;
 		for(h=0;h<holes.length;h++)
 		//h=14;
@@ -405,7 +406,7 @@ function rotateXZ() {
 			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa00f04}));
 			block1.position.set(holes[h].x-30, 1, holes[h].y-25);
 			block1.scale.set(2.30, 1, 2.30);
-			group.add( block1 );
+			//group.add( block1 );
 		}
 		
 		//recherche vers le haut
@@ -413,11 +414,12 @@ function rotateXZ() {
 		//h=14;
 		{
 			var y=0;
-			var sideL=0;
-			var sideR=0;
+			var sideL=false;
+			var sideR=false;
+			var top=true;
 			var maxX=0;
 			var minX=45555;
-			var top=true;
+			
 			for(h2=0;h2<holes.length;h2++)
 			{
 				if(h!=h2)
@@ -431,7 +433,7 @@ function rotateXZ() {
 						if(holes[h2].x>maxX)
 						{
 							maxX=holes[h2].x;
-							sideR=1;
+							sideR=true;
 						}
 						if(holes[h2].y+2.3>y)
 						{
@@ -448,7 +450,7 @@ function rotateXZ() {
 						if(holes[h2].x<minX)
 						{
 							minX=holes[h2].x;
-							sideL=-1;
+							sideL=true;
 						}
 						if(holes[h2].y+2.3>y)
 						{
@@ -464,7 +466,7 @@ function rotateXZ() {
 			block1.scale.set(2.30, 1, holes[h].y-y);
 			group.add( block1 );
 			
-			if(sideR==1)
+			if(sideR==true)
 			{	if(maxX-holes[h].x>0)
 				{
 					//console.log("R "+(maxX-holes[h].x)/2);
@@ -475,7 +477,7 @@ function rotateXZ() {
 				}			
 			}
 			
-			if(sideL==-1)
+			if(sideL==true)
 			{	if(holes[h].x-minX>0)
 				{
 					//console.log("L "+(holes[h].x-minX)/2);
@@ -495,17 +497,15 @@ function rotateXZ() {
 				if((minX!=45555)&&(maxX!=0))
 				{
 					console.log("j'ai TOP "+minX+"; "+maxX);
+					Column.push({x1:minX,x2:maxX+2.3});
 					
 					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xF0f0F4}));
-					block1.position.set((maxX-minX+2.3)/2+minX-30-1.15, 1, (50-holes[h].y-2.3)/2+holes[h].y -25+1.15);
-					block1.scale.set(maxX-minX+2.3, 1, 50-holes[h].y-2.3);
+					block1.position.set((maxX-minX+2.3)/2+minX-30-1.15, 1, (50-holes[h].y-2.3)/2+holes[h].y -25+2.3);
+					block1.scale.set(maxX-minX+2.3, 1, 50-holes[h].y);
 					group.add( block1 );
 				}
 			}
-			
-			
 		}
-		
 		
 		
 		//recherche vers le bas
@@ -513,10 +513,8 @@ function rotateXZ() {
 		//h=14;
 		{
 			var ymin=0
-			var yL=0;
-			var yR=0;
-			var sideL=0;
-			var sideR=0;
+			var sideL=false;
+			var sideR=false;
 			var maxX=0;
 			var minX=45555;
 			for(h2=0;h2<holes.length;h2++)
@@ -535,8 +533,7 @@ function rotateXZ() {
 						if(holes[h2].x>maxX)
 						{
 							maxX=holes[h2].x;
-							sideR=1;
-							yR=holes[h2].y;
+							sideR=true;
 						}
 						
 					}
@@ -551,15 +548,14 @@ function rotateXZ() {
 						if(holes[h2].x<minX)
 						{
 							minX=holes[h2].x;
-							sideL=-1;
-							yL=holes[h2].y;
+							sideL=true;
 						}
 					}
 					
 				}
 			}
 			var block1;
-			if(sideR==1)
+			if(sideR==true)
 			{	if(maxX-holes[h].x>0)
 				{
 					//console.log("R "+(maxX-holes[h].x)/2);
@@ -570,7 +566,7 @@ function rotateXZ() {
 				}			
 			}
 			
-			if(sideL==-1)
+			if(sideL==true)
 			{	if(holes[h].x-minX>0)
 				{
 					//console.log("L "+(holes[h].x-minX)/2);
@@ -580,10 +576,20 @@ function rotateXZ() {
 					group.add( block1 );
 				}			
 			}
-			
-			
 		}
-		
+		//fill between column
+		Column.sort((a, b) => (a.x1 > b.x1) ? 1 : -1);
+		Column.push({x1:60+2.3,x2:60+2.3});
+		var prevX=0;
+		for(var z=0;z<Column.length;z++)
+		{
+			console.log("col:"+Column[z].x1+"; "+Column[z].x2);
+			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xf000f4}));
+			block1.position.set(prevX-30-1.15+((Column[z].x1-prevX)/2), 1, 0);
+			block1.scale.set(Column[z].x1-prevX, 1,  50+2.3);
+			group.add( block1 );
+			prevX=Column[z].x2;
+		}
 		
 			
 	}
