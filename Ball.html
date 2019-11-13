@@ -1,14 +1,23 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>JS 3D Physics</title>
+        <title>Labyrinth Ball Game</title>
         <style>
             body { margin: 0; }
+			#info {
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
         </style>
     </head>
     <body>
         <script src="js/three.js"></script>
         <script src="js/ammo.js"></script>
+		<div id="info">Description</div>
         <script>
 		
 		//substract 3d
@@ -40,6 +49,18 @@
 //https://gist.github.com/erwincoumans/b8a110b5c228b378161068cd25fa7d2c
 
             //variable declaration section
+			
+			
+			var holes=[ {x:15.5,y:9.5,l:"1"},	{x:10.75,y:9.5,l:"2,22"},	{x:3,y:3,l:"3"},		{x:6,y:10,l:"4,5"},			{x:2.5,y:25.5,l:"6,9"},
+						{x:2,y:39.5,l:"10"},	{x:6,y:35.5,l:"11"},	 	{x:5.5,y:44,l:"12"},	{x:10.75,y:40.75,l:"13"},	{x:15.25,y:46.75,l:"14,33"},
+						{x:15.5,y:34.5,l:"15"},	{x:11.25,y:30.5,l:"8,16"},	{x:16,y:25.5,l:"17,20"},{x:11,y:22,l:"7,21"},		{x:14.75,y:16.5,l:"23"},
+						{x:20.25,y:34.5,l:"18,31"},{x:21,y:17.75,l:"19"},	{x:30.5,y:6.85,l:"24,26"},{x:25.75,y:17,l:"25,28"},{x:31,y:26,l:"27,29,49"},
+						{x:30.5,y:38.5,l:"30,36"},{x:25.25,y:43.75,l:"32,34"},{x:35.5,y:47.75,l:"35,39"},{x:35.75,y:42.5,l:"37"},{x:35.35,y:34.85,l:"38,48"},
+						{x:35.85,y:18,l:"50"},{x:36.5,y:12,l:"54"},{x:36.75,y:2.75,l:"55"},{x:46.5,y:2.25,l:"56"},{x:52.5,y:2,l:"57"},{x:56.5,y:6.75,l:"58,60"},
+						{x:46.5,y:12.25,l:"53"},{x:52,y:19.5,l:"45,59"},{x:45.75,y:21.5,l:"46,52"},{x:40.65,y:22.75,l:"51"},{x:45.75,y:38.5,l:"41,47"},
+						{x:51,y:37,l:"42"},{x:51,y:46.25,l:"40"},{x:55.5,y:43,l:"43"},{x:55.5,y:32.5,l:"44"}
+						];
+			
             let physicsWorld, scene, camera, renderer, rigidBodies = [];
             let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
 
@@ -362,7 +383,7 @@ function rotateXZ() {
 				
             }
 
-		//function AddHole(shape,ox,oy,radius){
+		
 		function AddHole(shape,hole,radius){
 
 			var ox=hole.x;
@@ -553,15 +574,7 @@ function rotateXZ() {
 			shape.lineTo( 60,0 );
 			shape.lineTo( 0,0 );
  
-			var holes=[ {x:15.5,y:9.5,l:"1"},	{x:10.75,y:9.5,l:"2,22"},	{x:3,y:3,l:"3"},		{x:6,y:10,l:"4,5"},			{x:2.5,y:25.5,l:"6,9"},
-						{x:2,y:39.5,l:"10"},	{x:6,y:35.5,l:"11"},	 	{x:5.5,y:44,l:"12"},	{x:10.75,y:40.75,l:"13"},	{x:15.25,y:46.75,l:"14,33"},
-						{x:15.5,y:34.5,l:"15"},	{x:11.25,y:30.5,l:"8,16"},	{x:16,y:25.5,l:"17,20"},{x:11,y:22,l:"7,21"},		{x:14.75,y:16.5,l:"23"},
-						{x:20.25,y:34.5,l:"18,31"},{x:21,y:17.75,l:"19"},	{x:30.5,y:6.85,l:"24,26"},{x:25.75,y:17,l:"25,28"},{x:31,y:26,l:"27,29,49"},
-						{x:30.5,y:38.5,l:"30,36"},{x:25.25,y:43.75,l:"32,34"},{x:35.5,y:47.75,l:"35,39"},{x:35.75,y:42.5,l:"37"},{x:35.35,y:34.85,l:"38,48"},
-						{x:35.85,y:18,l:"50"},{x:36.5,y:12,l:"54"},{x:36.75,y:2.75,l:"55"},{x:46.5,y:2.25,l:"56"},{x:52.5,y:2,l:"57"},{x:56.5,y:6.75,l:"58,60"},
-						{x:46.5,y:12.25,l:"53"},{x:52,y:19.5,l:"45,59"},{x:45.75,y:21.5,l:"46,52"},{x:40.65,y:22.75,l:"51"},{x:45.75,y:38.5,l:"41,47"},
-						{x:51,y:37,l:"42"},{x:51,y:46.25,l:"40"},{x:55.5,y:43,l:"43"},{x:55.5,y:32.5,l:"44"}
-						];
+			
 	
 			
 			var h;
@@ -869,20 +882,58 @@ function getMesh( geometry ) {
                 renderer.shadowMap.enabled = true;
 
             }
-
+			function CheckStatus()
+			{
+				var inhole=false;
+				let ms = bodyBall.getMotionState();
+                if ( ms ) 
+				{
+					ms.getWorldTransform( tmpTrans );
+                    let p = tmpTrans.getOrigin();
+					var bx=p.x()+30;
+					var by=p.z()+25;
+					//console.log("CheckStatus:"+bx+", "+by+"    "+(holes[0].x)+", "+(holes[0].y));	
+					for(h=0;h<holes.length;h++)
+					{
+						var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((by-holes[h].y)*(by-holes[h].y))
+						if(dist<1)
+						{
+							//console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
+							document.getElementById('info').innerHTML = "Lost "+h+": " +holes[h].l;//+ "; dist="+dist;
+							inhole=true;
+							break;
+						}
+					}
+				}
+				if(inhole==false)
+				{
+					document.getElementById('info').innerHTML = Math.round(AngleX*50)+";"+Math.round(AngleZ*50)
+				}
+			}
+			
         
             function renderFrame(){
 
                 let deltaTime = clock.getDelta();
 
                 updatePhysics( deltaTime );
+				
+				CheckStatus();
 
                 renderer.render( scene, camera );
 
                 requestAnimationFrame( renderFrame );
 
             }
+			window.addEventListener( 'resize', onWindowResize, false );
 
+			function onWindowResize(){
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
 
         </script>
     </body>
