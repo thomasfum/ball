@@ -68,8 +68,10 @@
 			var materialWood;
 			var BlockBody;
 			var compoundShape;
-			var bodyBall; 
 			
+			var ball;
+			var bodyBall; 
+			var caster = new THREE.Raycaster();
 			
 			
 			var AngleZ=0;
@@ -679,7 +681,7 @@ function rotateXZ() {
                 //threeJS Section
 				
 				let ballMaterial = new THREE.MeshStandardMaterial ({color: 0xECECEC, roughness:0.2, metalness:0.8});
-                let ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius,20,20), ballMaterial);
+                ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius,20,20), ballMaterial);
 
                 ball.position.set(pos.x, pos.y, pos.z);
                 
@@ -814,6 +816,60 @@ function rotateXZ() {
 			{
 				var inhole=false;
 				let ms = bodyBall.getMotionState();
+				// var speedVector= = new Ammo.btVector3(100,0,100); bodyBall.getLinearVelocity();
+				var speedVector= bodyBall.getLinearVelocity();
+				//console.log("speedVector"+speedVector.x()+"; "+speedVector.y()+"; "+speedVector.z());
+				var rays = [
+					  new THREE.Vector3(0, 0, 1),
+					  new THREE.Vector3(1, 0, 1),
+					  new THREE.Vector3(1, 0, 0),
+					  new THREE.Vector3(1, 0, -1),
+					  new THREE.Vector3(0, 0, -1),
+					  new THREE.Vector3(-1, 0, -1),
+					  new THREE.Vector3(-1, 0, 0),
+					  new THREE.Vector3(-1, 0, 1)
+					];
+					
+				var  distance = 2;
+				var collisions;
+				var i;
+				 // For each ray
+				for (i = 0; i < rays.length; i += 1) {
+				
+					//console.log("loop "+ i);
+				  // We reset the raycaster to this direction
+				  caster.set(ball.position, rays[i]);
+				  // Test if we intersect with any obstacle mesh
+				  collisions = caster.intersectObjects(scene.children,true);
+				  // And disable that direction if we do
+				  
+				  for ( var j = 0; j < collisions.length; j++ ) {
+					  
+					  if (collisions[j].distance <= distance) {
+					  
+					  if(collisions[ j ].object!=undefined)
+					  {
+						collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0xF00000});
+					  /*
+						// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
+						if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
+						  this.direction.setZ(0);
+						} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
+						  this.direction.setZ(0);
+						}
+						if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
+						  this.direction.setX(0);
+						} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
+						  this.direction.setX(0);
+						}
+						*/
+						console.log("hit something at 32 in dir "+ i+" "+j);
+						}
+					}
+				  }
+				}
+			 
+				
                 if ( ms ) 
 				{
 					ms.getWorldTransform( tmpTrans );
