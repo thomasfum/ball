@@ -19,7 +19,7 @@
         <script src="js/ammo.js"></script>
 		<div id="info">Description</div>
         <script>
-		
+// Epson WORKFORCE WF-4725 		
 		//substract 3d
 		//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
 		
@@ -66,13 +66,26 @@
 
 			var woodcolor=0x521C1A;
 			var materialWood;
+			
+			
+			var groupGround;
+			var compoundShapeGround;
 			var BlockBody;
-			var compoundShape;
+			
+			var groupGroundAnneau;
+			var compoundShapeAnneau;
+			var BlockBodyAnneau;
+			
+			var groupGroundBox;
 			
 			var ball;
 			var bodyBall; 
+			var ballRadius=1;
 			var caster = new THREE.Raycaster();
 			
+			var previousFrotte=false;
+			var lastBong=Date.now();
+			var rolling=false;
 			
 			var AngleZ=0;
 			var AngleX=0;
@@ -110,15 +123,16 @@ function onDocumentKeyDown(event) {
 function rotateZ(deltaZ) {
 	AngleZ=AngleZ+deltaZ;
 	console.log("key pressed" +AngleX+", "+AngleZ);
-	rotateXZ();
+	rotateGroundXZ();
 }
 
 function rotateX(deltaX) {
 	AngleX=AngleX+deltaX;
 	console.log("key pressed" +AngleX+", "+AngleZ);
-	rotateXZ();
+	rotateAnneauX();
+	rotateGroundXZ();
 }
-function rotateXZ() {
+function rotateGroundXZ() {
 		let pos = {x: 0, y: 0, z: 0};
 		let transform = new Ammo.btTransform();
         transform.setIdentity();
@@ -131,9 +145,27 @@ function rotateXZ() {
 	
 		let p = transform.getOrigin();
 		let q = transform.getRotation();
-		group.position.set( p.x(), p.y(), p.z() );
-		group.quaternion.set( q.x(), q.y(), q.z(), q.w() );
+		groupGround.position.set( p.x(), p.y(), p.z() );
+		groupGround.quaternion.set( q.x(), q.y(), q.z(), q.w() );
 }
+
+function rotateAnneauX() {
+		let pos = {x: 0, y: 0, z: 0};
+		let transform = new Ammo.btTransform();
+        transform.setIdentity();
+        transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+        transform.setRotation( new Ammo.btQuaternion( AngleX, 0, 0, 1 ) );
+				
+        BlockBodyAnneau.setWorldTransform(transform);
+        BlockBodyAnneau.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+        BlockBodyAnneau.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+	
+		let p = transform.getOrigin();
+		let q = transform.getRotation();
+		groupGroundAnneau.position.set( p.x(), p.y(), p.z() );
+		groupGroundAnneau.quaternion.set( q.x(), q.y(), q.z(), q.w() );
+}
+
 
 			
             //Ammojs Initialization
@@ -147,8 +179,11 @@ function rotateXZ() {
                 setupPhysicsWorld();
 				setupGraphics();
 				
-				group = new THREE.Group();
-                compoundShape = new Ammo.btCompoundShape();
+				groupGround = new THREE.Group();
+				groupGroundAnneau= new THREE.Group();
+				groupGroundBox= new THREE.Group();
+                compoundShapeGround = new Ammo.btCompoundShape();
+				compoundShapeAnneau = new Ammo.btCompoundShape();
 				
 				
 				
@@ -163,12 +198,14 @@ function rotateXZ() {
 				
 				createGround(materialBase);
 				createWalls();
-				scene.add( group );
+				scene.add( groupGround );
+				scene.add( groupGroundAnneau);
+				scene.add( groupGroundBox);
 								
 				var mass=0;
 				let localInertia = new Ammo.btVector3( 0, 0, 0 );
-				compoundShape.calculateLocalInertia(mass,localInertia);
-				let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShape, localInertia );
+				compoundShapeGround.calculateLocalInertia(mass,localInertia);
+				let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeGround, localInertia );
 				BlockBody = new Ammo.btRigidBody( rbInfo );
 			  
 				BlockBody.setFriction(.1);
@@ -179,6 +216,25 @@ function rotateXZ() {
 
 				physicsWorld.addRigidBody( BlockBody, colGroupPlane, colGroupRedBall );
 				
+				
+				createAnneau();
+				compoundShapeAnneau.calculateLocalInertia(mass,localInertia);
+				let rbInfoAnneau = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeAnneau, localInertia );
+				BlockBodyAnneau = new Ammo.btRigidBody( rbInfoAnneau );
+			  
+				BlockBodyAnneau.setFriction(.1);
+				BlockBodyAnneau.setRestitution(.8);
+				BlockBodyAnneau.setDamping(0.2, 0.2);
+				BlockBodyAnneau.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
+				BlockBodyAnneau.setActivationState( 4 );//never sleep
+
+				physicsWorld.addRigidBody( BlockBodyAnneau, colGroupPlane, colGroupRedBall );
+				
+				
+				
+
+				
+				createBox();
                 createBall();
                 //createMaskBall();
 
@@ -235,7 +291,7 @@ function rotateXZ() {
 				blockPlane.applyQuaternion(quaternion); // Apply Quaternion
                 blockPlane.castShadow = true;
                 blockPlane.receiveShadow = true;
-				group.add( blockPlane );
+				groupGround.add( blockPlane );
 
                 //Ammojs Section
                 let transform = new Ammo.btTransform();
@@ -251,11 +307,31 @@ function rotateXZ() {
 				//let transform2 = new Ammo.btTransform();
 				//transform2.setIdentity();
 				//transform2.setOrigin(new Ammo.btVector3(0, 0, 0));
-				compoundShape.addChildShape(transform, colShapePlane);
+				compoundShapeGround.addChildShape(transform, colShapePlane);
 				
             }
 */
 
+
+
+	function createAnneau()
+	{
+		var offset=2.5;
+		createBlock2({x: 0, y: 2, z: -26-offset},{x: 62+offset*2, y: 6, z: 2},null,true,2);
+		createBlock2({x: 0, y: 2, z: 26+offset},{x: 62+offset*2, y: 6, z: 2},null,true,2);
+		createBlock2({x: -31-offset, y: 2, z: 0},{x: 2, y: 6, z: 54+offset*2},null,true,2);
+		createBlock2({x: 31+offset, y: 2, z: 0},{x: 2, y: 6, z: 54+offset*2},null,true,2);
+			
+	}
+	
+	function createBox()
+	{
+		var offset=5;
+		createBlock2({x: 0, y: 6, z: -26-offset},{x: 62+offset*2, y: -16, z: 2},null,true,3);
+		createBlock2({x: 0, y: 6, z: 26+offset},{x: 62+offset*2, y: -16, z: 2},null,true,3);
+		createBlock2({x: -31-offset, y: 6, z: 0},{x: 2, y: -16, z: 54+offset*2},null,true,3);
+		createBlock2({x: 31+offset, y: 6, z: 0},{x: 2, y: -16, z: 54+offset*2},null,true,3);
+	}
 
 		function createWalls()
 		{
@@ -312,25 +388,25 @@ function rotateXZ() {
 			mesh.castShadow = true;
             mesh.receiveShadow = true;
 			//scene.add( mesh );
-			group.add( mesh );
+			groupGround.add( mesh );
 			
 		}
 		function createWall_x(pos_x,pos_z,len)
 		{
-			createBlock2({x: pos_x, y: 2, z: pos_z},{x: len, y: 1, z: 1},0xa0afa4,true);
+			createBlock2({x: pos_x, y: 2, z: pos_z},{x: len, y: 1, z: 1},0xa0afa4,true,1);
 		}
 		
 		function createWall_y(pos_x,pos_z,len)
 		{
-			createBlock2({x: pos_x, y: 2, z: pos_z},{x: 1, y: 1, z: len},0xa0afa4,true);
+			createBlock2({x: pos_x, y: 2, z: pos_z},{x: 1, y: 1, z: len},0xa0afa4,true,1);
 		}
 		
 		function createBlock(pos,scale)
 		{
-			createBlock2(pos,scale,null,true);
+			createBlock2(pos,scale,null,true,1);
 		}
 		
-	     function createBlock2(pos,scale, type, create3js){
+	     function createBlock2(pos,scale, color, create3js,group){
                 
             let quat = {x: 0, y: 0, z: 0, w: 1};
             let mass = 0;
@@ -339,10 +415,10 @@ function rotateXZ() {
 			{
 				//threeJS Section
 				var block1;
-				if(type==null)
+				if(color==null)
 					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), materialWood);
 				else
-					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: type}));
+					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: color}));
 					
 					block1.position.set(pos.x, pos.y, pos.z);
 					block1.scale.set(scale.x, scale.y, scale.z);
@@ -350,7 +426,12 @@ function rotateXZ() {
 					block1.applyQuaternion(quaternion); // Apply Quaternion
 					block1.castShadow = true;
 					block1.receiveShadow = true;
-					group.add( block1 );
+					if(group==1)
+						groupGround.add( block1 );
+					if(group==2)
+						groupGroundAnneau.add( block1 );
+					if(group==3)
+						groupGroundBox.add( block1 );
 			}
 			//Ammojs Section
 			let transform = new Ammo.btTransform();
@@ -365,7 +446,10 @@ function rotateXZ() {
 				
 			//let transform2 = new Ammo.btTransform();
 			//transform2.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-			compoundShape.addChildShape(transform, colShape1);
+			if(group==1)
+				compoundShapeGround.addChildShape(transform, colShape1);
+			if(group==2)	
+				compoundShapeAnneau.addChildShape(transform, colShape1);
 			
             }
 
@@ -394,7 +478,7 @@ function rotateXZ() {
 
 	function CreateSubBlockDemo(x,y,z,dx,dy,dz,color)
 	{
-		createBlock2({x: x, y: 0, z: z},{x: dx, y: 2, z: dz}, color,false);
+		createBlock2({x: x, y: 0, z: z},{x: dx, y: 2, z: dz}, color,false,1);
 		//createBlock2({x: x, y: 1, z: z},{x: dx, y: 2, z: dz}, color,true);
 	}
 	function CreateBlockDemo(holes)
@@ -417,7 +501,7 @@ function rotateXZ() {
 			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa00f04}));
 			block1.position.set(holes[h].x-dx_2, 1, holes[h].y-dy_2);
 			block1.scale.set(diam, 1, diam);
-			//group.add( block1 );
+			//groupGround.add( block1 );
 		}
 		*/
 		//recherche vers le haut
@@ -580,6 +664,7 @@ function rotateXZ() {
 		
 			
 	}
+	
 
 		function createGround(material)
 		{
@@ -596,7 +681,7 @@ function rotateXZ() {
 				blockPlane.applyQuaternion(quaternion); // Apply Quaternion
                 blockPlane.castShadow = true;
                 blockPlane.receiveShadow = true;
-				group.add( blockPlane );
+				groupGround.add( blockPlane );
 */
 			
 			//-------------
@@ -641,7 +726,7 @@ function rotateXZ() {
 			mesh.castShadow = true;
             mesh.receiveShadow = true;
 			//scene.add( mesh );
-			group.add( mesh );
+			groupGround.add( mesh );
 
 
 			/*
@@ -666,7 +751,7 @@ function rotateXZ() {
 				
 			//let transform2 = new Ammo.btTransform();
 			//transform2.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-			compoundShape.addChildShape(transform, colShape1);
+			compoundShapeGround.addChildShape(transform, colShape1);
 			*/
 		}
 
@@ -674,7 +759,7 @@ function rotateXZ() {
 		   function createBall(){
                 
                 let pos = {x: 2, y: 10, z: -23};
-                let radius = 1;
+                let radius = ballRadius;
                 let quat = {x: 0, y: 0, z: 0, w: 1};
                 let mass = 2;
 
@@ -698,7 +783,7 @@ function rotateXZ() {
                 transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
                 let motionState = new Ammo.btDefaultMotionState( transform );
 
-                let colShape = new Ammo.btSphereShape( radius*1.0 );
+                let colShape = new Ammo.btSphereShape( radius );
                 colShape.setMargin( 0.05 );
 			    
 	
@@ -818,7 +903,45 @@ function rotateXZ() {
 				let ms = bodyBall.getMotionState();
 				// var speedVector= = new Ammo.btVector3(100,0,100); bodyBall.getLinearVelocity();
 				var speedVector= bodyBall.getLinearVelocity();
-				//console.log("speedVector"+speedVector.x()+"; "+speedVector.y()+"; "+speedVector.z());
+				//console.log("ammoSpeedVector"+speedVector.x()+"; "+speedVector.y()+"; "+speedVector.z());
+				var tjsSpeedVectorNorm= new THREE.Vector3(speedVector.x(), speedVector.y(), speedVector.z());
+				var speed=tjsSpeedVectorNorm.length();
+				tjsSpeedVectorNorm.normalize ();
+				//console.log("ThreeSpeedVector"+tjsSpeedVectorNorm.x+"; "+tjsSpeedVectorNorm.y+"; "+tjsSpeedVectorNorm.z);
+				caster.set(ball.position, tjsSpeedVectorNorm);
+				var collisions;
+				collisions = caster.intersectObjects(scene.children,true);
+				 for ( var j = 0; j < collisions.length; j++ ) {
+				   if(collisions[ j ].object!=undefined)
+					  {
+						  if ((collisions[j].distance >=1)&&(collisions[j].distance <=2)) {
+							//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0x0000F0});
+						  /*
+							// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
+							if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
+							  this.direction.setZ(0);
+							} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
+							  this.direction.setZ(0);
+							}
+							if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
+							  this.direction.setX(0);
+							} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
+							  this.direction.setX(0);
+							}
+							*/
+							if(speed>3)
+							{
+								var millis = Date.now() - lastBong;
+								if(millis>200)
+								{
+									console.log("BONG: collision comming with something at 32 in speed dir "+j+ " dist="+ collisions[j].distance+ " speed="+speed);
+									lastBong=Date.now();
+								}
+							}
+						}
+					}
+				 }
+				
 				var rays = [
 					  new THREE.Vector3(0, 0, 1),
 					  new THREE.Vector3(1, 0, 1),
@@ -828,13 +951,15 @@ function rotateXZ() {
 					  new THREE.Vector3(-1, 0, -1),
 					  new THREE.Vector3(-1, 0, 0),
 					  new THREE.Vector3(-1, 0, 1)
+					  // new THREE.Vector3(0, -1, 0)//en bas
 					];
 					
 				var  distance = 2;
-				var collisions;
+				var Frotte=false;
 				var i;
 				 // For each ray
-				for (i = 0; i < rays.length; i += 1) {
+				for (i = 0; i < rays.length; i += 1) 
+				{
 				
 					//console.log("loop "+ i);
 				  // We reset the raycaster to this direction
@@ -845,11 +970,11 @@ function rotateXZ() {
 				  
 				  for ( var j = 0; j < collisions.length; j++ ) {
 					  
-					  if (collisions[j].distance <= distance) {
+					  if (collisions[j].distance <= ballRadius+0.1) {
 					  
 					  if(collisions[ j ].object!=undefined)
 					  {
-						collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0xF00000});
+						//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0xF00000});
 					  /*
 						// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
 						if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
@@ -863,12 +988,24 @@ function rotateXZ() {
 						  this.direction.setX(0);
 						}
 						*/
-						console.log("hit something at 32 in dir "+ i+" "+j);
+						if(speed>2)
+						{
+							//console.log("ca frotte!!!! in contact with something at 32 in dir "+ i+" "+j+ " dist="+ collisions[j].distance);
+							Frotte=true;
 						}
 					}
 				  }
 				}
-			 
+				}
+				if((Frotte==true)&&(previousFrotte==false))
+				{
+					previousFrotte=true;
+					console.log("ca frotte!!!!");
+				}else if((Frotte==false)&&(previousFrotte==true))
+				{
+					previousFrotte=false;
+					console.log("ca frotte plus!!!!");
+				}				
 				
                 if ( ms ) 
 				{
