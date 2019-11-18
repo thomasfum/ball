@@ -20,36 +20,35 @@
         <script src="js/ammo.js"></script>
 		<div id="info">Description</div>
         <script>
-// Epson WORKFORCE WF-4725 		
+
 		//substract 3d
 		//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
 		
 		
-		
 		//https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
-//http://lo-th.github.io/Ammo.lab/#basketball
-//https://stemkoski.github.io/Three.js/Collision-Detection.html
-//file:///D:/Utilisateurs/Nous/Desktop/Dev/amo1/ammo.js-master/examples/webgl_demo_vehicle/index.html
-//http://webmaestro.fr/collisions-detection-three-js-raycasting/
+		//http://lo-th.github.io/Ammo.lab/#basketball
+		//https://stemkoski.github.io/Three.js/Collision-Detection.html
+		//file:///D:/Utilisateurs/Nous/Desktop/Dev/amo1/ammo.js-master/examples/webgl_demo_vehicle/index.html
+		//http://webmaestro.fr/collisions-detection-three-js-raycasting/
 
-//terrain
-//http://blog.mastermaps.com/2013/10/terrain-building-with-threejs.html
-//https://grahamweldon.com/post/2012/01/3d-terrain-generation-with-three.js/
-//http://kripken.github.io/ammo.js/examples/webgl_demo_terrain/index.html
+		//terrain
+		//http://blog.mastermaps.com/2013/10/terrain-building-with-threejs.html
+		//https://grahamweldon.com/post/2012/01/3d-terrain-generation-with-three.js/
+		//http://kripken.github.io/ammo.js/examples/webgl_demo_terrain/index.html
 
-//map
-//http://learningthreejs.com/blog/2011/09/14/lets-make-a-3D-game-map-editor/
+		//map
+		//http://learningthreejs.com/blog/2011/09/14/lets-make-a-3D-game-map-editor/
 
-//Physijs/
-//https://gamedevelopment.tutsplus.com/tutorials/creating-a-simple-3d-physics-game-using-threejs-and-physijs--cms-29453
-//https://chandlerprall.github.io/Physijs/
+		//Physijs/
+		//https://gamedevelopment.tutsplus.com/tutorials/creating-a-simple-3d-physics-game-using-threejs-and-physijs--cms-29453
+		//https://chandlerprall.github.io/Physijs/
 
 
-//compound:
-//https://github.com/kripken/ammo.js/blob/master/bullet/Demos/ConstraintDemo/ConstraintDemo.cpp
-//https://gist.github.com/erwincoumans/b8a110b5c228b378161068cd25fa7d2c
+		//compound:
+		//https://github.com/kripken/ammo.js/blob/master/bullet/Demos/ConstraintDemo/ConstraintDemo.cpp
+		//https://gist.github.com/erwincoumans/b8a110b5c228b378161068cd25fa7d2c
 
-            //variable declaration section
+        //variable declaration section
 			
 			
 			var holes=[ {x:15.5,y:9.5,l:"1"},	{x:10.75,y:9.5,l:"2,22"},	{x:3,y:3,l:"3"},		{x:6,y:10,l:"4,5"},			{x:2.5,y:25.5,l:"6,9"},
@@ -60,7 +59,9 @@
 						{x:35.85,y:18,l:"50"},{x:36.5,y:12,l:"54"},{x:36.75,y:2.75,l:"55"},{x:46.5,y:2.25,l:"56"},{x:52.5,y:2,l:"57"},{x:56.5,y:6.75,l:"58,60"},
 						{x:46.5,y:12.25,l:"53"},{x:52,y:19.5,l:"45,59"},{x:45.75,y:21.5,l:"46,52"},{x:40.65,y:22.75,l:"51"},{x:45.75,y:38.5,l:"41,47"},
 						{x:51,y:37,l:"42"},{x:51,y:46.25,l:"40"},{x:55.5,y:43,l:"43"},{x:55.5,y:32.5,l:"44"}
+						
 						];
+			var finish={x:56.5,y:27.5,l:"Finish"};
 			
             let physicsWorld, scene, camera, controls,renderer, rigidBodies = [];
             let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
@@ -71,13 +72,15 @@
 			
 			var groupGround;
 			var compoundShapeGround;
-			var BlockBody;
+			var BlockBodyGround;
 			
-			var groupGroundAnneau;
-			var compoundShapeAnneau;
-			var BlockBodyAnneau;
+			var groupGroundRing;
+			var compoundShapeRing;
+			var BlockBodyRing;
 			
 			var groupGroundBox;
+			var compoundShapeBox;
+			var BlockBodyBox;
 			
 			var ball;
 			var bodyBall; 
@@ -90,82 +93,88 @@
 			
 			var AngleZ=0;
 			var AngleX=0;
-document.addEventListener("keydown", onDocumentKeyDown, false);
-function onDocumentKeyDown(event) {
-    var keyCode = event.which;
-	//var delta=0.005;
-	var delta=0.02;
-	//console.log("key pressed" +keyCode);
-    if (keyCode == 38) {
-                rotateX(-delta);
-    } else if (keyCode == 40) {
-                rotateX(delta)
-    } else if (keyCode == 39) {
-        rotateZ(-delta);
-    } else if (keyCode == 37) {
-        rotateZ(delta);
-    } else if (keyCode == 32) {
-        //blockPlane.position.set(0, 0, 0);
-    
-	} else if (keyCode == 65) {//a
-		console.log("apply force");
-		//apply force
-		var relativeForce = new Ammo.btVector3(100,0,100);
-		//btTransform* boxTrans;
-		//boxRigidBody->getMotionState()->getWroldTransform(boxTrans);
-		//btVector3 correctedForce = (boxTrans * relativeForce) - boxTrans.getOrigin();
-		bodyBall.applyCentralForce(relativeForce);
-    }
-};
 
-
-
-
-function rotateZ(deltaZ) {
-	AngleZ=AngleZ+deltaZ;
-	console.log("key pressed" +AngleX+", "+AngleZ);
-	rotateGroundXZ();
-}
-
-function rotateX(deltaX) {
-	AngleX=AngleX+deltaX;
-	console.log("key pressed" +AngleX+", "+AngleZ);
-	rotateAnneauX();
-	rotateGroundXZ();
-}
-function rotateGroundXZ() {
-		let pos = {x: 0, y: 0, z: 0};
-		let transform = new Ammo.btTransform();
-        transform.setIdentity();
-        transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-        transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
+			document.addEventListener("keydown", onDocumentKeyDown, false);
+			function onDocumentKeyDown(event) {
+				var keyCode = event.which;
+				//var delta=0.005;
+				var delta=0.02;
+				//console.log("key pressed" +keyCode);
+				if (keyCode == 38) {
+						if(AngleX>-0.078)
+							rotateX(-delta);
+				} else if (keyCode == 40) {
+						if(AngleX<0.078)
+							rotateX(delta);
+				} else if (keyCode == 39) {
+						if(AngleZ>-0.078)
+							rotateZ(-delta);
+				} else if (keyCode == 37) {
+						if(AngleZ<0.078)
+							rotateZ(delta);
+				} else if (keyCode == 32) {
+					//blockPlane.position.set(0, 0, 0);
 				
-        BlockBody.setWorldTransform(transform);
-        BlockBody.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-        BlockBody.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-	
-		let p = transform.getOrigin();
-		let q = transform.getRotation();
-		groupGround.position.set( p.x(), p.y(), p.z() );
-		groupGround.quaternion.set( q.x(), q.y(), q.z(), q.w() );
-}
+				} else if (keyCode == 65) {//a
+					console.log("apply force");
+					//apply force
+					var relativeForce = new Ammo.btVector3(100,0,100);
+					//btTransform* boxTrans;
+					//boxRigidBody->getMotionState()->getWroldTransform(boxTrans);
+					//btVector3 correctedForce = (boxTrans * relativeForce) - boxTrans.getOrigin();
+					bodyBall.applyCentralForce(relativeForce);
+				}
+			};
 
-function rotateAnneauX() {
-		let pos = {x: 0, y: 0, z: 0};
-		let transform = new Ammo.btTransform();
-        transform.setIdentity();
-        transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-        transform.setRotation( new Ammo.btQuaternion( AngleX, 0, 0, 1 ) );
+
+
+
+			function rotateZ(deltaZ) {
+				console.log("key pressedZ:" +AngleX+", "+AngleZ);
+				AngleZ=AngleZ+deltaZ;
+				rotateGroundXZ();
 				
-        BlockBodyAnneau.setWorldTransform(transform);
-        BlockBodyAnneau.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-        BlockBodyAnneau.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-	
-		let p = transform.getOrigin();
-		let q = transform.getRotation();
-		groupGroundAnneau.position.set( p.x(), p.y(), p.z() );
-		groupGroundAnneau.quaternion.set( q.x(), q.y(), q.z(), q.w() );
-}
+			}
+
+			function rotateX(deltaX) {
+				console.log("key pressedX:" +AngleX+", "+AngleZ);
+				AngleX=AngleX+deltaX;
+				rotateRingX();
+				rotateGroundXZ();
+			}
+			function rotateGroundXZ() {
+					let pos = {x: 0, y: 0, z: 0};
+					let transform = new Ammo.btTransform();
+					transform.setIdentity();
+					transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+					transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
+							
+					BlockBodyGround.setWorldTransform(transform);
+					BlockBodyGround.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+					BlockBodyGround.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+				
+					let p = transform.getOrigin();
+					let q = transform.getRotation();
+					groupGround.position.set( p.x(), p.y(), p.z() );
+					groupGround.quaternion.set( q.x(), q.y(), q.z(), q.w() );
+			}
+
+			function rotateRingX() {
+					let pos = {x: 0, y: 0, z: 0};
+					let transform = new Ammo.btTransform();
+					transform.setIdentity();
+					transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+					transform.setRotation( new Ammo.btQuaternion( AngleX, 0, 0, 1 ) );
+							
+					BlockBodyRing.setWorldTransform(transform);
+					BlockBodyRing.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+					BlockBodyRing.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+				
+					let p = transform.getOrigin();
+					let q = transform.getRotation();
+					groupGroundRing.position.set( p.x(), p.y(), p.z() );
+					groupGroundRing.quaternion.set( q.x(), q.y(), q.z(), q.w() );
+			}
 
 
 			
@@ -181,10 +190,11 @@ function rotateAnneauX() {
 				setupGraphics();
 				
 				groupGround = new THREE.Group();
-				groupGroundAnneau= new THREE.Group();
+				groupGroundRing= new THREE.Group();
 				groupGroundBox= new THREE.Group();
                 compoundShapeGround = new Ammo.btCompoundShape();
-				compoundShapeAnneau = new Ammo.btCompoundShape();
+				compoundShapeRing = new Ammo.btCompoundShape();
+				compoundShapeBox = new Ammo.btCompoundShape();
 				
 				
 				
@@ -200,42 +210,34 @@ function rotateAnneauX() {
 				createGround(materialBase);
 				createWalls();
 				scene.add( groupGround );
-				scene.add( groupGroundAnneau);
+				scene.add( groupGroundRing);
 				scene.add( groupGroundBox);
 								
 				var mass=0;
 				let localInertia = new Ammo.btVector3( 0, 0, 0 );
 				compoundShapeGround.calculateLocalInertia(mass,localInertia);
 				let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeGround, localInertia );
-				BlockBody = new Ammo.btRigidBody( rbInfo );
+				BlockBodyGround = new Ammo.btRigidBody( rbInfo );
 			  
-				BlockBody.setFriction(.1);
-				BlockBody.setRestitution(.8);
-				BlockBody.setDamping(0.2, 0.2);
-				BlockBody.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
-				BlockBody.setActivationState( 4 );//never sleep
+				BlockBodyGround.setFriction(.1);
+				BlockBodyGround.setRestitution(.8);
+				BlockBodyGround.setDamping(0.2, 0.2);
+				BlockBodyGround.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
+				BlockBodyGround.setActivationState( 4 );//never sleep
 
-				physicsWorld.addRigidBody( BlockBody, colGroupPlane, colGroupRedBall );
+				physicsWorld.addRigidBody( BlockBodyGround, colGroupPlane, colGroupRedBall );
 				
 				
-				createAnneau();
-				compoundShapeAnneau.calculateLocalInertia(mass,localInertia);
-				let rbInfoAnneau = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeAnneau, localInertia );
-				BlockBodyAnneau = new Ammo.btRigidBody( rbInfoAnneau );
-			  
-				BlockBodyAnneau.setFriction(.1);
-				BlockBodyAnneau.setRestitution(.8);
-				BlockBodyAnneau.setDamping(0.2, 0.2);
-				BlockBodyAnneau.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
-				BlockBodyAnneau.setActivationState( 4 );//never sleep
-
-				physicsWorld.addRigidBody( BlockBodyAnneau, colGroupPlane, colGroupRedBall );
+				createRing();
+				
 				
 				
 				
 
 				
 				createBox();
+				
+				
                 createBall();
                 //createMaskBall();
 
@@ -315,14 +317,29 @@ function rotateAnneauX() {
 
 
 
-	function createAnneau()
+	function createRing()
 	{
 		var offset=2.5;
 		var dy=5;
+		let mass = 0;
+		
 		createBlock2({x: 0, y: 2, z: -26-offset},{x: 62+offset*2, y: dy, z: 2},null,true,2);
 		createBlock2({x: 0, y: 2, z: 26+offset},{x: 62+offset*2, y: dy, z: 2},null,true,2);
 		createBlock2({x: -31-offset, y: 2, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,2);
 		createBlock2({x: 31+offset, y: 2, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,2);
+		
+		let localInertia = new Ammo.btVector3( 0, 0, 0 );
+		compoundShapeRing.calculateLocalInertia(mass,localInertia);
+		let rbInfoRing = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeRing, localInertia );
+		BlockBodyRing = new Ammo.btRigidBody( rbInfoRing );
+	  
+		BlockBodyRing.setFriction(.1);
+		BlockBodyRing.setRestitution(.8);
+		BlockBodyRing.setDamping(0.2, 0.2);
+		BlockBodyRing.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
+		BlockBodyRing.setActivationState( 4 );//never sleep
+
+		physicsWorld.addRigidBody( BlockBodyRing, colGroupPlane, colGroupRedBall );
 			
 	}
 	
@@ -330,10 +347,42 @@ function rotateAnneauX() {
 	{
 		var offset=5;
 		var dy=21;
+		let mass = 0;
 		createBlock2({x: 0, y: -6, z: -26-offset},{x: 62+offset*2, y: dy, z: 2},null,true,3);
-		createBlock2({x: 0, y: -6, z: 26+offset},{x: 62+offset*2, y: dy, z: 2},null,true,3);
-		createBlock2({x: -31-offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);
-		createBlock2({x: 31+offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);
+		//createBlock2({x: 0, y: -6, z: 26+offset},{x: 62+offset*2, y: dy, z: 2},null,true,3);//devant
+		createBlock2({x: -31-offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);// agauche
+		createBlock2({x: 31+offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);//a droite
+		
+		
+		createBlock2({x: -2, y: -6, z: 26+offset},{x: 62+offset*2-4, y: dy, z: 2},null,true,3);//devant gauche
+		createBlock2({x: 31+2, y: -6+2, z: 26+offset},{x: 4, y: dy-4, z: 2},null,true,3);//devant haut droit
+		createBlock2({x: 31+2, y: -dy+5, z: 26+offset+2.5},{x: 4, y: 1, z: 2+2},null,true,3);//devant bas
+		
+		createBlock2({x: 31+2, y: -dy+5, z: 26+offset+2.5},{x: 7, y: 1, z: 2+2},null,true,3);//devant bas
+		
+		createBlock2({x: 31+2, y: -dy+5+1, z: 26+offset+4},{x: 6, y: 1, z: 1},null,true,3);//devant bas barriere
+		createBlock2({x: 31+2-3, y: -dy+5+1, z: 26+offset+2.5},{x: 1, y: 1, z: 4},null,true,3);//devant bas gauche barriere
+		createBlock2({x: 31+2+3, y: -dy+5+1, z: 26+offset+2.5},{x: 1, y: 1, z: 4},null,true,3);//devant bas droite barriere
+		
+		createBlock3({x: 0, y: -12, z:  0},{x: 62+offset*2, y: 1, z: 54+offset*2},{x: 0.025, y: 0.0, z: -0.025, w: 1}, null, true,3);
+		
+		
+		
+		
+		
+		let localInertia = new Ammo.btVector3( 0, 0, 0 );
+		compoundShapeBox.calculateLocalInertia(mass,localInertia);
+		let rbInfoRing = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeBox, localInertia );
+		BlockBodyBox = new Ammo.btRigidBody( rbInfoRing );
+	  
+		BlockBodyBox.setFriction(.1);
+		BlockBodyBox.setRestitution(.8);
+		BlockBodyBox.setDamping(0.2, 0.2);
+		BlockBodyBox.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
+		BlockBodyBox.setActivationState( 4 );//never sleep
+
+		physicsWorld.addRigidBody( BlockBodyBox, colGroupPlane, colGroupRedBall );
+		
 	}
 
 		function createWalls()
@@ -366,7 +415,7 @@ function rotateAnneauX() {
 			createWall_y(-17,-8,2);//en haut à droite du 21
 			
 		}
-
+/*
 		function createWallExtrude()
 		{
 			var shape = new THREE.Shape();
@@ -403,6 +452,7 @@ function rotateAnneauX() {
 			groupGround.add( mesh );
 			
 		}
+		*/
 		function createWall_x(pos_x,pos_z,len)
 		{
 			createBlock2({x: pos_x, y: 2, z: pos_z},{x: len, y: 1, z: 1},0xa0afa4,true,1);
@@ -417,10 +467,14 @@ function rotateAnneauX() {
 		{
 			createBlock2(pos,scale,null,true,1);
 		}
-		
-	     function createBlock2(pos,scale, color, create3js,group){
-                
-            let quat = {x: 0, y: 0, z: 0, w: 1};
+		function createBlock2(pos,scale, color, create3js,group)
+		{
+			let quat = {x: 0, y: 0, z: 0, w: 1};
+			createBlock3(pos,scale,quat, color, create3js,group);
+		}
+	    function createBlock3(pos,scale,quat, color, create3js,group)
+		{
+           
             let mass = 0;
 
 			if(create3js==true)
@@ -441,7 +495,7 @@ function rotateAnneauX() {
 					if(group==1)
 						groupGround.add( block1 );
 					if(group==2)
-						groupGroundAnneau.add( block1 );
+						groupGroundRing.add( block1 );
 					if(group==3)
 						groupGroundBox.add( block1 );
 			}
@@ -461,7 +515,9 @@ function rotateAnneauX() {
 			if(group==1)
 				compoundShapeGround.addChildShape(transform, colShape1);
 			if(group==2)	
-				compoundShapeAnneau.addChildShape(transform, colShape1);
+				compoundShapeRing.addChildShape(transform, colShape1);
+			if(group==3)	
+				compoundShapeBox.addChildShape(transform, colShape1);
 			
             }
 
@@ -728,8 +784,8 @@ function rotateAnneauX() {
 			//const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 			var geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 			
-			var materialSide = new THREE.MeshBasicMaterial( { color: 0x521C1A } );
-			var mesh = new THREE.Mesh( geometry, [material,materialSide] ) ;
+			//var materialSide = new THREE.MeshBasicMaterial( { color: woodcolor } );
+			var mesh = new THREE.Mesh( geometry, [material,materialWood] ) ;
 			mesh.rotation.x= THREE.Math.degToRad( 90 );
 			mesh.position.x=-30;
 			mesh.position.z=-25;
@@ -1034,7 +1090,7 @@ function rotateAnneauX() {
 					//console.log("CheckStatus:"+bx+", "+by+"    "+(holes[0].x)+", "+(holes[0].y));	
 					for(h=0;h<holes.length;h++)
 					{
-						var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((by-holes[h].y)*(by-holes[h].y))
+						var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((by-holes[h].y)*(by-holes[h].y));
 						if(dist<1)
 						{
 							//console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
@@ -1043,11 +1099,21 @@ function rotateAnneauX() {
 							break;
 						}
 					}
+					var distFinish=((bx-finish.x)*(bx-finish.x)) + ((by-finish.y)*(by-finish.y));
+					if(distFinish<1)
+					{
+						console.log("GAGNE");
+					}
+					
+				
 				}
 				if(inhole==false)
 				{
 					document.getElementById('info').innerHTML = Math.round(AngleX*50)+";"+Math.round(AngleZ*50)
 				}
+				
+				
+				
 			}
 			
         
