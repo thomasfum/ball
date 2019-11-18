@@ -20,7 +20,12 @@
         <script src="js/ammo.js"></script>
 		<div id="info">Description</div>
         <script>
+		//TODO 
+		// - sound
+		// - score
+		// - angle level
 
+		
 		//substract 3d
 		//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
 		
@@ -66,6 +71,7 @@
             let physicsWorld, scene, camera, controls,renderer, rigidBodies = [];
             let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
 
+			let posOrigin = {x: 2, y: 10, z: -23};
 			var woodcolor=0x521C1A;
 			var materialWood;
 			
@@ -90,6 +96,7 @@
 			var previousFrotte=false;
 			var lastBong=Date.now();
 			var rolling=false;
+			var inhole=false;
 			
 			var AngleZ=0;
 			var AngleX=0;
@@ -99,7 +106,7 @@
 				var keyCode = event.which;
 				//var delta=0.005;
 				var delta=0.02;
-				//console.log("key pressed" +keyCode);
+				//console.log("key pressed " +keyCode);
 				if (keyCode == 38) {
 						if(AngleX>-0.078)
 							rotateX(-delta);
@@ -123,6 +130,24 @@
 					//boxRigidBody->getMotionState()->getWroldTransform(boxTrans);
 					//btVector3 correctedForce = (boxTrans * relativeForce) - boxTrans.getOrigin();
 					bodyBall.applyCentralForce(relativeForce);
+				}else if (keyCode == 82) {//r
+					console.log("restart");
+					AngleZ=0;
+					AngleX=0;
+					rotateRingX();
+					rotateGroundXZ();
+					//bodyBall.position.x = posOrigin.x;//, posOrigin.y, posOrigin.z ) );
+					let transform = new Ammo.btTransform();
+					transform.setIdentity();
+					transform.setOrigin( new Ammo.btVector3( posOrigin.x, posOrigin.y, posOrigin.z ) );
+					//transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
+							
+					bodyBall.setWorldTransform(transform);
+					bodyBall.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+					bodyBall.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+					
+					rolling=false;
+					inhole=false;
 				}
 			};
 
@@ -130,14 +155,14 @@
 
 
 			function rotateZ(deltaZ) {
-				console.log("key pressedZ:" +AngleX+", "+AngleZ);
+				//console.log("key pressedZ:" +AngleX+", "+AngleZ);
 				AngleZ=AngleZ+deltaZ;
 				rotateGroundXZ();
 				
 			}
 
 			function rotateX(deltaX) {
-				console.log("key pressedX:" +AngleX+", "+AngleZ);
+				//console.log("key pressedX:" +AngleX+", "+AngleZ);
 				AngleX=AngleX+deltaX;
 				rotateRingX();
 				rotateGroundXZ();
@@ -206,6 +231,50 @@
 				var materialBase = new THREE.MeshBasicMaterial( {map: texture1 } );
 				var texture2 =loader.load('img/wood.jpg');
 				materialWood = new THREE.MeshBasicMaterial( {map: texture2 } );
+				
+				
+				var floorGeometry = new THREE.PlaneGeometry( 500, 500, 20, 20 );
+				floorGeometry.rotateX( - Math.PI / 2 );
+				
+				var floorTexture = loader.load( 'img/wood-floorboards-texture.jpg' );
+				floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+				floorTexture.repeat.set(3, 3);
+				var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture});
+				var floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
+				floorMesh.translateY(-18);
+				scene.add( floorMesh );
+				
+				//sky
+				
+				var path = "img/sand/";
+				var format = '.png';
+				var urls = [
+					path + 'right' + format,
+					path + 'left' + format,
+					path + 'top' + format,
+					path + 'bottom' + format,
+					path + 'back' + format,
+					path + 'front' + format
+				];
+				 
+				var reflectionCube = THREE.ImageUtils.loadTextureCube(urls);
+				reflectionCube.format = THREE.RGBFormat;
+				 
+				var shader = THREE.ShaderLib[ "cube" ];
+				shader.uniforms[ "tCube" ].value = reflectionCube;
+				 
+				var material = new THREE.ShaderMaterial( {
+					fragmentShader: shader.fragmentShader,
+					vertexShader: shader.vertexShader,
+					uniforms: shader.uniforms,
+					depthWrite: false,
+					side: THREE.BackSide
+				});
+				 
+				mesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 1000, 1000), material);
+				scene.add(mesh);
+
+
 				
 				createGround(materialBase);
 				createWalls();
@@ -826,7 +895,7 @@
 
 		   function createBall(){
                 
-                let pos = {x: 2, y: 10, z: -23};
+             
                 let radius = ballRadius;
                 let quat = {x: 0, y: 0, z: 0, w: 1};
                 let mass = 2;
@@ -836,7 +905,7 @@
 				let ballMaterial = new THREE.MeshStandardMaterial ({color: 0xECECEC, roughness:0.2, metalness:0.8});
                 ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius,20,20), ballMaterial);
 
-                ball.position.set(pos.x, pos.y, pos.z);
+                ball.position.set(posOrigin.x, posOrigin.y, posOrigin.z);
                 
                 ball.castShadow = true;
                 ball.receiveShadow = true;
@@ -847,7 +916,7 @@
                 //Ammojs Section
                 let transform = new Ammo.btTransform();
                 transform.setIdentity();
-                transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+                transform.setOrigin( new Ammo.btVector3( posOrigin.x, posOrigin.y, posOrigin.z ) );
                 transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
                 let motionState = new Ammo.btDefaultMotionState( transform );
 
@@ -966,6 +1035,10 @@
 				
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
 				controls.enableKeys  = false;
+				controls.maxDistance =200;
+				controls.minDistance =30;
+				controls.minPolarAngle = THREE.Math.degToRad( -45);;
+				controls.maxPolarAngle = THREE.Math.degToRad( 80);;
 								
 				controls.update();
 				
@@ -973,7 +1046,7 @@
             }
 			function CheckStatus()
 			{
-				var inhole=false;
+
 				let ms = bodyBall.getMotionState();
 				// var speedVector= = new Ammo.btVector3(100,0,100); bodyBall.getLinearVelocity();
 				var speedVector= bodyBall.getLinearVelocity();
@@ -1083,26 +1156,32 @@
 				
                 if ( ms ) 
 				{
+					var inhole=false;
 					ms.getWorldTransform( tmpTrans );
                     let p = tmpTrans.getOrigin();
 					var bx=p.x()+30;
 					var by=p.z()+25;
-					//console.log("CheckStatus:"+bx+", "+by+"    "+(holes[0].x)+", "+(holes[0].y));	
-					for(h=0;h<holes.length;h++)
+					var by=p.y();
+					if(by>-6.5)
 					{
-						var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((by-holes[h].y)*(by-holes[h].y));
-						if(dist<1)
+						//console.log(by);
+						//console.log("CheckStatus:"+bx+", "+by+"    "+(holes[0].x)+", "+(holes[0].y));	
+						for(h=0;h<holes.length;h++)
 						{
-							//console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
-							document.getElementById('info').innerHTML = "Lost "+h+": " +holes[h].l;//+ "; dist="+dist;
-							inhole=true;
-							break;
+							var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((by-holes[h].y)*(by-holes[h].y));
+							if(dist<1)
+							{
+								//console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
+								document.getElementById('info').innerHTML = "Lost "+h+": " +holes[h].l;//+ "; dist="+dist;
+								inhole=true;
+								break;
+							}
 						}
-					}
-					var distFinish=((bx-finish.x)*(bx-finish.x)) + ((by-finish.y)*(by-finish.y));
-					if(distFinish<1)
-					{
-						console.log("GAGNE");
+						var distFinish=((bx-finish.x)*(bx-finish.x)) + ((by-finish.y)*(by-finish.y));
+						if(distFinish<1)
+						{
+							document.getElementById('info').innerHTML = "Gagné!!!";
+						}
 					}
 					
 				
