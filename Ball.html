@@ -16,6 +16,7 @@
     </head>
     <body>
         <script src="js/three.js"></script>
+		<script src="js/OrbitControls.js"></script>
         <script src="js/ammo.js"></script>
 		<div id="info">Description</div>
         <script>
@@ -61,7 +62,7 @@
 						{x:51,y:37,l:"42"},{x:51,y:46.25,l:"40"},{x:55.5,y:43,l:"43"},{x:55.5,y:32.5,l:"44"}
 						];
 			
-            let physicsWorld, scene, camera, renderer, rigidBodies = [];
+            let physicsWorld, scene, camera, controls,renderer, rigidBodies = [];
             let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
 
 			var woodcolor=0x521C1A;
@@ -317,20 +318,22 @@ function rotateAnneauX() {
 	function createAnneau()
 	{
 		var offset=2.5;
-		createBlock2({x: 0, y: 2, z: -26-offset},{x: 62+offset*2, y: 6, z: 2},null,true,2);
-		createBlock2({x: 0, y: 2, z: 26+offset},{x: 62+offset*2, y: 6, z: 2},null,true,2);
-		createBlock2({x: -31-offset, y: 2, z: 0},{x: 2, y: 6, z: 54+offset*2},null,true,2);
-		createBlock2({x: 31+offset, y: 2, z: 0},{x: 2, y: 6, z: 54+offset*2},null,true,2);
+		var dy=5;
+		createBlock2({x: 0, y: 2, z: -26-offset},{x: 62+offset*2, y: dy, z: 2},null,true,2);
+		createBlock2({x: 0, y: 2, z: 26+offset},{x: 62+offset*2, y: dy, z: 2},null,true,2);
+		createBlock2({x: -31-offset, y: 2, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,2);
+		createBlock2({x: 31+offset, y: 2, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,2);
 			
 	}
 	
 	function createBox()
 	{
 		var offset=5;
-		createBlock2({x: 0, y: 6, z: -26-offset},{x: 62+offset*2, y: -16, z: 2},null,true,3);
-		createBlock2({x: 0, y: 6, z: 26+offset},{x: 62+offset*2, y: -16, z: 2},null,true,3);
-		createBlock2({x: -31-offset, y: 6, z: 0},{x: 2, y: -16, z: 54+offset*2},null,true,3);
-		createBlock2({x: 31+offset, y: 6, z: 0},{x: 2, y: -16, z: 54+offset*2},null,true,3);
+		var dy=21;
+		createBlock2({x: 0, y: -6, z: -26-offset},{x: 62+offset*2, y: dy, z: 2},null,true,3);
+		createBlock2({x: 0, y: -6, z: 26+offset},{x: 62+offset*2, y: dy, z: 2},null,true,3);
+		createBlock2({x: -31-offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);
+		createBlock2({x: 31+offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);
 	}
 
 		function createWalls()
@@ -849,7 +852,7 @@ function rotateAnneauX() {
 
 
 	
-	            function setupGraphics(){
+	        function setupGraphics(){
 
                 //create clock for timing
                 clock = new THREE.Clock();
@@ -864,7 +867,7 @@ function rotateAnneauX() {
 				camera.position.set( 0, 80, 20 );
 				
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
-
+				
                 //Add hemisphere light
                 let hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.1 );
                 hemiLight.color.setHSL( 0.6, 0.6, 0.6 );
@@ -904,6 +907,12 @@ function rotateAnneauX() {
                 renderer.gammaOutput = true;
 
                 renderer.shadowMap.enabled = true;
+				
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.enableKeys  = false;
+								
+				controls.update();
+				
 
             }
 			function CheckStatus()
@@ -1049,7 +1058,7 @@ function rotateAnneauX() {
                 updatePhysics( deltaTime );
 				
 				CheckStatus();
-
+				controls.update();
                 renderer.render( scene, camera );
 
                 requestAnimationFrame( renderFrame );
