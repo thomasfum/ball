@@ -19,11 +19,13 @@
 		<script src="js/OrbitControls.js"></script>
         <script src="js/ammo.js"></script>
 		<div id="info">Description</div>
+	
         <script>
 		//TODO 
-		// - sound
+		// - sound on /off
 		// - score
 		// - angle level
+		// - strart bouton => sound
 
 		
 		//substract 3d
@@ -74,7 +76,9 @@
 			let posOrigin = {x: 2, y: 10, z: -23};
 			var woodcolor=0x521C1A;
 			var materialWood;
-			
+			var listener;
+			var sound;
+			var soundEnabled=false;
 			
 			var groupGround;
 			var compoundShapeGround;
@@ -148,6 +152,22 @@
 					
 					rolling=false;
 					inhole=false;
+				
+				}else if (keyCode == 83) {//s
+				
+					console.log("sound");
+							// create a global audio source
+					sound = new THREE.Audio( listener );
+
+					// load a sound and set it as the Audio object's buffer
+					var audioLoader = new THREE.AudioLoader();
+					audioLoader.load( 'sounds/Ball_Bounce.wav', function( buffer ) {
+						sound.setBuffer( buffer );
+						sound.setLoop( false );
+						sound.setVolume( 1 );
+						//sound.play();
+						soundEnabled=true;
+					});
 				}
 			};
 
@@ -482,6 +502,7 @@
 			createWall_y(-16.5,15.5,3);//a droite du 13
 			createWall_y(-16.25,1,7);//a gauche du 17
 			createWall_y(-17,-8,2);//en haut à droite du 21
+			
 			
 		}
 /*
@@ -993,6 +1014,13 @@
 				
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
 				
+				// create an AudioListener and add it to the camera
+				listener = new THREE.AudioListener();
+				camera.add( listener );
+
+				
+		
+				
                 //Add hemisphere light
                 let hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.1 );
                 hemiLight.color.setHSL( 0.6, 0.6, 0.6 );
@@ -1076,13 +1104,15 @@
 							  this.direction.setX(0);
 							}
 							*/
-							if(speed>3)
+							if(speed>2)
 							{
 								var millis = Date.now() - lastBong;
 								if(millis>200)
 								{
 									console.log("BONG: collision comming with something at 32 in speed dir "+j+ " dist="+ collisions[j].distance+ " speed="+speed);
 									lastBong=Date.now();
+									if(soundEnabled==true)
+										sound.play();
 								}
 							}
 						}
