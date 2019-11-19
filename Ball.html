@@ -12,6 +12,105 @@
 				z-index: 100;
 				display:block;
 			}
+			#bloc_trans  
+		{ 
+				background-color: transparent; /*pour avoir la transparence avec le body*/
+				
+				background-color: #B0B0B0;
+				
+
+				opacity:0.8;
+				
+				  position:fixed;
+					top: 50%;
+					left: 50%;
+					width:30em;
+					height:18em;
+					margin-top: -9em; /*set to a negative number 1/2 of your height*/
+					margin-left: -15em; /*set to a negative number 1/2 of your width*/
+					border: 1px solid #ccc;
+		}
+
+		#trans
+		{
+			font-weight : bold;  
+			font-family : verdana;  
+			font-size : 12px;
+
+			text-align: center;
+			position:fixed;
+			top: 50%;
+			left: 50%;
+			width:30em;
+			height:18em;
+			margin-top: -9em; /*set to a negative number 1/2 of your height*/
+			margin-left: -15em; /*set to a negative number 1/2 of your width*/
+		   
+		  
+		}
+		
+		#restart
+		{
+			position: absolute;
+		
+			font-weight : bold;  
+			font-family : verdana;  
+			font-size : 12px;
+
+			text-align: center;
+			
+			top: 90%;
+			left: 50%;
+			width:30em;
+			//height:18em;
+			//margin-top: -9em; 
+			margin-left: -15em; 
+			display: none;
+		  
+		}
+	
+		#score
+		{
+			font-weight : bold;  
+			font-family : verdana;  
+			font-size : 20px;
+			color: #4CAF50;
+			position: absolute;
+			//text-align: center;
+			top: 15px;
+			left: 100%;
+			margin-left:-250px; 
+			//margin-right:0px; 
+			//display: flex; justify-content: flex-end
+			
+		  
+		}	
+		#sound
+		{
+			position: absolute;
+			text-align: center;
+			top: 15px;
+			left: 15px;
+			width:30px;
+			height:30px;
+		  
+		}	
+		.button {
+			  background-color: #4CAF50; /* Green */
+			  border: none;
+			  color: white;
+			  padding: 15px 32px;
+			  text-align: center;
+			  text-decoration: none;
+			  display: inline-block;
+			  font-size: 16px;
+			  border-radius: 4px;
+			   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+			}
+		.button:hover {
+			  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+			}
+
         </style>
     </head>
     <body>
@@ -19,13 +118,34 @@
 		<script src="js/OrbitControls.js"></script>
         <script src="js/ammo.js"></script>
 		<div id="info">Description</div>
+		<div id="score">Your best score: 0</div>
+		<img src="img/unmute.png" alt="mute" id="sound"  onclick="toggleSound()" >
+		
+		<div id="restart">
+			<input type="button" class="button" value="ReStart"  onclick="ReStart()">
+		</div>
+		<div id="start">
+			<div id="bloc_trans">
+			
+			</div>
+			<div id="trans">
+				<H1>Labyrinth Ball</H1><br>
+				This a test of three.js and ammo.js, you can find the source code here.<br><br>
+				To rotate the tray, use the arrow keys.<br>
+				Use space key to chock the ball.<br><br><br>
+				
+				<input type="button" class="button" value="Start"  onclick="Start()">
+			</div>	
+		</div>	
+	
+   
+    
+
 	
         <script>
 		//TODO 
-		// - sound on /off
 		// - score
 		// - angle level
-		// - strart bouton => sound
 
 		
 		//substract 3d
@@ -69,7 +189,7 @@
 						
 						];
 			var finish={x:56.5,y:27.5,l:"Finish"};
-			
+			var startGame=false;
             let physicsWorld, scene, camera, controls,renderer, rigidBodies = [];
             let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
 
@@ -78,7 +198,7 @@
 			var materialWood;
 			var listener;
 			var sound;
-			var soundEnabled=false;
+			var soundEnabled=true;
 			
 			var groupGround;
 			var compoundShapeGround;
@@ -105,6 +225,62 @@
 			var AngleZ=0;
 			var AngleX=0;
 
+			
+			function Start(){
+				setTimeout(function(){ 
+						document.getElementById('start').style.display = "none";
+						document.getElementById('restart').style.display = "inline-block";
+						sound = new THREE.Audio( listener );
+
+						// load a sound and set it as the Audio object's buffer
+						var audioLoader = new THREE.AudioLoader();
+						audioLoader.load( 'sounds/Ball_Bounce.wav', function( buffer ) {
+							sound.setBuffer( buffer );
+							sound.setLoop( false );
+							sound.setVolume( 1 );
+							//sound.play();
+							//soundEnabled=true;
+						});
+						ball.visible = true;
+						startGame=true;
+				 }, 100);
+			}
+			
+			function ReStart(){
+				console.log("restart");
+					AngleZ=0;
+					AngleX=0;
+					rotateRingX();
+					rotateGroundXZ();
+					//bodyBall.position.x = posOrigin.x;//, posOrigin.y, posOrigin.z ) );
+					let transform = new Ammo.btTransform();
+					transform.setIdentity();
+					transform.setOrigin( new Ammo.btVector3( posOrigin.x, posOrigin.y, posOrigin.z ) );
+					//transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
+							
+					bodyBall.setWorldTransform(transform);
+					bodyBall.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+					bodyBall.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
+					
+					rolling=false;
+					inhole=false;
+					}
+			function toggleSound()
+			{
+			
+				 if (soundEnabled==true) 
+					{
+						soundEnabled=false;
+						document.getElementById("sound").src = "img/mute.png";
+					}
+					else 
+					{
+						soundEnabled=true;
+						document.getElementById("sound").src = "img/unmute.png";
+					}
+			}
+			
+			
 			document.addEventListener("keydown", onDocumentKeyDown, false);
 			function onDocumentKeyDown(event) {
 				var keyCode = event.which;
@@ -123,10 +299,7 @@
 				} else if (keyCode == 37) {
 						if(AngleZ<0.078)
 							rotateZ(delta);
-				} else if (keyCode == 32) {
-					//blockPlane.position.set(0, 0, 0);
-				
-				} else if (keyCode == 65) {//a
+				}  else if (keyCode == 32) {//space
 					console.log("apply force");
 					//apply force
 					var relativeForce = new Ammo.btVector3(100,0,100);
@@ -135,39 +308,13 @@
 					//btVector3 correctedForce = (boxTrans * relativeForce) - boxTrans.getOrigin();
 					bodyBall.applyCentralForce(relativeForce);
 				}else if (keyCode == 82) {//r
-					console.log("restart");
-					AngleZ=0;
-					AngleX=0;
-					rotateRingX();
-					rotateGroundXZ();
-					//bodyBall.position.x = posOrigin.x;//, posOrigin.y, posOrigin.z ) );
-					let transform = new Ammo.btTransform();
-					transform.setIdentity();
-					transform.setOrigin( new Ammo.btVector3( posOrigin.x, posOrigin.y, posOrigin.z ) );
-					//transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
-							
-					bodyBall.setWorldTransform(transform);
-					bodyBall.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-					bodyBall.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-					
-					rolling=false;
-					inhole=false;
+					ReStart();
 				
 				}else if (keyCode == 83) {//s
 				
 					console.log("sound");
 							// create a global audio source
-					sound = new THREE.Audio( listener );
-
-					// load a sound and set it as the Audio object's buffer
-					var audioLoader = new THREE.AudioLoader();
-					audioLoader.load( 'sounds/Ball_Bounce.wav', function( buffer ) {
-						sound.setBuffer( buffer );
-						sound.setLoop( false );
-						sound.setVolume( 1 );
-						//sound.play();
-						soundEnabled=true;
-					});
+			
 				}
 			};
 
@@ -930,7 +1077,7 @@
                 
                 ball.castShadow = true;
                 ball.receiveShadow = true;
-
+				ball.visible = false;
                 scene.add(ball);
 
 
@@ -1065,8 +1212,9 @@
 				controls.enableKeys  = false;
 				controls.maxDistance =200;
 				controls.minDistance =30;
-				controls.minPolarAngle = THREE.Math.degToRad( -45);;
-				controls.maxPolarAngle = THREE.Math.degToRad( 80);;
+				controls.minPolarAngle = THREE.Math.degToRad( -45);
+				controls.maxPolarAngle = THREE.Math.degToRad( 80);
+				controls.zoomSpeed=0.2;
 								
 				controls.update();
 				
@@ -1089,7 +1237,7 @@
 				 for ( var j = 0; j < collisions.length; j++ ) {
 				   if(collisions[ j ].object!=undefined)
 					  {
-						  if ((collisions[j].distance >=1)&&(collisions[j].distance <=2)) {
+						  if ((collisions[j].distance >=1)&&(collisions[j].distance <=1.1)) {
 							//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0x0000F0});
 						  /*
 							// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
@@ -1104,7 +1252,7 @@
 							  this.direction.setX(0);
 							}
 							*/
-							if(speed>2)
+							if(speed>1.0)
 							{
 								var millis = Date.now() - lastBong;
 								if(millis>200)
@@ -1228,9 +1376,12 @@
         
             function renderFrame(){
 
-                let deltaTime = clock.getDelta();
+				if(startGame==true)
+				{
+					let deltaTime = clock.getDelta();
 
-                updatePhysics( deltaTime );
+					updatePhysics( deltaTime );
+				}
 				
 				CheckStatus();
 				controls.update();
