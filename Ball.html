@@ -99,18 +99,22 @@
 				text-align: center;
 				top: 50%;
 				left: 60px;
-				width:48px;
-				height:54px;
+				//width:48px;
+				//height:54px;
+				width:36px;
+				height:40px;
 				margin-top: -28px;
 			}
 			#triangleTop
 			{
 				position: absolute;
 				text-align: center;
-				top: 50px;
+				top: 53px;
 				left: 50%;
-				width:48px;
-				height:54px;
+				//width:48px;
+				//height:54px;
+				width:36px;
+				height:40px;
 				margin-left: -23px;
 					  
 				
@@ -169,14 +173,14 @@
 		<img src="img/triangle.png" alt="triangle" id="TriangleLeft" >
 		<img src="img/triangle.png" alt="triangle" id="TriangleTop" >
 		<div id="restart">
-			<input type="button" class="button" value="ReStart"  onclick="ReStart()">
+			<input type="button" class="button" value="Try again"  onclick="ReStart()">
 		</div>
 		<div id="start">
 			<div id="bloc_trans">
 			</div>
 			<div id="trans">
 				<H1>Labyrinth Ball</H1><br>
-				This a test of three.js and ammo.js, you can find the source code here.<br><br>
+				This a test of three.js and ammo.js, you can find the source code <a href="https://example.com">here</a>.<br><br>
 				To rotate the tray, use the arrow keys.<br>
 				Use space key to chock the ball.<br><br><br>
 				
@@ -244,6 +248,7 @@
 			var listener;
 			var sound;
 			var soundEnabled=true;
+			var bestScore=0;
 			
 			var groupGround;
 			var compoundShapeGround;
@@ -1266,6 +1271,18 @@
 				
 
             }
+			
+			function CacluateScore(hole)
+			{
+				var res = hole.l.split(",");
+				if(res.length==1)
+					return parseInt(res[0], 10);
+				else
+				{
+					//a finir 
+					return parseInt(res[0], 10);
+				}
+			}
 			function CheckStatus()
 			{
 
@@ -1396,8 +1413,14 @@
 							if(dist<1)
 							{
 								console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
-								document.getElementById('info').innerHTML = "Lost "+h+": " +holes[h].l;//+ "; dist="+dist;
+								
+								Score=CacluateScore(holes[h]);
+								if(Score>bestScore)
+									bestScore=Score;
+								
+								document.getElementById('info').innerHTML = "You lose!<br>Your score: "+Score;
 								document.getElementById('info').style.display = "inline-block";
+								document.getElementById('score').innerHTML = "Your best score: "+bestScore;
 								inhole=true;
 								break;
 							}
@@ -1406,15 +1429,18 @@
 						if(distFinish<1)
 						{
 							console.log("Gagné!!!!!!!");
-							document.getElementById('info').innerHTML = "Gagné!!!";
+							document.getElementById('info').innerHTML = "You win!!!";
+							bestScore=61;
+							document.getElementById('score').innerHTML = "Your best score: "+bestScore;
+							
 							document.getElementById('info').style.display = "inline-block";
 						}
 					}
 					
 				
 				}
-				var posX=((window.innerWidth /2)  - (AngleZ*50)*23);
-				var posY=((window.innerHeight/2)  + (AngleX*50)*23);
+				var posX=((window.innerWidth /2)  - (AngleZ*50)*23) +6;
+				var posY=((window.innerHeight/2)  + (AngleX*50)*23) +6;
 				document.getElementById('TriangleTop').style.left =  posX+'px';				
 				document.getElementById('TriangleLeft').style.top =  posY+'px';				
 				
