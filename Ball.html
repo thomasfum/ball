@@ -243,14 +243,15 @@ a:active {
         //variable declaration section
 			
 			
-			var holes=[ {x:15.5,y:9.5,l:"1"},				{x:10.75,y:9.5,l:"2,22",d:"T,B"},	{x:3,y:3,l:"3"},					{x:6,y:10,l:"4,5",d:"T,B"},			{x:2.5,y:25.5,l:"6,9",d:"T,B"},
-						{x:2,y:39.5,l:"10"},				{x:6,y:35.5,l:"11"},	 			{x:5.5,y:44,l:"12"},				{x:10.75,y:40.75,l:"13"},			{x:15.25,y:46.75,l:"14,33",d:"TL,RB"},
-						{x:15.5,y:34.5,l:"15"},				{x:11.25,y:30.5,l:"8,16",d:"TL,RB"},{x:16,y:25.5,l:"17,20",d:"TL,RB"},	{x:11,y:22,l:"7,21",d:"BL,TR"},		{x:14.75,y:16.5,l:"23"},
-						{x:20.25,y:34.5,l:"18,31",d:"TL,RB"},{x:21,y:17.75,l:"19"},				{x:30.5,y:6.85,l:"24,26",d:"TL,RB"},{x:25.75,y:17,l:"25,28",d:"TR,LB"},	{x:31,y:26,l:"27,29,49",d:"TL,B,R"},
-						{x:30.5,y:38.5,l:"30,36"},			{x:25.25,y:43.75,l:"32,34",d:"TL,RB"},{x:35.5,y:47.75,l:"35,39",d:"TL,RB"},{x:35.75,y:42.5,l:"37"},			{x:35.35,y:34.85,l:"38,48",d:"RB,TL"},
-						{x:35.85,y:18,l:"50"},				{x:36.5,y:12,l:"54"},				{x:36.75,y:2.75,l:"55"},			{x:46.5,y:2.25,l:"56"},				{x:52.5,y:2,l:"57"},
-						{x:56.5,y:6.75,l:"58,60",d:"TL,RB"},{x:46.5,y:12.25,l:"53"},			{x:52,y:19.5,l:"45,59",d:"BL,TR"},	{x:45.75,y:21.5,l:"46,52",d:"BR,TL"},{x:40.65,y:22.75,l:"51"},
-						{x:45.75,y:38.5,l:"41,47",d:"BR,TL"},{x:51,y:37,l:"42"},				{x:51,y:46.25,l:"40"},				{x:55.5,y:43,l:"43"},				{x:55.5,y:32.5,l:"44"}
+			var holes=[ 
+			{a:[],x:15.5,y:9.5,l:"1"},				{a:[],x:10.75,y:9.5,l:"2,22",d:"T,B"},		{a:[],x:3,y:3,l:"3"},					{a:[],x:6,y:10,l:"4,5",d:"T,B"},			{a:[],x:2.5,y:25.5,l:"6,9",d:"T,B"},
+			{a:[],x:2,y:39.5,l:"10"},				{a:[],x:6,y:35.5,l:"11"},	 				{a:[],x:5.5,y:44,l:"12"},				{a:[],x:10.75,y:40.75,l:"13"},			{a:[],x:15.25,y:46.75,l:"14,33",d:"TL,RB"},
+			{a:[],x:15.5,y:34.5,l:"15"},			{a:[],x:11.25,y:30.5,l:"8,16",d:"TL,RB"},	{a:[],x:16,y:25.5,l:"17,20",d:"BL,TR"},	{a:[],x:11,y:22,l:"7,21",d:"BL,TR"},		{a:[],x:14.75,y:16.5,l:"23"},
+			{a:[],x:20.25,y:34.5,l:"18,31",d:"TL,RB"},{a:[],x:21,y:17.75,l:"19"},				{a:[],x:30.5,y:6.85,l:"24,26",d:"TL,RB"},{a:[],x:25.75,y:17,l:"25,28",d:"TR,BL"},	{a:[],x:31,y:26,l:"27,29,49",d:"TL,B,R"},
+			{a:[],x:30.5,y:38.5,l:"30,36",d:"TL,RB"},{a:[],x:25.25,y:43.75,l:"32,34",d:"TL,RB"},	{a:[],x:35.5,y:47.75,l:"35,39",d:"TL,RB"},{a:[],x:35.75,y:42.5,l:"37"},			{a:[],x:35.35,y:34.85,l:"38,48",d:"RB,TL"},
+			{a:[],x:35.85,y:18,l:"50"},				{a:[],x:36.5,y:12,l:"54"},					{a:[],x:36.75,y:2.75,l:"55"},			{a:[],x:46.5,y:2.25,l:"56"},				{a:[],x:52.5,y:2,l:"57"},
+			{a:[],x:56.5,y:6.75,l:"58,60",d:"TL,RB"},{a:[],x:46.5,y:12.25,l:"53"},				{a:[],x:52,y:19.5,l:"45,59",d:"BL,TR"},	{a:[],x:45.75,y:21.5,l:"46,52",d:"RB,TL"},{a:[],x:40.65,y:22.75,l:"51"},
+			{a:[],x:45.75,y:38.5,l:"41,47",d:"RB,TL"},{a:[],x:51,y:37,l:"42"},					{a:[],x:51,y:46.25,l:"40"},				{a:[],x:55.5,y:43,l:"43"},				{a:[],x:55.5,y:32.5,l:"44"}
 						];
 			var finish={x:56.5,y:27.5,l:"Finish"};
 			var startGame=false;
@@ -460,7 +461,7 @@ a:active {
 				
 				var loader = new THREE.TextureLoader();
 				var texture1 =loader.load('img/Background.jpg');
-				console.log("texture="+texture1);
+				//console.log("texture="+texture1);
 				texture1.wrapS = texture1.wrapT = THREE.RepeatWrapping;
 				texture1.repeat.set( 1/60, -1/50 );
 				var materialBase = new THREE.MeshBasicMaterial( {map: texture1 } );
@@ -849,29 +850,49 @@ a:active {
 			shape.holes.push( circle );
 			
 			//-------------
+			// hole name& disk
+			fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) 
+			{
+				for(k=0;k<hole.a.length;k++)
+				{
+					//  Creates the name mesh
+					var textGeometry = new THREE.TextGeometry(hole.a[k].s, {
+							font: font,
+							size: 1,
+							height: 0.5,
+							curveSegments: 12,
+							bevelEnabled: false,
+							
+						});
+					var angle=(hole.a[k].ls+hole.a[k].le)/2;
+					if(hole.a[k].ls>hole.a[k].le)//on passe par 0
+						angle=angle-180;
+					var dir=new THREE.Vector3(-1, 0, 0)
+					var axis = new THREE.Vector3( 0, 1, 0 );
+					dir.applyAxisAngle( axis, THREE.Math.degToRad( angle ) );
+
+					console.log("===>"+hole.a[k].s+": "+hole.a[k].l+"("+angle+")"+"="+dir.x+","+dir.y+","+dir.z);
+						
+					var offsetX=dir.x*2;
+					var offsetZ=dir.z*2;
+					if(hole.a[k].l=="0")//centré
+					{
+						offsetX=0;
+						offsetZ=0;
+					}
+					offsetX=offsetX-0.8;
+						
+					var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
+					var TextMesh = new THREE.Mesh( textGeometry, textMaterial );
+					TextMesh.position.x = hole.x-30+offsetX;
+					TextMesh.position.y=2;
+					TextMesh.position.z = hole.y-25-offsetZ;
+					TextMesh.rotateX(-3.14/2);
+					scene.add(TextMesh);
+				}
 			
-			fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) {
-			//  Creates the name mesh
-			var textGeometry = new THREE.TextGeometry(hole.l, {
-					font: font,
-					size: 1,
-					height: 0.5,
-					curveSegments: 12,
-					bevelEnabled: false,
-					
-				});
-				
-			var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
-			var TextMesh = new THREE.Mesh( textGeometry, textMaterial );
-			TextMesh.position.x = hole.x-30;
-			TextMesh.position.y=2;
-			TextMesh.position.z = hole.y-25;
-			TextMesh.rotateX(-3.14/2);
-			//  Adds the name mesh and the slogan mesh to the scene
-			scene.add(TextMesh);
 			
-			
-		});
+			});
 			//----------------
 			
 			
@@ -980,7 +1001,7 @@ a:active {
 					
 				if((minX!=45555)&&(maxX!=0))
 				{
-					console.log("j'ai TOP "+minX+"; "+maxX);
+					//console.log("j'ai TOP "+minX+"; "+maxX);
 					Column.push({x1:minX,x2:maxX+diam});
 					CreateSubBlockDemo((maxX-minX+diam)/2+minX-dx_2-radius, 1, (dy-holes[h].y-diam)/2+holes[h].y -dy_2+diam,maxX-minX+diam, 1, dy-holes[h].y,0xF0f0F4);
 				}
@@ -1057,7 +1078,7 @@ a:active {
 		var prevX=0;
 		for(var z=0;z<Column.length;z++)
 		{
-			console.log("col:"+Column[z].x1+"; "+Column[z].x2);
+			//console.log("col:"+Column[z].x1+"; "+Column[z].x2);
 			if(Column[z].x1-prevX>0)
 				CreateSubBlockDemo(prevX-dx_2-radius+((Column[z].x1-prevX)/2), 1, 0,Column[z].x1-prevX, 1,  dy+diam,0xf000f4);
 			prevX=Column[z].x2;
@@ -1068,23 +1089,103 @@ a:active {
 	function ExtandHole()
 	{
 		var h=0;
+		/*
+		var Obj = { s:"", ls:0,	le:0};
+*/		
 		for(h=0;h<holes.length;h++)
 		{
+		
 				//,d:"TL,RB"
 				var res = holes[h].l.split(",");
 				if(res.length==1)
 				{
-					holes[h].l_s=holes[h].l;
-					holes[h].l_1s=0;
-					holes[h].l_1e=360;
+					var Obj = { l:"",s:"", ls:0,	le:0};
+					Obj.l="0";
+					Obj.s=holes[h].l;
+					Obj.ls=0;
+					Obj.le=360;
+					holes[h].a.push(Obj);
+					/*
+					holes[h].a[0].s=holes[h].l;
+					holes[h].a[0].ls=0;
+					holes[h].a[0].le=360;
+					*/
 				}
 				else
 				{
+					//console.log("nb split d:"+res.length);
+					//console.log("d:"+holes[h].d);
 					var k=0;
 					for(k=0;k<res.length;k++)
-					var d = holes[h].d.split(",");
-					//a finir 
-					return parseInt(res[0], 10);
+					{
+						
+						var d = holes[h].d.split(",");
+						var label = holes[h].l.split(",");
+						for(l=0;l<d.length;l++)
+						{
+							var Obj = { l:"",s:"", ls:0,	le:0};
+							Obj.s=label[l];
+							Obj.l=d[l];
+							if(d[l].length==1)//T,B,L,R
+							{
+								if(d[l]=='T')
+								{
+									Obj.ls=0;
+									Obj.le=180;
+								}
+								else if(d[l]=='B')
+								{
+									Obj.ls=180;
+									Obj.le=360;
+								}
+								else if(d[l]=='L')
+								{
+									Obj.ls=270;
+									Obj.le=90;
+								}
+								else if(d[l]=='R')
+								{
+									Obj.ls=90;
+									Obj.le=270;
+								}
+								else
+								{
+									console.log("unknown hole pos 1:"+d[l]+" for hole "+h+":"+holes[h].l);
+								}
+							}else if(d[l].length==2)//TL,RB
+							{
+								if(d[l]=='TL')
+								{
+									Obj.ls=315;
+									Obj.le=135;
+								}
+								else if(d[l]=='RB')
+								{
+									Obj.ls=135;
+									Obj.le=315;
+								}
+								else if(d[l]=='BL')
+								{
+									Obj.ls=225;
+									Obj.le=45;
+								}
+								else if(d[l]=='TR')
+								{
+									Obj.ls=45;
+									Obj.le=225;
+								}
+								else
+								{
+									console.log("unknown hole pos 1:"+d[l]+" for hole "+h+":"+holes[h].l);
+								}
+							}
+							else
+							{
+								console.log("unknown hole typpe>2:"+d.length+" for hole "+h+":"+holes[h].l);
+							}
+							holes[h].a.push(Obj);
+						}
+					}
 				}
 		}
 	}
