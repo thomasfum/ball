@@ -189,20 +189,20 @@
 				}
 				
 				a:link {
-  text-decoration: none;
-}
+				  text-decoration: none;
+				}
 
-a:visited {
-  text-decoration: none;
-}
+				a:visited {
+				  text-decoration: none;
+				}
 
-a:hover {
-  text-decoration: underline;
-}
+				a:hover {
+				  text-decoration: underline;
+				}
 
-a:active {
-  text-decoration: underline;
-}
+				a:active {
+				  text-decoration: underline;
+				}
 
         </style>
     </head>
@@ -265,6 +265,7 @@ a:active {
 		//TODO 
 		// - rotate ball when rotate tray for smooth gaming
 		// - all walls
+		// - eclairage
 		
 		
 			//substract 3d
@@ -789,6 +790,44 @@ a:active {
 			createWall_y(-16.25,1,7);//a gauche du 17
 			createWall_y(-17,-8,2);//en haut à droite du 21
 			
+			createWall_y(-11.75,15.5,8);//au dessus du 14
+			createWall_x(-9,12,4.5);//au droite du 15
+			createWall_y(-10.75,1.5,7);//au droite du 17
+			createWall_y(-11,-7.5,5);//au gauche du 19
+			createWall_x(-9,-10,5);//a droite du 23
+			createWall_y(-6.75,-12.5,6);//au gauche du 25
+			createWall_y(-1.5,-15,4);//sous le 24
+			createWall_y(-1.85,-7.5,4);//a droite de 28
+			createWall_y(-2,1.5,4);//sous 27
+			createWall_y(-6.5,1,12.5);//sous 27
+			createWall_x(-4.5,7,5);//au dessus de 31
+			
+			createWall_y(-1.75,16.5,9);//a gauche de 36
+			createWall_y(-6.85,18.25,4);//a droite de 32
+			
+			createWall_y(3.5,7.5,9);//a gauche de 48
+			createWall_x(6,20.25,7.5);//au dessus de 35
+			
+			createWall_y(13.75,14.5,11);//a gauche de 47
+			createWall_x(11,9.5,6.5);//a gauche de 47	
+			createWall_y(8.25,6.5,7);//a droite de 48
+			
+			createWall_y(18.75,19.25,4);//au dessus de 40
+			createWall_y(18.75,8.75,11.5);//a droite de 47
+			
+			createWall_y(13.75,0,9.5);//a gauche de 46
+			createWall_x(11.25,0,5);//sous le 51
+			createWall_x(9,-10.25,9);//sous le 54
+			createWall_x(6.5,-16.5,4.5);//sous le 55
+			
+			createWall_y(13.75,-15.75,3.5);//a gauche de 53
+			createWall_x(16.75,-17.5,7);//au dessus de 53
+			createWall_y(19.75,-11,14);//a gauche de 59
+			createWall_y(19.50,-23,3.5);//au dessus de 57 
+			createWall_y(25,-15,4);//a gauche du 60 
+			createWall_y(24.5,-2,13.5);//a droite de 45
+			createWall_x(27,4.25,5.5);//au dessus de 53
+			
 			
 		}
 /*
@@ -831,12 +870,14 @@ a:active {
 		*/
 		function createWall_x(pos_x,pos_z,len)
 		{
-			createBlock2({x: pos_x, y: 2, z: pos_z},{x: len, y: 1, z: 1},0xa0afa4,true,1);
+			//createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: len, y: 1, z: 1},0xa0afa4,true,1);
+			createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: len, y: 1, z: 1},null,true,1);
 		}
 		
 		function createWall_y(pos_x,pos_z,len)
 		{
-			createBlock2({x: pos_x, y: 2, z: pos_z},{x: 1, y: 1, z: len},0xa0afa4,true,1);
+			//createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: 1, y: 1, z: len},0xa0afa4,true,1);
+			createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: 1, y: 1, z: len},null,true,1);
 		}
 		
 		function createBlock(pos,scale)
