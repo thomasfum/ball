@@ -283,6 +283,8 @@ a:active {
 			var ballRadius=1;
 			var caster = new THREE.Raycaster();
 			
+			var displayHoleNumber=false;
+			
 			var previousFrotte=false;
 			var lastBong=Date.now();
 			var rolling=false;
@@ -848,51 +850,53 @@ a:active {
 				}
 			}
 			shape.holes.push( circle );
-			
-			//-------------
-			// hole name& disk
-			fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) 
+			if(displayHoleNumber==true)
 			{
-				for(k=0;k<hole.a.length;k++)
+				//-------------
+				// hole name& disk
+				fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) 
 				{
-					//  Creates the name mesh
-					var textGeometry = new THREE.TextGeometry(hole.a[k].s, {
-							font: font,
-							size: 1,
-							height: 0.5,
-							curveSegments: 12,
-							bevelEnabled: false,
-							
-						});
-					var angle=(hole.a[k].ls+hole.a[k].le)/2;
-					if(hole.a[k].ls>hole.a[k].le)//on passe par 0
-						angle=angle-180;
-					var dir=new THREE.Vector3(-1, 0, 0)
-					var axis = new THREE.Vector3( 0, 1, 0 );
-					dir.applyAxisAngle( axis, THREE.Math.degToRad( angle ) );
-
-					console.log("===>"+hole.a[k].s+": "+hole.a[k].l+"("+angle+")"+"="+dir.x+","+dir.y+","+dir.z);
-						
-					var offsetX=dir.x*2;
-					var offsetZ=dir.z*2;
-					if(hole.a[k].l=="0")//centré
+					for(k=0;k<hole.a.length;k++)
 					{
-						offsetX=0;
-						offsetZ=0;
+						//  Creates the name mesh
+						var textGeometry = new THREE.TextGeometry(hole.a[k].s, {
+								font: font,
+								size: 1,
+								height: 0.5,
+								curveSegments: 12,
+								bevelEnabled: false,
+								
+							});
+						var angle=(hole.a[k].ls+hole.a[k].le)/2;
+						if(hole.a[k].ls>hole.a[k].le)//on passe par 0
+							angle=angle-180;
+						var dir=new THREE.Vector3(-1, 0, 0)
+						var axis = new THREE.Vector3( 0, 1, 0 );
+						dir.applyAxisAngle( axis, THREE.Math.degToRad( angle ) );
+
+						//console.log("===>"+hole.a[k].s+": "+hole.a[k].l+"("+angle+")"+"="+dir.x+","+dir.y+","+dir.z);
+							
+						var offsetX=dir.x*2;
+						var offsetZ=dir.z*2;
+						if(hole.a[k].l=="0")//centré
+						{
+							offsetX=0;
+							offsetZ=0;
+						}
+						offsetX=offsetX-0.8;
+							
+						var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
+						var TextMesh = new THREE.Mesh( textGeometry, textMaterial );
+						TextMesh.position.x = hole.x-30+offsetX;
+						TextMesh.position.y=2;
+						TextMesh.position.z = hole.y-25-offsetZ;
+						TextMesh.rotateX(-3.14/2);
+						scene.add(TextMesh);
 					}
-					offsetX=offsetX-0.8;
-						
-					var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
-					var TextMesh = new THREE.Mesh( textGeometry, textMaterial );
-					TextMesh.position.x = hole.x-30+offsetX;
-					TextMesh.position.y=2;
-					TextMesh.position.z = hole.y-25-offsetZ;
-					TextMesh.rotateX(-3.14/2);
-					scene.add(TextMesh);
-				}
-			
-			
-			});
+				
+				
+				});
+			}
 			//----------------
 			
 			
@@ -1115,13 +1119,20 @@ a:active {
 				{
 					//console.log("nb split d:"+res.length);
 					//console.log("d:"+holes[h].d);
-					var k=0;
-					for(k=0;k<res.length;k++)
+					
+					var d = holes[h].d.split(",");
+					var label = holes[h].l.split(",");
+					
+					//var k=0;
+					//for(k=0;k<res.length;k++)
+					
+					var l=0;
+					for(l=0;l<d.length;l++)
 					{
 						
-						var d = holes[h].d.split(",");
-						var label = holes[h].l.split(",");
-						for(l=0;l<d.length;l++)
+						//var d = holes[h].d.split(",");
+						//var label = holes[h].l.split(",");
+						//for(l=0;l<d.length;l++)
 						{
 							var Obj = { l:"",s:"", ls:0,	le:0};
 							Obj.s=label[l];
@@ -1440,15 +1451,39 @@ a:active {
 
             }
 			
-			function CacluateScore(hole)
+			function CacluateScore(hole, speedVector)
 			{
 				var res = hole.l.split(",");
 				if(res.length==1)
 					return parseInt(res[0], 10);
 				else
 				{
-					//a finir 
-					return parseInt(res[0], 10);
+					speedVector.multiply(new THREE.Vector3(-1,0,1));
+					console.log("===>Speed vector" +speedVector.x+","+speedVector.y+","+speedVector.z);
+					console.log("===>a.length="+hole.a.length);
+					var MinError=9999;
+					var MinErrorK=-1;
+					for(k=0;k<hole.a.length;k++)
+					{
+						var angle=(hole.a[k].ls+hole.a[k].le)/2;
+						if(hole.a[k].ls>hole.a[k].le)//on passe par 0
+							angle=angle-180;
+						var dir=new THREE.Vector3(-1, 0, 0)
+						var axis = new THREE.Vector3( 0, 1, 0 );
+						dir.applyAxisAngle( axis, THREE.Math.degToRad( angle ) );
+						
+						var error = dir.distanceTo( speedVector );
+						
+						console.log("===>"+hole.a[k].s+": "+hole.a[k].l+"("+angle+")"+"="+dir.x+","+dir.y+","+dir.z+"------ >"+error);
+						if(error<MinError)
+						{
+							MinError=error;
+							MinErrorK=k;
+						}
+						
+					}
+					console.log("===>Hole selected:="+res[MinErrorK]);
+					return parseInt(res[MinErrorK], 10);
 				}
 			}
 			function CheckStatus()
@@ -1562,50 +1597,52 @@ a:active {
 					previousFrotte=false;
 					console.log("ca frotte plus!!!!");
 				}				
-				
-                if ( ms ) 
+				if(inhole==false)
 				{
-					var inhole=false;
-					ms.getWorldTransform( tmpTrans );
-                    let p = tmpTrans.getOrigin();
-					var bx=p.x()+30;
-					var bz=p.z()+25;
-					var by=p.y();
-					if(by>-6.5)
+					if ( ms ) 
 					{
-						//console.log(by);
-						//console.log("CheckStatus:"+bx+", "+by+"    "+(holes[0].x)+", "+(holes[0].y));	
-						for(h=0;h<holes.length;h++)
+						//var inhole=false;
+						ms.getWorldTransform( tmpTrans );
+						let p = tmpTrans.getOrigin();
+						var bx=p.x()+30;
+						var bz=p.z()+25;
+						var by=p.y();
+						if(by>-6.5)
 						{
-							var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((bz-holes[h].y)*(bz-holes[h].y));
-							if(dist<1)
+							//console.log(by);
+							//console.log("CheckStatus:"+bx+", "+by+"    "+(holes[0].x)+", "+(holes[0].y));	
+							for(h=0;h<holes.length;h++)
 							{
-								console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
-								
-								Score=CacluateScore(holes[h]);
-								if(Score>bestScore)
-									bestScore=Score;
-								
-								document.getElementById('info').innerHTML = "You lose!<br>Your score: "+Score;
-								document.getElementById('info').style.display = "inline-block";
+								var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((bz-holes[h].y)*(bz-holes[h].y));
+								if(dist<1)
+								{
+									console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
+									
+									Score=CacluateScore(holes[h],tjsSpeedVectorNorm);
+									if(Score>bestScore)
+										bestScore=Score;
+									
+									document.getElementById('info').innerHTML = "You lose!<br>Your score: "+Score;
+									document.getElementById('info').style.display = "inline-block";
+									document.getElementById('score').innerHTML = "Your best score: "+bestScore;
+									inhole=true;
+									break;
+								}
+							}
+							var distFinish=((bx-finish.x)*(bx-finish.x)) + ((by-finish.y)*(by-finish.y));
+							if(distFinish<1)
+							{
+								console.log("Gagné!!!!!!!");
+								document.getElementById('info').innerHTML = "You win!!!";
+								bestScore=61;
 								document.getElementById('score').innerHTML = "Your best score: "+bestScore;
-								inhole=true;
-								break;
+								
+								document.getElementById('info').style.display = "inline-block";
 							}
 						}
-						var distFinish=((bx-finish.x)*(bx-finish.x)) + ((by-finish.y)*(by-finish.y));
-						if(distFinish<1)
-						{
-							console.log("Gagné!!!!!!!");
-							document.getElementById('info').innerHTML = "You win!!!";
-							bestScore=61;
-							document.getElementById('score').innerHTML = "Your best score: "+bestScore;
-							
-							document.getElementById('info').style.display = "inline-block";
-						}
-					}
+						
 					
-				
+					}
 				}
 				var posX=((window.innerWidth /2)  - (AngleZ*50)*23) +6;
 				var posY=((window.innerHeight/2)  + (AngleX*50)*23) +6;
