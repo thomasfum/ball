@@ -264,8 +264,8 @@
         <script>
 		//TODO 
 		// - rotate ball when rotate tray for smooth gaming
-		// - all walls
 		// - eclairage
+		// frottement
 		
 		
 			//substract 3d
@@ -320,7 +320,8 @@
 			var woodcolor=0x521C1A;
 			var materialWood;
 			var listener;
-			var sound;
+			var soundBong;
+			var soundRolling;
 			var soundEnabled=true;
 			var bestScore=0;
 			
@@ -369,16 +370,24 @@
 				setTimeout(function(){ 
 						document.getElementById('start').style.display = "none";
 						document.getElementById('restart').style.display = "inline-block";
-						sound = new THREE.Audio( listener );
+						soundBong = new THREE.PositionalAudio( listener );
+						soundRolling = new THREE.PositionalAudio( listener );
 
 						// load a sound and set it as the Audio object's buffer
 						var audioLoader = new THREE.AudioLoader();
 						audioLoader.load( 'sounds/Ball_Bounce.wav', function( buffer ) {
-							sound.setBuffer( buffer );
-							sound.setLoop( false );
-							sound.setVolume( 1 );
-							//sound.play();
-							//soundEnabled=true;
+							soundBong.setBuffer( buffer );
+							soundBong.setLoop( false );
+							soundBong.setVolume( 10 );
+							//soundBong.play();
+						});
+						var audio = new THREE.PositionalAudio( listener );
+						audioLoader.load( 'sounds/Rolling.wav', function( buffer ) {
+							soundRolling.setBuffer( buffer );
+							soundRolling.setLoop( true );
+							soundRolling.setVolume( 5 );
+							soundRolling.playbackRate=0.1;
+							//soundRolling.play();
 						});
 						ball.visible = true;
 						startGame=true;
@@ -450,11 +459,6 @@
 				}else if (keyCode == 82) {//r
 					ReStart();
 				
-				}else if (keyCode == 83) {//s
-				
-					console.log("sound");
-							// create a global audio source
-			
 				}
 			};
 
@@ -1605,43 +1609,61 @@
 				var tjsSpeedVectorNorm= new THREE.Vector3(speedVector.x(), speedVector.y(), speedVector.z());
 				var speed=tjsSpeedVectorNorm.length();
 				tjsSpeedVectorNorm.normalize ();
+				
+				var tjsSpeedVectorNormXZ= new THREE.Vector3(speedVector.x(), 0, speedVector.z());
+				var speedXZ=tjsSpeedVectorNormXZ.length();
+				
 				//console.log("ThreeSpeedVector"+tjsSpeedVectorNorm.x+"; "+tjsSpeedVectorNorm.y+"; "+tjsSpeedVectorNorm.z);
-				caster.set(ball.position, tjsSpeedVectorNorm);
-				var collisions;
-				collisions = caster.intersectObjects(scene.children,true);
-				 for ( var j = 0; j < collisions.length; j++ ) {
-				   if(collisions[ j ].object!=undefined)
-					  {
-						  if ((collisions[j].distance >=1)&&(collisions[j].distance <=1.1)) {
-							//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0x0000F0});
-						  /*
-							// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
-							if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
-							  this.direction.setZ(0);
-							} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
-							  this.direction.setZ(0);
-							}
-							if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
-							  this.direction.setX(0);
-							} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
-							  this.direction.setX(0);
-							}
-							*/
-							if(speed>1.0)
+				
+				
+				if(speed>0.01)
+				{
+					//console.log("speed:"+speed);
+					caster.set(ball.position, tjsSpeedVectorNorm);
+					var collisions;
+					collisions = caster.intersectObjects(scene.children,true);
+					for ( var j = 0; j < collisions.length; j++ ) 
+					{
+						
+						//if(collisions[ j ].object!=undefined)
+						{
+							if (collisions[j].distance <1.5)
+								console.log("BONG: collision "+j+" d= "+collisions[j].distance+" s = "+speed);
+							//if ((collisions[j].distance >=1)&&(collisions[j].distance <=2.5))//Math.max(speed/2,1.2))) 
+							if ((collisions[j].distance >=1)&&(collisions[j].distance <=1.5))//Math.max(speed/2,1.2))) 
 							{
+								
+								//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0x0000F0});
+							  /*
+								// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
+								if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
+								  this.direction.setZ(0);
+								} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
+								  this.direction.setZ(0);
+								}
+								if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
+								  this.direction.setX(0);
+								} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
+								  this.direction.setX(0);
+								}
+								*/
 								var millis = Date.now() - lastBong;
 								if(millis>200)
 								{
 									console.log("BONG: collision comming with something at 32 in speed dir "+j+ " dist="+ collisions[j].distance+ " speed="+speed);
 									lastBong=Date.now();
 									if(soundEnabled==true)
-										sound.play();
+									{
+										if(soundRolling.isPlaying ==true)
+											soundRolling.stop();									
+										soundBong.play();
+									}
 								}
+							
 							}
 						}
 					}
-				 }
-				
+				}				
 				var rays = [
 					  new THREE.Vector3(0, 0, 1),
 					  new THREE.Vector3(1, 0, 1),
@@ -1650,61 +1672,68 @@
 					  new THREE.Vector3(0, 0, -1),
 					  new THREE.Vector3(-1, 0, -1),
 					  new THREE.Vector3(-1, 0, 0),
-					  new THREE.Vector3(-1, 0, 1)
-					  // new THREE.Vector3(0, -1, 0)//en bas
+					  new THREE.Vector3(-1, 0, 1),
+					  new THREE.Vector3(0, -1, 0)//en bas
 					];
 					
 				var  distance = 2;
 				var Frotte=false;
 				var i;
-				 // For each ray
-				for (i = 0; i < rays.length; i += 1) 
+				if(speedXZ>2)
 				{
-				
-					//console.log("loop "+ i);
-				  // We reset the raycaster to this direction
-				  caster.set(ball.position, rays[i]);
-				  // Test if we intersect with any obstacle mesh
-				  collisions = caster.intersectObjects(scene.children,true);
-				  // And disable that direction if we do
-				  
-				  for ( var j = 0; j < collisions.length; j++ ) {
+				 // For each ray
+					for (i = 0; i < rays.length; i += 1) 
+					{
+						//console.log("loop "+ i);
+						// We reset the raycaster to this direction
+						caster.set(ball.position, rays[i]);
+						// Test if we intersect with any obstacle mesh
+						collisions = caster.intersectObjects(scene.children,true);
+						// And disable that direction if we do
 					  
-					  if (collisions[j].distance <= ballRadius+0.1) {
-					  
-					  if(collisions[ j ].object!=undefined)
-					  {
-						//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0xF00000});
-					  /*
-						// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
-						if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
-						  this.direction.setZ(0);
-						} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
-						  this.direction.setZ(0);
-						}
-						if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
-						  this.direction.setX(0);
-						} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
-						  this.direction.setX(0);
-						}
-						*/
-						if(speed>2)
+						for ( var j = 0; j < collisions.length; j++ ) 
 						{
-							//console.log("ca frotte!!!! in contact with something at 32 in dir "+ i+" "+j+ " dist="+ collisions[j].distance);
-							Frotte=true;
+						  
+							if (collisions[j].distance <= ballRadius+0.1) 
+							{
+								if(collisions[ j ].object!=undefined)
+								{
+									//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0xF00000});
+								  /*
+									// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
+									if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
+									  this.direction.setZ(0);
+									} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
+									  this.direction.setZ(0);
+									}
+									if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
+									  this.direction.setX(0);
+									} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
+									  this.direction.setX(0);
+									}
+									*/
+							//		console.log("ca frotte!!!! in contact with something at 32 in dir "+ i+" "+j+ " dist="+ collisions[j].distance);
+									Frotte=true;
+					
+								}
+							}
 						}
 					}
-				  }
-				}
 				}
 				if((Frotte==true)&&(previousFrotte==false))
 				{
 					previousFrotte=true;
 					console.log("ca frotte!!!!");
+					if(soundEnabled==true)
+						soundRolling.play();
 				}else if((Frotte==false)&&(previousFrotte==true))
 				{
 					previousFrotte=false;
 					console.log("ca frotte plus!!!!");
+					if(soundEnabled==true)
+						if(soundRolling.isPlaying ==true)
+							soundRolling.stop();									
+						
 				}				
 				if(inhole==false)
 				{
