@@ -4,6 +4,9 @@
         <title>Labyrinth Ball Game</title>
         <style>
             body { margin: 0; }
+			#documentation {
+				display:none;
+			}
 			#info {
 				position: absolute;
 				top: 40%;
@@ -33,7 +36,7 @@
 				border: 1px solid #ccc;
 			}
 
-			#trans
+			.trans
 			{
 				font-weight : bold;  
 				font-family : verdana;  
@@ -47,7 +50,13 @@
 				margin-top: -9em; /*set to a negative number 1/2 of your height*/
 				margin-left: -15em; /*set to a negative number 1/2 of your width*/
 			}
-		
+			.doctrans
+			{
+				width:30em;
+				height:26em;
+				margin-top: -13em; /*set to a negative number 1/2 of your height*/
+				margin-left: -15em; /*set to a negative number 1/2 of your width*/
+			}
 			#restart
 			{
 				position: absolute;
@@ -67,12 +76,14 @@
 				font-weight : bold;  
 				font-family : verdana;  
 				font-size : 20px;
+				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 				color: #4CAF50;
+				
 				position: absolute;
 				top: 15px;
 				left: 100%;
 				margin-left:-250px; 
-				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+				
 			}	
 			#sound
 			{
@@ -82,6 +93,24 @@
 				left: 15px;
 				width:30px;
 				height:30px;
+			}	
+			#doc
+			{
+			
+				font-weight : bold;  
+				font-family : verdana;  
+				font-size : 20px;
+				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+				color: #4CAF50;
+				
+				position: absolute;
+				text-align: center;
+				top: 100%;
+				margin-top: -50px;
+				margin-left:-50px; 
+				left: 100%;
+				cursor:pointer;
+				
 			}	
 			#scaleLeft
 			{
@@ -184,6 +213,7 @@ a:active {
 		<div id="info">Description</div>
 		<div id="score">Your best score: 0</div>
 		<img src="img/unmute.png" alt="mute" id="sound"  onclick="toggleSound()" >
+		<span id="doc" onclick="OpenDocumentation()">?</span>
 		<img src="img/scale.png" alt="scale" id="scaleLeft" >
 		<img src="img/scale.png" alt="scale" id="scaleTop" >
 		<img src="img/triangle.png" alt="triangle" id="TriangleLeft" >
@@ -194,7 +224,7 @@ a:active {
 		<div id="start">
 			<div id="bloc_trans">
 			</div>
-			<div id="trans">
+			<div class="trans">
 				<H1>Labyrinth Ball</H1><br>
 				This is a test of three.js and ammo.js, you can find the source code <a href="https://github.com/thomasfum/ball" target="_blank">here</a>.<br><br>
 				To rotate the tray, use the arrow keys.<br>
@@ -203,25 +233,49 @@ a:active {
 				<input type="button" class="button" value="Start"  onclick="Start()">
 			</div>	
 		</div>	
-	
+		<div id="Documentation">
+			<div id="bloc_trans">
+			</div>
+			<div class="trans doctrans">
+				<H1>Useful links</H1>
+				<a href="https://github.com/thomasfum/ball" target="_blank">Source code of this app</a><br>
+				<a href="https://threejs.org/" target="_blank">ThreeJs</a><br>
+				<a href="https://github.com/kripken/ammo.js/" target="_blank">ammo.js source code and examples</a><br>
+				
+				
+								
+				<a href="https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591" target="_blank">Very good starting point</a><br>
+				<a href="http://lo-th.github.io/Ammo.lab/#basic" target="_blank">Very good ammo examples</a><br>
+				<a href="http://webmaestro.fr/collisions-detection-three-js-raycasting/" target="_blank">Basic Collisions Detection, RayCasting with Three.Js</a><br>
+						<br>
+				Not used, but interesting:<br>
+				<a href="http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/" target="_blank">Constructive Solid Geometry With csg.js</a><br>
+				<a href="https://chandlerprall.github.io/Physijs/" target="_blank">Physijs (not maintained)</a><br>
+				<a href="https://gamedevelopment.tutsplus.com/tutorials/creating-a-simple-3d-physics-game-using-threejs-and-physijs--cms-29453" target="_blank">Simple 3D Physics Game Using Three.js and Physijs</a><br>
+				
+				<br>
+				<input type="button" class="button" value="Close"  onclick="CloseDocumentation()">
+			</div>	
+		</div>	
    
     
 
 	
         <script>
 		//TODO 
-		// - score
+		// - rotate ball when rotate tray for smooth gaming
 		// - all walls
 		
-		//substract 3d
-		//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
 		
+			//substract 3d
+			//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
 		
-		//https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
-		//http://lo-th.github.io/Ammo.lab/#basketball
-		//https://stemkoski.github.io/Three.js/Collision-Detection.html
-		//file:///D:/Utilisateurs/Nous/Desktop/Dev/amo1/ammo.js-master/examples/webgl_demo_vehicle/index.html
-		//http://webmaestro.fr/collisions-detection-three-js-raycasting/
+			//https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
+		
+			////http://lo-th.github.io/Ammo.lab/#basketball
+		
+			//file:///D:/Utilisateurs/Nous/Desktop/Dev/amo1/ammo.js-master/examples/webgl_demo_vehicle/index.html
+			//http://webmaestro.fr/collisions-detection-three-js-raycasting/
 
 		//terrain
 		//http://blog.mastermaps.com/2013/10/terrain-building-with-threejs.html
@@ -232,13 +286,16 @@ a:active {
 		//http://learningthreejs.com/blog/2011/09/14/lets-make-a-3D-game-map-editor/
 
 		//Physijs/
-		//https://gamedevelopment.tutsplus.com/tutorials/creating-a-simple-3d-physics-game-using-threejs-and-physijs--cms-29453
-		//https://chandlerprall.github.io/Physijs/
+			//https://gamedevelopment.tutsplus.com/tutorials/creating-a-simple-3d-physics-game-using-threejs-and-physijs--cms-29453
+			//https://chandlerprall.github.io/Physijs/
 
 
 		//compound:
-		//https://github.com/kripken/ammo.js/blob/master/bullet/Demos/ConstraintDemo/ConstraintDemo.cpp
-		//https://gist.github.com/erwincoumans/b8a110b5c228b378161068cd25fa7d2c
+			//https://github.com/kripken/ammo.js/blob/master/bullet/Demos/ConstraintDemo/ConstraintDemo.cpp
+			//https://gist.github.com/erwincoumans/b8a110b5c228b378161068cd25fa7d2c
+
+		//bof 
+			//https://stemkoski.github.io/Three.js/Collision-Detection.html
 
         //variable declaration section
 			
@@ -295,6 +352,17 @@ a:active {
 
 			var fontLoader = new THREE.FontLoader();
 
+			function OpenDocumentation(){
+						document.getElementById('Documentation').style.display = "inline-block";
+						document.getElementById('start').style.display = "none";
+			}
+			function CloseDocumentation(){
+				setTimeout(function(){ 
+					document.getElementById('Documentation').style.display = "none";
+					if(startGame==false)
+						document.getElementById('start').style.display = "inline-block";
+				 }, 100);
+			}
 			
 			function Start(){
 				setTimeout(function(){ 
