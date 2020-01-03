@@ -266,7 +266,7 @@
 		// - rotate ball when rotate tray for smooth gaming
 		// - eclairage
 		// frottement
-		
+		//https://stackoverflow.com/questions/11175694/bullet-physics-simplest-collision-example
 		
 			//substract 3d
 			//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
@@ -345,6 +345,7 @@
 			var displayHoleNumber=false;
 			
 			var previousFrotte=false;
+			var nbPreviouColision=0;
 			var lastBong=Date.now();
 			var rolling=false;
 			var inhole=false;
@@ -1464,7 +1465,7 @@
 
                 // Step world
                 physicsWorld.stepSimulation( deltaTime, 10 );
-
+				
                 // Update rigid bodies
                 for ( let i = 0; i < rigidBodies.length; i++ ) {
                     let objThree = rigidBodies[ i ];
@@ -1605,17 +1606,97 @@
 				let ms = bodyBall.getMotionState();
 				// var speedVector= = new Ammo.btVector3(100,0,100); bodyBall.getLinearVelocity();
 				var speedVector= bodyBall.getLinearVelocity();
+				
 				//console.log("ammoSpeedVector"+speedVector.x()+"; "+speedVector.y()+"; "+speedVector.z());
 				var tjsSpeedVectorNorm= new THREE.Vector3(speedVector.x(), speedVector.y(), speedVector.z());
 				var speed=tjsSpeedVectorNorm.length();
 				tjsSpeedVectorNorm.normalize ();
-				
+				var speedVectorNorm = new Ammo.btVector3(tjsSpeedVectorNorm.x, tjsSpeedVectorNorm.y, tjsSpeedVectorNorm.z); 
 				var tjsSpeedVectorNormXZ= new THREE.Vector3(speedVector.x(), 0, speedVector.z());
 				var speedXZ=tjsSpeedVectorNormXZ.length();
 				
 				//console.log("ThreeSpeedVector"+tjsSpeedVectorNorm.x+"; "+tjsSpeedVectorNorm.y+"; "+tjsSpeedVectorNorm.z);
 				
+				var nbcol = physicsWorld.getDispatcher().getNumManifolds();
 				
+				
+	
+				if(nbPreviouColision!=nbcol)
+				{
+					console.log("NbCol="+nbPreviouColision +" -> "+nbcol);
+					if(nbcol>nbPreviouColision)
+					{
+						if(speed>1)
+						{
+						//----------------------------
+						for ( i=0;i<nbcol;i++)
+						{
+						
+							var contactManifold =  physicsWorld.getDispatcher().getManifoldByIndexInternal(i);
+							var obA = contactManifold.getBody0();
+							var obB = contactManifold.getBody1();
+							var numContacts = contactManifold.getNumContacts();
+							for (j=0;j<numContacts;j++)
+							{
+								var pt = contactManifold.getContactPoint(j);
+								if (pt.getDistance()<0)
+								{
+									var ptA = pt.getPositionWorldOnA();
+									var ptB = pt.getPositionWorldOnB();
+									var normalOnB = pt.m_normalWorldOnB;
+									console.log("vectN="+normalOnB.x()+", "+normalOnB.y()+", "+normalOnB.z());
+									console.log("vectS="+speedVectorNorm.x()+", "+speedVectorNorm.y()+", "+speedVectorNorm.z());
+									var b=new Ammo.btVector3(normalOnB.x()-speedVector.x(),normalOnB.y()-speedVector.y(),normalOnB.z()-speedVector.z());
+									
+									console.log("vectB="+b.x()+", "+b.y()+", "+b.z());
+									console.log("vectB len="+b.length());
+									
+									
+								/*
+									const btVector3& ptA = pt.getPositionWorldOnA();
+									const btVector3& ptB = pt.getPositionWorldOnB();
+									const btVector3& normalOnB = pt.m_normalWorldOnB;
+									*/
+								}
+							}
+						/*
+							btPersistentManifold* contactManifold =  world->getDispatcher()->getManifoldByIndexInternal(i);
+							btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+							btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+
+							int numContacts = contactManifold->getNumContacts();
+							for (int j=0;j<numContacts;j++)
+							{
+								btManifoldPoint& pt = contactManifold->getContactPoint(j);
+								if (pt.getDistance()<0.f)
+								{
+									const btVector3& ptA = pt.getPositionWorldOnA();
+									const btVector3& ptB = pt.getPositionWorldOnB();
+									const btVector3& normalOnB = pt.m_normalWorldOnB;
+								}
+							}
+							*/
+						}
+						
+						
+						//-------------------------
+						var millis = Date.now() - lastBong;
+						if(millis>200)
+						{
+							console.log("BONG: collision at speed="+speed);
+							lastBong=Date.now();
+							if(soundEnabled==true)
+							{
+								if(soundRolling.isPlaying ==true)
+									soundRolling.stop();									
+								soundBong.play();
+							}
+						}
+						}
+					}
+					nbPreviouColision=nbcol;
+				}
+				/*
 				if(speed>0.05)
 				{
 					//console.log("speed:"+speed);
@@ -1652,7 +1733,8 @@
 							}
 						}
 					}
-				}				
+				}		
+				*/				
 				var rays = [
 					  new THREE.Vector3(0, 0, 1),
 					  new THREE.Vector3(1, 0, 1),
