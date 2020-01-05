@@ -1646,11 +1646,26 @@
 									var normalOnB = pt.m_normalWorldOnB;
 									console.log("vectN="+normalOnB.x()+", "+normalOnB.y()+", "+normalOnB.z());
 									console.log("vectS="+speedVectorNorm.x()+", "+speedVectorNorm.y()+", "+speedVectorNorm.z());
-									var b=new Ammo.btVector3(normalOnB.x()-speedVector.x(),normalOnB.y()-speedVector.y(),normalOnB.z()-speedVector.z());
+									var b=new Ammo.btVector3(normalOnB.x()+speedVectorNorm.x(),normalOnB.y()+speedVectorNorm.y(),normalOnB.z()+speedVectorNorm.z());
 									
 									console.log("vectB="+b.x()+", "+b.y()+", "+b.z());
 									console.log("vectB len="+b.length());
-									
+											//-------------------------
+											if(b.length()<1)
+											{
+									var millis = Date.now() - lastBong;
+									if(millis>200)
+									{
+										console.log("BONG: collision at speed="+speed);
+										lastBong=Date.now();
+										if(soundEnabled==true)
+										{
+											if(soundRolling.isPlaying ==true)
+												soundRolling.stop();									
+											soundBong.play();
+										}
+									}
+									}
 									
 								/*
 									const btVector3& ptA = pt.getPositionWorldOnA();
@@ -1679,19 +1694,7 @@
 						}
 						
 						
-						//-------------------------
-						var millis = Date.now() - lastBong;
-						if(millis>200)
-						{
-							console.log("BONG: collision at speed="+speed);
-							lastBong=Date.now();
-							if(soundEnabled==true)
-							{
-								if(soundRolling.isPlaying ==true)
-									soundRolling.stop();									
-								soundBong.play();
-							}
-						}
+				
 						}
 					}
 					nbPreviouColision=nbcol;
