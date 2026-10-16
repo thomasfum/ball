@@ -1,0 +1,9 @@
+
+.vs/ProjectSettings.json
+.vs/VSWorkspaceState.json
+.vs/tasks.vs.json
+.vs/slnx.sqlite
+.vs/launch.vs.json
+.vs/config/applicationhost.config
+Web.config
+node-modules/
