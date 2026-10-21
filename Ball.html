@@ -1,225 +1,227 @@
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Labyrinth Ball Game</title>
-        <style>
-            body { margin: 0; }
-			#documentation {
-				display:none;
-			}
-			#info {
-				position: absolute;
-				top: 40%;
-				width: 100%;
-				text-align: center;
-				z-index: 100;
-				display:none;
-				font-weight : bold;  
-				font-family : verdana;  
-				font-size : 48px;
-				text-align: center;
-				color: #4CAF50;
-				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-			}
-			#bloc_trans  
-			{	 
-				background-color: transparent; /*pour avoir la transparence avec le body*/
-				background-color: #B0B0B0;
-				opacity:0.8;
-				position:fixed;
-				top: 50%;
-				left: 50%;
-				width:30em;
-				height:18em;
-				margin-top: -9em; /*set to a negative number 1/2 of your height*/
-				margin-left: -15em; /*set to a negative number 1/2 of your width*/
-				border: 1px solid #ccc;
-			}
+<head>
+	<meta charset="utf-8">
+	<title>Labyrinth Ball Game</title>
+	<style>
+		body {
+			margin: 0;
+		}
 
-			.trans
-			{
-				font-weight : bold;  
-				font-family : verdana;  
-				font-size : 12px;
-				text-align: center;
-				position:fixed;
-				top: 50%;
-				left: 50%;
-				width:30em;
-				height:18em;
-				margin-top: -9em; /*set to a negative number 1/2 of your height*/
-				margin-left: -15em; /*set to a negative number 1/2 of your width*/
-			}
-			.doctrans
-			{
-				width:30em;
-				height:26em;
-				margin-top: -13em; /*set to a negative number 1/2 of your height*/
-				margin-left: -15em; /*set to a negative number 1/2 of your width*/
-			}
-			#restart
-			{
-				position: absolute;
-				font-weight : bold;  
-				font-family : verdana;  
-				font-size : 12px;
-				text-align: center;
-				top: 90%;
-				left: 50%;
-				width:30em;
-				margin-left: -15em; 
-				display: none;
-			}
-	
-			#score
-			{
-				font-weight : bold;  
-				font-family : verdana;  
-				font-size : 20px;
-				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-				color: #4CAF50;
-				
-				position: absolute;
-				top: 15px;
-				left: 100%;
-				margin-left:-250px; 
-				
-			}	
-			#sound
-			{
-				position: absolute;
-				text-align: center;
-				top: 15px;
-				left: 15px;
-				width:30px;
-				height:30px;
-			}	
-			#doc
-			{
-			
-				font-weight : bold;  
-				font-family : verdana;  
-				font-size : 20px;
-				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-				color: #4CAF50;
-				
-				position: absolute;
-				text-align: center;
-				top: 100%;
-				margin-top: -50px;
-				margin-left:-50px; 
-				left: 100%;
-				cursor:pointer;
-				
-			}	
-			#scaleLeft
-			{
-				position: absolute;
-				text-align: center;
-				top: 50%;
-				left: 15px;
-				width:52px;
-				height:192px;
-				margin-top: -96px;
-			}
-			#triangleLeft
-			{
-				position: absolute;
-				text-align: center;
-				top: 50%;
-				left: 60px;
-				//width:48px;
-				//height:54px;
-				width:36px;
-				height:40px;
-				margin-top: -28px;
-			}
-			#triangleTop
-			{
-				position: absolute;
-				text-align: center;
-				top: 53px;
-				left: 50%;
-				//width:48px;
-				//height:54px;
-				width:36px;
-				height:40px;
-				margin-left: -23px;
-					  
-				
-				-webkit-transform: rotate(90deg);
-				-moz-transform: rotate(90deg);
-				-o-transform: rotate(90deg);
-				-ms-transform: rotate(90deg);
-				transform: rotate(90deg);
-			  
-			}		
-			
-			#scaleTop
-			{
-				position: absolute;
-				text-align: center;
-				top: -60px;
-				left: 50%;
-				width:52px;
-				height:192px;
-				margin-left: -26px;
-					  
-				
-				-webkit-transform: rotate(90deg);
-				-moz-transform: rotate(90deg);
-				-o-transform: rotate(90deg);
-				-ms-transform: rotate(90deg);
-				transform: rotate(90deg);
-			}
-			.button {
-				  background-color: #4CAF50; /* Green */
-				  border: none;
-				  color: white;
-				  padding: 15px 32px;
-				  text-align: center;
-				  text-decoration: none;
-				  display: inline-block;
-				  font-size: 16px;
-				  border-radius: 4px;
-				   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-				}
+		#documentation {
+			display: none;
+		}
+
+		#info {
+			position: absolute;
+			top: 40%;
+			width: 100%;
+			text-align: center;
+			z-index: 100;
+			display: none;
+			font-weight: bold;
+			font-family: verdana;
+			font-size: 48px;
+			text-align: center;
+			color: #4CAF50;
+			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+		}
+
+		#bloc_trans {
+			background-color: transparent; /*pour avoir la transparence avec le body*/
+			background-color: #B0B0B0;
+			opacity: 0.8;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			width: 30em;
+			height: 18em;
+			margin-top: -9em; /*set to a negative number 1/2 of your height*/
+			margin-left: -15em; /*set to a negative number 1/2 of your width*/
+			border: 1px solid #ccc;
+		}
+
+		.trans {
+			font-weight: bold;
+			font-family: verdana;
+			font-size: 12px;
+			text-align: center;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			width: 30em;
+			height: 18em;
+			margin-top: -9em; /*set to a negative number 1/2 of your height*/
+			margin-left: -15em; /*set to a negative number 1/2 of your width*/
+		}
+
+		.doctrans {
+			width: 30em;
+			height: 26em;
+			margin-top: -13em; /*set to a negative number 1/2 of your height*/
+			margin-left: -15em; /*set to a negative number 1/2 of your width*/
+		}
+
+		#restart {
+			position: absolute;
+			font-weight: bold;
+			font-family: verdana;
+			font-size: 12px;
+			text-align: center;
+			top: 90%;
+			left: 50%;
+			width: 30em;
+			margin-left: -15em;
+			display: none;
+		}
+
+		#score {
+			font-weight: bold;
+			font-family: verdana;
+			font-size: 20px;
+			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+			color: #4CAF50;
+			position: absolute;
+			top: 15px;
+			left: 100%;
+			margin-left: -250px;
+		}
+
+		#sound {
+			position: absolute;
+			text-align: center;
+			top: 15px;
+			left: 15px;
+			width: 30px;
+			height: 30px;
+		}
+
+		#doc {
+			font-weight: bold;
+			font-family: verdana;
+			font-size: 20px;
+			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+			color: #4CAF50;
+			position: absolute;
+			text-align: center;
+			top: 100%;
+			margin-top: -50px;
+			margin-left: -50px;
+			left: 100%;
+			cursor: pointer;
+		}
+
+		#scaleLeft {
+			position: absolute;
+			text-align: center;
+			top: 50%;
+			left: 15px;
+			width: 52px;
+			height: 192px;
+			margin-top: -96px;
+		}
+
+		#triangleLeft {
+			position: absolute;
+			text-align: center;
+			top: 50%;
+			left: 60px;
+			//width:48px;
+			//height:54px;
+			width: 36px;
+			height: 40px;
+			margin-top: -28px;
+		}
+
+		#triangleTop {
+			position: absolute;
+			text-align: center;
+			top: 53px;
+			left: 50%;
+			//width:48px;
+			//height:54px;
+			width: 36px;
+			height: 40px;
+			margin-left: -23px;
+			-webkit-transform: rotate(90deg);
+			-moz-transform: rotate(90deg);
+			-o-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+
+		#scaleTop {
+			position: absolute;
+			text-align: center;
+			top: -60px;
+			left: 50%;
+			width: 52px;
+			height: 192px;
+			margin-left: -26px;
+			-webkit-transform: rotate(90deg);
+			-moz-transform: rotate(90deg);
+			-o-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+
+		.button {
+			background-color: #4CAF50; /* Green */
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			border-radius: 4px;
+			box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+		}
+
 			.button:hover {
-				  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-				}
-				
-				a:link {
-				  text-decoration: none;
-				}
+				box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+			}
 
-				a:visited {
-				  text-decoration: none;
-				}
+		a:link {
+			text-decoration: none;
+		}
 
-				a:hover {
-				  text-decoration: underline;
-				}
+		a:visited {
+			text-decoration: none;
+		}
 
-				a:active {
-				  text-decoration: underline;
-				}
+		a:hover {
+			text-decoration: underline;
+		}
 
-        </style>
-    </head>
-    <body>
-        <script src="js/three.js"></script>
-		<script src="js/OrbitControls.js"></script>
-        <script src="js/ammo.js"></script>
+		a:active {
+			text-decoration: underline;
+		}
+	</style>
+
+	<script type="importmap">
+		{
+		  "imports": {
+			"three": "./js/three.module.js"
+
+		  }
+		}
+	</script>
+
+
+</head>
+	<body>
+		<script type="module" src="./js/main.js"></script>
+		<script src="js/ammo.js"></script>
 		<div id="info">Description</div>
 		<div id="score">Your best score: 0</div>
-		<img src="img/unmute.png" alt="mute" id="sound"  onclick="toggleSound()" >
+		<img src="img/unmute.png" alt="mute" id="sound" onclick="toggleSound()">
 		<span id="doc" onclick="OpenDocumentation()">?</span>
-		<img src="img/Scale.png" alt="scale" id="scaleLeft" >
-		<img src="img/Scale.png" alt="scale" id="scaleTop" >
-		<img src="img/triangle.png" alt="triangle" id="TriangleLeft" >
-		<img src="img/triangle.png" alt="triangle" id="TriangleTop" >
+		<img src="img/Scale.png" alt="scale" id="scaleLeft">
+		<img src="img/Scale.png" alt="scale" id="scaleTop">
+		<img src="img/triangle.png" alt="triangle" id="TriangleLeft">
+		<img src="img/triangle.png" alt="triangle" id="TriangleTop">
 		<div id="restart">
-			<input type="button" class="button" value="Try again"  onclick="ReStart()">
+			<input type="button" class="button" value="Try again" onclick="ReStart()">
 		</div>
 		<div id="start">
 			<div id="bloc_trans">
@@ -229,10 +231,10 @@
 				This is a test of three.js and ammo.js, you can find the source code <a href="https://github.com/thomasfum/ball" target="_blank">here</a>.<br><br>
 				To rotate the tray, use the arrow keys.<br>
 				Use space key to push the ball.<br><br><br>
-				
-				<input type="button" class="button" value="Start"  onclick="Start()">
-			</div>	
-		</div>	
+
+				<input type="button" class="button" value="Start" onclick="Start()">
+			</div>
+		</div>
 		<div id="Documentation">
 			<div id="bloc_trans">
 			</div>
@@ -241,1655 +243,28 @@
 				<a href="https://github.com/thomasfum/ball" target="_blank">Source code of this app</a><br>
 				<a href="https://threejs.org/" target="_blank">ThreeJs</a><br>
 				<a href="https://github.com/kripken/ammo.js/" target="_blank">ammo.js source code and examples</a><br>
-				
-				
-								
+
+
+
 				<a href="https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591" target="_blank">Very good starting point</a><br>
 				<a href="http://lo-th.github.io/Ammo.lab/#basic" target="_blank">Very good ammo examples</a><br>
 				<a href="http://webmaestro.fr/collisions-detection-three-js-raycasting/" target="_blank">Basic Collisions Detection, RayCasting with Three.Js</a><br>
-						<br>
+				<br>
 				Not used, but interesting:<br>
 				<a href="http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/" target="_blank">Constructive Solid Geometry With csg.js</a><br>
 				<a href="https://chandlerprall.github.io/Physijs/" target="_blank">Physijs (not maintained)</a><br>
 				<a href="https://gamedevelopment.tutsplus.com/tutorials/creating-a-simple-3d-physics-game-using-threejs-and-physijs--cms-29453" target="_blank">Simple 3D Physics Game Using Three.js and Physijs</a><br>
-				
+
 				<br>
-				<input type="button" class="button" value="Close"  onclick="CloseDocumentation()">
-			</div>	
-		</div>	
-   
-    
+				<input type="button" class="button" value="Close" onclick="CloseDocumentation()">
+			</div>
+		</div>
 
-	
-        <script>
-		//TODO 
-		// - rotate ball when rotate tray for smooth gaming
-		// - eclairage
-		// frottement
-		//https://stackoverflow.com/questions/11175694/bullet-physics-simplest-collision-example
-		
-			//substract 3d
-			//http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
-		
-			//https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
-		
-			////http://lo-th.github.io/Ammo.lab/#basketball
-		
-			//file:///D:/Utilisateurs/Nous/Desktop/Dev/amo1/ammo.js-master/examples/webgl_demo_vehicle/index.html
-			//http://webmaestro.fr/collisions-detection-three-js-raycasting/
 
-		//terrain
-		//http://blog.mastermaps.com/2013/10/terrain-building-with-threejs.html
-		//https://grahamweldon.com/post/2012/01/3d-terrain-generation-with-three.js/
-		//http://kripken.github.io/ammo.js/examples/webgl_demo_terrain/index.html
 
-		//map
-		//http://learningthreejs.com/blog/2011/09/14/lets-make-a-3D-game-map-editor/
 
-		//Physijs/
-			//https://gamedevelopment.tutsplus.com/tutorials/creating-a-simple-3d-physics-game-using-threejs-and-physijs--cms-29453
-			//https://chandlerprall.github.io/Physijs/
-
-
-		//compound:
-			//https://github.com/kripken/ammo.js/blob/master/bullet/Demos/ConstraintDemo/ConstraintDemo.cpp
-			//https://gist.github.com/erwincoumans/b8a110b5c228b378161068cd25fa7d2c
-
-		//bof 
-			//https://stemkoski.github.io/Three.js/Collision-Detection.html
-
-        //variable declaration section
-			
-			
-			var holes=[ 
-			{a:[],x:15.5,y:9.5,l:"1"},				{a:[],x:10.75,y:9.5,l:"2,22",d:"T,B"},		{a:[],x:3,y:3,l:"3"},					{a:[],x:6,y:10,l:"4,5",d:"T,B"},			{a:[],x:2.5,y:25.5,l:"6,9",d:"T,B"},
-			{a:[],x:2,y:39.5,l:"10"},				{a:[],x:6,y:35.5,l:"11"},	 				{a:[],x:5.5,y:44,l:"12"},				{a:[],x:10.75,y:40.75,l:"13"},			{a:[],x:15.25,y:46.75,l:"14,33",d:"TL,RB"},
-			{a:[],x:15.5,y:34.5,l:"15"},			{a:[],x:11.25,y:30.5,l:"8,16",d:"TL,RB"},	{a:[],x:16,y:25.5,l:"17,20",d:"BL,TR"},	{a:[],x:11,y:22,l:"7,21",d:"BL,TR"},		{a:[],x:14.75,y:16.5,l:"23"},
-			{a:[],x:20.25,y:34.5,l:"18,31",d:"TL,RB"},{a:[],x:21,y:17.75,l:"19"},				{a:[],x:30.5,y:6.85,l:"24,26",d:"TL,RB"},{a:[],x:25.75,y:17,l:"25,28",d:"TR,BL"},	{a:[],x:31,y:26,l:"27,29,49",d:"TL,B,R"},
-			{a:[],x:30.5,y:38.5,l:"30,36",d:"TL,RB"},{a:[],x:25.25,y:43.75,l:"32,34",d:"TL,RB"},	{a:[],x:35.5,y:47.75,l:"35,39",d:"TL,RB"},{a:[],x:35.75,y:42.5,l:"37"},			{a:[],x:35.35,y:34.85,l:"38,48",d:"RB,TL"},
-			{a:[],x:35.85,y:18,l:"50"},				{a:[],x:36.5,y:12,l:"54"},					{a:[],x:36.75,y:2.75,l:"55"},			{a:[],x:46.5,y:2.25,l:"56"},				{a:[],x:52.5,y:2,l:"57"},
-			{a:[],x:56.5,y:6.75,l:"58,60",d:"TL,RB"},{a:[],x:46.5,y:12.25,l:"53"},				{a:[],x:52,y:19.5,l:"45,59",d:"BL,TR"},	{a:[],x:45.75,y:21.5,l:"46,52",d:"RB,TL"},{a:[],x:40.65,y:22.75,l:"51"},
-			{a:[],x:45.75,y:38.5,l:"41,47",d:"RB,TL"},{a:[],x:51,y:37,l:"42"},					{a:[],x:51,y:46.25,l:"40"},				{a:[],x:55.5,y:43,l:"43"},				{a:[],x:55.5,y:32.5,l:"44"}
-						];
-			var finish={x:56.5,y:27.5,l:"Finish"};
-			var startGame=false;
-            let physicsWorld, scene, camera, controls,renderer, rigidBodies = [];
-            let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
-
-			let posOrigin = {x: 2, y: 10, z: -23};
-			var woodcolor=0x521C1A;
-			var materialWood;
-			var listener;
-			var soundBong;
-			var soundRolling;
-			var soundEnabled=true;
-			var bestScore=0;
-			
-			var groupGround;
-			var compoundShapeGround;
-			var BlockBodyGround;
-			
-			var groupGroundRing;
-			var compoundShapeRing;
-			var BlockBodyRing;
-			
-			var groupGroundBox;
-			var compoundShapeBox;
-			var BlockBodyBox;
-			
-			var ball;
-			var bodyBall; 
-			var ballRadius=1;
-			var caster = new THREE.Raycaster();
-			
-			var displayHoleNumber=false;
-			
-			var previousFrotte=false;
-			var nbPreviouColision=0;
-			var lastBong=Date.now();
-			var rolling=false;
-			var inhole=false;
-			
-			var AngleZ=0;
-			var AngleX=0;
-
-			var fontLoader = new THREE.FontLoader();
-
-			function OpenDocumentation(){
-						document.getElementById('Documentation').style.display = "inline-block";
-						document.getElementById('start').style.display = "none";
-			}
-			function CloseDocumentation(){
-				setTimeout(function(){ 
-					document.getElementById('Documentation').style.display = "none";
-					if(startGame==false)
-						document.getElementById('start').style.display = "inline-block";
-				 }, 100);
-			}
-			
-			function Start(){
-				setTimeout(function(){ 
-						document.getElementById('start').style.display = "none";
-						document.getElementById('restart').style.display = "inline-block";
-						soundBong = new THREE.PositionalAudio( listener );
-						soundRolling = new THREE.PositionalAudio( listener );
-
-						// load a sound and set it as the Audio object's buffer
-						var audioLoader = new THREE.AudioLoader();
-						audioLoader.load( 'sounds/Ball_Bounce.wav', function( buffer ) {
-							soundBong.setBuffer( buffer );
-							soundBong.setLoop( false );
-							soundBong.setVolume( 10 );
-							//soundBong.play();
-						});
-						var audio = new THREE.PositionalAudio( listener );
-						audioLoader.load( 'sounds/Rolling.wav', function( buffer ) {
-							soundRolling.setBuffer( buffer );
-							soundRolling.setLoop( true );
-							soundRolling.setVolume( 5 );
-							soundRolling.playbackRate=0.1;
-							//soundRolling.play();
-						});
-						ball.visible = true;
-						startGame=true;
-				 }, 100);
-			}
-			
-			function ReStart(){
-				console.log("restart");
-					AngleZ=0;
-					AngleX=0;
-					rotateRingX();
-					rotateGroundXZ();
-					//bodyBall.position.x = posOrigin.x;//, posOrigin.y, posOrigin.z ) );
-					let transform = new Ammo.btTransform();
-					transform.setIdentity();
-					transform.setOrigin( new Ammo.btVector3( posOrigin.x, posOrigin.y, posOrigin.z ) );
-					//transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
-							
-					bodyBall.setWorldTransform(transform);
-					bodyBall.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-					bodyBall.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-					document.getElementById('info').style.display = "none";
-					
-					rolling=false;
-					inhole=false;
-					}
-			function toggleSound()
-			{
-			
-				 if (soundEnabled==true) 
-					{
-						soundEnabled=false;
-						document.getElementById("sound").src = "img/mute.png";
-					}
-					else 
-					{
-						soundEnabled=true;
-						document.getElementById("sound").src = "img/unmute.png";
-					}
-			}
-			
-			
-			document.addEventListener("keydown", onDocumentKeyDown, false);
-			function onDocumentKeyDown(event) {
-				var keyCode = event.which;
-				//var delta=0.005;
-				var delta=0.02;
-				//console.log("key pressed " +keyCode);
-				if (keyCode == 38) {
-						if(AngleX>-0.078)
-							rotateX(-delta);
-				} else if (keyCode == 40) {
-						if(AngleX<0.078)
-							rotateX(delta);
-				} else if (keyCode == 39) {
-						if(AngleZ>-0.078)
-							rotateZ(-delta);
-				} else if (keyCode == 37) {
-						if(AngleZ<0.078)
-							rotateZ(delta);
-				}  else if (keyCode == 32) {//space
-					console.log("apply force");
-					//apply force
-					var relativeForce = new Ammo.btVector3(100,0,100);
-					//btTransform* boxTrans;
-					//boxRigidBody->getMotionState()->getWroldTransform(boxTrans);
-					//btVector3 correctedForce = (boxTrans * relativeForce) - boxTrans.getOrigin();
-					bodyBall.applyCentralForce(relativeForce);
-				}else if (keyCode == 82) {//r
-					ReStart();
-				
-				}
-			};
-
-
-
-
-			function rotateZ(deltaZ) {
-				//console.log("key pressedZ:" +AngleX+", "+AngleZ);
-				AngleZ=AngleZ+deltaZ;
-				rotateGroundXZ();
-				
-			}
-
-			function rotateX(deltaX) {
-				//console.log("key pressedX:" +AngleX+", "+AngleZ);
-				AngleX=AngleX+deltaX;
-				rotateRingX();
-				rotateGroundXZ();
-			}
-			function rotateGroundXZ() {
-					let pos = {x: 0, y: 0, z: 0};
-					let transform = new Ammo.btTransform();
-					transform.setIdentity();
-					transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-					transform.setRotation( new Ammo.btQuaternion( AngleX, 0, AngleZ, 1 ) );
-							
-					BlockBodyGround.setWorldTransform(transform);
-					BlockBodyGround.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-					BlockBodyGround.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-				
-					let p = transform.getOrigin();
-					let q = transform.getRotation();
-					groupGround.position.set( p.x(), p.y(), p.z() );
-					groupGround.quaternion.set( q.x(), q.y(), q.z(), q.w() );
-			}
-
-			function rotateRingX() {
-					let pos = {x: 0, y: 0, z: 0};
-					let transform = new Ammo.btTransform();
-					transform.setIdentity();
-					transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-					transform.setRotation( new Ammo.btQuaternion( AngleX, 0, 0, 1 ) );
-							
-					BlockBodyRing.setWorldTransform(transform);
-					BlockBodyRing.setLinearVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-					BlockBodyRing.setAngularVelocity(new Ammo.btVector3(0.0, 0.0, 0.0));
-				
-					let p = transform.getOrigin();
-					let q = transform.getRotation();
-					groupGroundRing.position.set( p.x(), p.y(), p.z() );
-					groupGroundRing.quaternion.set( q.x(), q.y(), q.z(), q.w() );
-			}
-
-
-			
-            //Ammojs Initialization
-            Ammo().then(start)
-
-            function start (){
-
-
-                tmpTrans = new Ammo.btTransform();
-
-                setupPhysicsWorld();
-				setupGraphics();
-				
-				groupGround = new THREE.Group();
-				groupGroundRing= new THREE.Group();
-				groupGroundBox= new THREE.Group();
-                compoundShapeGround = new Ammo.btCompoundShape();
-				compoundShapeRing = new Ammo.btCompoundShape();
-				compoundShapeBox = new Ammo.btCompoundShape();
-				
-				
-				
-				var loader = new THREE.TextureLoader();
-				var texture1 =loader.load('img/Background.jpg');
-				//console.log("texture="+texture1);
-				texture1.wrapS = texture1.wrapT = THREE.RepeatWrapping;
-				texture1.repeat.set( 1/60, -1/50 );
-				var materialBase = new THREE.MeshBasicMaterial( {map: texture1 } );
-				var texture2 =loader.load('img/wood.jpg');
-				materialWood = new THREE.MeshBasicMaterial( {map: texture2 } );
-				
-				
-				var floorGeometry = new THREE.PlaneGeometry( 500, 500, 20, 20 );
-				floorGeometry.rotateX( - Math.PI / 2 );
-				
-				var floorTexture = loader.load( 'img/wood-floorboards-texture.jpg' );
-				floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-				floorTexture.repeat.set(3, 3);
-				var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture});
-				var floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
-				floorMesh.translateY(-18);
-				scene.add( floorMesh );
-				
-				//sky
-				
-				var path = "img/sand/";
-				var format = '.png';
-				var urls = [
-					path + 'right' + format,
-					path + 'left' + format,
-					path + 'top' + format,
-					path + 'bottom' + format,
-					path + 'back' + format,
-					path + 'front' + format
-				];
-				 
-				var reflectionCube = THREE.ImageUtils.loadTextureCube(urls);
-				reflectionCube.format = THREE.RGBFormat;
-				 
-				var shader = THREE.ShaderLib[ "cube" ];
-				shader.uniforms[ "tCube" ].value = reflectionCube;
-				 
-				var material = new THREE.ShaderMaterial( {
-					fragmentShader: shader.fragmentShader,
-					vertexShader: shader.vertexShader,
-					uniforms: shader.uniforms,
-					depthWrite: false,
-					side: THREE.BackSide
-				});
-				 
-				mesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 1000, 1000), material);
-				scene.add(mesh);
-
-
-				
-				createGround(materialBase);
-				createWalls();
-				scene.add( groupGround );
-				scene.add( groupGroundRing);
-				scene.add( groupGroundBox);
-								
-				var mass=0;
-				let localInertia = new Ammo.btVector3( 0, 0, 0 );
-				compoundShapeGround.calculateLocalInertia(mass,localInertia);
-				let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeGround, localInertia );
-				BlockBodyGround = new Ammo.btRigidBody( rbInfo );
-			  
-				BlockBodyGround.setFriction(.1);
-				BlockBodyGround.setRestitution(.8);
-				BlockBodyGround.setDamping(0.2, 0.2);
-				BlockBodyGround.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
-				BlockBodyGround.setActivationState( 4 );//never sleep
-
-				physicsWorld.addRigidBody( BlockBodyGround, colGroupPlane, colGroupRedBall );
-				
-				
-				createRing();
-				
-				
-				
-				
-
-				
-				createBox();
-				
-				
-                createBall();
-                //createMaskBall();
-
-                renderFrame();
-			
-            }
-
-            function setupPhysicsWorld(){
-
-                let collisionConfiguration  = new Ammo.btDefaultCollisionConfiguration(),
-                    dispatcher              = new Ammo.btCollisionDispatcher(collisionConfiguration),
-                    overlappingPairCache    = new Ammo.btDbvtBroadphase(),
-                    solver                  = new Ammo.btSequentialImpulseConstraintSolver();
-
-                physicsWorld           = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-                physicsWorld.setGravity(new Ammo.btVector3(0, -20, 0));//2g to speed up the gameplay
-
-            }
-			/*
-			//print positions of all objects
-		for (int j = physicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
-		{
-			btCollisionObject* obj = physicsWorld->getCollisionObjectArray()[j];
-			btRigidBody* body = btRigidBody::upcast(obj);
-			btTransform trans;
-			if (body && body->getMotionState())
-			{
-				body->getMotionState()->getWorldTransform(trans);
-			}
-			else
-			{
-				trans = obj->getWorldTransform();
-			}
-			printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-		}
-			*/
-
-
-
-
-/*
-            function createBlock(pos,scale){
-                
-                //let pos = {x: 0, y: 0, z: 0};
-                //let scale = {x: 50, y: 2, z: 50};
-                let quat = {x: 0, y: 0, z: 0, w: 1};
-                let mass = 0;
-
-                //threeJS Section
-				var blockPlane = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa0afa4}));
-                blockPlane.position.set(pos.x, pos.y, pos.z);
-                blockPlane.scale.set(scale.x, scale.y, scale.z);
-				const quaternion = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
-				blockPlane.applyQuaternion(quaternion); // Apply Quaternion
-                blockPlane.castShadow = true;
-                blockPlane.receiveShadow = true;
-				groupGround.add( blockPlane );
-
-                //Ammojs Section
-                let transform = new Ammo.btTransform();
-                transform.setIdentity();
-                transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-                transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-                //let motionState = new Ammo.btDefaultMotionState( transform );
-                var colShapePlane = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );
-                colShapePlane.setMargin( 0.05 );
-                let localInertia = new Ammo.btVector3( 0, 0, 0 );
-                colShapePlane.calculateLocalInertia( mass, localInertia );
-				
-				//let transform2 = new Ammo.btTransform();
-				//transform2.setIdentity();
-				//transform2.setOrigin(new Ammo.btVector3(0, 0, 0));
-				compoundShapeGround.addChildShape(transform, colShapePlane);
-				
-            }
-*/
-
-
-
-	function createRing()
-	{
-		var offset=2.5;
-		var dy=5;
-		let mass = 0;
-		
-		createBlock2({x: 0, y: 2, z: -26-offset},{x: 62+offset*2, y: dy, z: 2},null,true,2);
-		createBlock2({x: 0, y: 2, z: 26+offset},{x: 62+offset*2, y: dy, z: 2},null,true,2);
-		createBlock2({x: -31-offset, y: 2, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,2);
-		createBlock2({x: 31+offset, y: 2, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,2);
-		
-		let localInertia = new Ammo.btVector3( 0, 0, 0 );
-		compoundShapeRing.calculateLocalInertia(mass,localInertia);
-		let rbInfoRing = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeRing, localInertia );
-		BlockBodyRing = new Ammo.btRigidBody( rbInfoRing );
-	  
-		BlockBodyRing.setFriction(.1);
-		BlockBodyRing.setRestitution(.8);
-		BlockBodyRing.setDamping(0.2, 0.2);
-		BlockBodyRing.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
-		BlockBodyRing.setActivationState( 4 );//never sleep
-
-		physicsWorld.addRigidBody( BlockBodyRing, colGroupPlane, colGroupRedBall );
-			
-	}
-	
-	function createBox()
-	{
-		var offset=5;
-		var dy=21;
-		let mass = 0;
-		createBlock2({x: 0, y: -6, z: -26-offset},{x: 62+offset*2, y: dy, z: 2},null,true,3);
-		//createBlock2({x: 0, y: -6, z: 26+offset},{x: 62+offset*2, y: dy, z: 2},null,true,3);//devant
-		createBlock2({x: -31-offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);// agauche
-		createBlock2({x: 31+offset, y: -6, z: 0},{x: 2, y: dy, z: 54+offset*2},null,true,3);//a droite
-		
-		
-		createBlock2({x: -2, y: -6, z: 26+offset},{x: 62+offset*2-4, y: dy, z: 2},null,true,3);//devant gauche
-		createBlock2({x: 31+2, y: -6+2, z: 26+offset},{x: 4, y: dy-4, z: 2},null,true,3);//devant haut droit
-		createBlock2({x: 31+2, y: -dy+5, z: 26+offset+2.5},{x: 4, y: 1, z: 2+2},null,true,3);//devant bas
-		
-		createBlock2({x: 31+2, y: -dy+5, z: 26+offset+2.5},{x: 7, y: 1, z: 2+2},null,true,3);//devant bas
-		
-		createBlock2({x: 31+2, y: -dy+5+1, z: 26+offset+4},{x: 6, y: 1, z: 1},null,true,3);//devant bas barriere
-		createBlock2({x: 31+2-3, y: -dy+5+1, z: 26+offset+2.5},{x: 1, y: 1, z: 4},null,true,3);//devant bas gauche barriere
-		createBlock2({x: 31+2+3, y: -dy+5+1, z: 26+offset+2.5},{x: 1, y: 1, z: 4},null,true,3);//devant bas droite barriere
-		
-		createBlock3({x: 0, y: -12, z:  0},{x: 62+offset*2, y: 1, z: 54+offset*2},{x: 0.025, y: 0.0, z: -0.025, w: 1}, null, true,3);
-		
-		
-		
-		
-		
-		let localInertia = new Ammo.btVector3( 0, 0, 0 );
-		compoundShapeBox.calculateLocalInertia(mass,localInertia);
-		let rbInfoRing = new Ammo.btRigidBodyConstructionInfo( mass, 0, compoundShapeBox, localInertia );
-		BlockBodyBox = new Ammo.btRigidBody( rbInfoRing );
-	  
-		BlockBodyBox.setFriction(.1);
-		BlockBodyBox.setRestitution(.8);
-		BlockBodyBox.setDamping(0.2, 0.2);
-		BlockBodyBox.setCollisionFlags( 1 );// 0 is static, 1 is dynamic, 2 is kinematic
-		BlockBodyBox.setActivationState( 4 );//never sleep
-
-		physicsWorld.addRigidBody( BlockBodyBox, colGroupPlane, colGroupRedBall );
-		
-	}
-
-		function createWalls()
-		{
-			//createBlock( {x: 0, y: 0, z: 0},   {x: 50, y: 2, z: 50});
-			createBlock({x: 0, y: 2, z: -26},{x: 62, y: 6, z: 2});
-			createBlock({x: 0, y: 2, z: 26},{x: 62, y: 6, z: 2});
-			createBlock({x: -31, y: 2, z: 0},{x: 2, y: 6, z: 54});
-			createBlock({x: 31, y: 2, z: 0},{x: 2, y: 6, z: 54});
-				
-			createWall_y(4,-14,23);//grand vertical pres du start
-			createWall_x(-3.5,-21,16);//grand horizontal sous le start
-			createWall_y(-11,-18.5,5.5);//au bout du precedent
-			createWall_y(-16,-23,5);//en face du start
-			createWall_y(-16.5,-16,4);//en dessous du precedent
-			createWall_y(-21.5,-18.5,4);//entre 2 et 4
-			createWall_x(-28,-19,4.5);//sous le 3
-			createWall_x(-28,-9.5,4.5);//en desous du precedent
-			createWall_y(-21,-8.75,8);//entre 5 et 22
-			createWall_x(-23,-5.25,5);//pres du 7
-			createWall_y(-25,2,4);//pres du 6 et du 9
-			createWall_y(-21,2,4);//au dessus du 8
-			
-			createWall_x(-24,8,5);//au dessus du 11
-			createWall_y(-22,14,13);//en dessous du 8
-			
-			createWall_y(-17.25,22.5,5);//a gauche du 33
-			createWall_y(-16.5,15.5,3);//a droite du 13
-			createWall_y(-16.25,1,7);//a gauche du 17
-			createWall_y(-17,-8,2);//en haut à droite du 21
-			
-			createWall_y(-11.75,15.5,8);//au dessus du 14
-			createWall_x(-9,12,4.5);//au droite du 15
-			createWall_y(-10.75,1.5,7);//au droite du 17
-			createWall_y(-11,-7.5,5);//au gauche du 19
-			createWall_x(-9,-10,5);//a droite du 23
-			createWall_y(-6.75,-12.5,6);//au gauche du 25
-			createWall_y(-1.5,-15,4);//sous le 24
-			createWall_y(-1.85,-7.5,4);//a droite de 28
-			createWall_y(-2,1.5,4);//sous 27
-			createWall_y(-6.5,1,12.5);//sous 27
-			createWall_x(-4.5,7,5);//au dessus de 31
-			
-			createWall_y(-1.75,16.5,9);//a gauche de 36
-			createWall_y(-6.85,18.25,4);//a droite de 32
-			
-			createWall_y(3.5,7.5,9);//a gauche de 48
-			createWall_x(6,20.25,7.5);//au dessus de 35
-			
-			createWall_y(13.75,14.5,11);//a gauche de 47
-			createWall_x(11,9.5,6.5);//a gauche de 47	
-			createWall_y(8.25,6.5,7);//a droite de 48
-			
-			createWall_y(18.75,19.25,4);//au dessus de 40
-			createWall_y(18.75,8.75,11.5);//a droite de 47
-			
-			createWall_y(13.75,0,9.5);//a gauche de 46
-			createWall_x(11.25,0,5);//sous le 51
-			createWall_x(9,-10.25,9);//sous le 54
-			createWall_x(6.5,-16.5,4.5);//sous le 55
-			
-			createWall_y(13.75,-15.75,3.5);//a gauche de 53
-			createWall_x(16.75,-17.5,7);//au dessus de 53
-			createWall_y(19.75,-11,14);//a gauche de 59
-			createWall_y(19.50,-23,3.5);//au dessus de 57 
-			createWall_y(25,-15,4);//a gauche du 60 
-			createWall_y(24.5,-2,13.5);//a droite de 45
-			createWall_x(27,4.25,5.5);//au dessus de 53
-			
-			
-		}
-/*
-		function createWallExtrude()
-		{
-			var shape = new THREE.Shape();
-			//...define your shape
-			shape.moveTo( 10,10 );
-			shape.lineTo( 10, 12 );
-			shape.absarc(10.25, 12, 0.25, 0, Math.PI*2 , false);
-			
-			//shape.lineTo( 10.5,12 );
-			shape.lineTo( 10.5,10 );
-			shape.lineTo( 10,10 );
-			
-			const extrudeSettings = {
-			  steps: 2,
-			  depth: 30,
-			  bevelEnabled: false,
-			  bevelThickness: 1,
-			  bevelSize: 1,
-			  bevelSegments: 2,
-			};
-			
-			var geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
-			
-			
-			var mesh = new THREE.Mesh( geometry, materialWood) ;
-			mesh.rotation.x= THREE.Math.degToRad( 0 );
-			mesh.position.x=-30;
-			mesh.position.z=-25;
-			mesh.position.y=5;
-			
-			mesh.castShadow = true;
-            mesh.receiveShadow = true;
-			//scene.add( mesh );
-			groupGround.add( mesh );
-			
-		}
-		*/
-		function createWall_x(pos_x,pos_z,len)
-		{
-			//createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: len, y: 1, z: 1},0xa0afa4,true,1);
-			createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: len, y: 1, z: 1},null,true,1);
-		}
-		
-		function createWall_y(pos_x,pos_z,len)
-		{
-			//createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: 1, y: 1, z: len},0xa0afa4,true,1);
-			createBlock2({x: pos_x, y: 1.5, z: pos_z},{x: 1, y: 1, z: len},null,true,1);
-		}
-		
-		function createBlock(pos,scale)
-		{
-			createBlock2(pos,scale,null,true,1);
-		}
-		function createBlock2(pos,scale, color, create3js,group)
-		{
-			let quat = {x: 0, y: 0, z: 0, w: 1};
-			createBlock3(pos,scale,quat, color, create3js,group);
-		}
-	    function createBlock3(pos,scale,quat, color, create3js,group)
-		{
-           
-            let mass = 0;
-
-			if(create3js==true)
-			{
-				//threeJS Section
-				var block1;
-				if(color==null)
-					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), materialWood);
-				else
-					block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: color}));
-					
-					block1.position.set(pos.x, pos.y, pos.z);
-					block1.scale.set(scale.x, scale.y, scale.z);
-					const quaternion = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
-					block1.applyQuaternion(quaternion); // Apply Quaternion
-					block1.castShadow = true;
-					block1.receiveShadow = true;
-					if(group==1)
-						groupGround.add( block1 );
-					if(group==2)
-						groupGroundRing.add( block1 );
-					if(group==3)
-						groupGroundBox.add( block1 );
-			}
-			//Ammojs Section
-			let transform = new Ammo.btTransform();
-			transform.setIdentity();
-			transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-			transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-			//let motionState = new Ammo.btDefaultMotionState( transform );
-			var colShape1 = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );
-			colShape1.setMargin( 0.05 );
-			let localInertia = new Ammo.btVector3( 0, 0, 0 );
-			colShape1.calculateLocalInertia( mass, localInertia );
-				
-			//let transform2 = new Ammo.btTransform();
-			//transform2.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-			if(group==1)
-				compoundShapeGround.addChildShape(transform, colShape1);
-			if(group==2)	
-				compoundShapeRing.addChildShape(transform, colShape1);
-			if(group==3)	
-				compoundShapeBox.addChildShape(transform, colShape1);
-			
-            }
-
-		
-		function AddHole(shape,hole,radius){
-
-			var ox=hole.x;
-			var oy=hole.y;
-			
-			var circleTri = new THREE.Shape();
-			var circle = new THREE.Shape();
-			var segments = 32;
-			var theta, x, y;
-			for (var i = 0; i < segments; i++) {
-				theta = ((i + 1) / segments) * Math.PI * 2.0;
-				x = radius * Math.cos(theta);
-				y = radius * Math.sin(theta);
-				if (i == 0) {
-					circle.moveTo(x+ox, y+oy);
-				} else {
-					circle.lineTo(x+ox, y+oy);
-				}
-			}
-			shape.holes.push( circle );
-			if(displayHoleNumber==true)
-			{
-				//-------------
-				// hole name& disk
-				fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) 
-				{
-					for(k=0;k<hole.a.length;k++)
-					{
-						//  Creates the name mesh
-						var textGeometry = new THREE.TextGeometry(hole.a[k].s, {
-								font: font,
-								size: 1,
-								height: 0.5,
-								curveSegments: 12,
-								bevelEnabled: false,
-								
-							});
-						var angle=(hole.a[k].ls+hole.a[k].le)/2;
-						if(hole.a[k].ls>hole.a[k].le)//on passe par 0
-							angle=angle-180;
-						var dir=new THREE.Vector3(-1, 0, 0)
-						var axis = new THREE.Vector3( 0, 1, 0 );
-						dir.applyAxisAngle( axis, THREE.Math.degToRad( angle ) );
-
-						//console.log("===>"+hole.a[k].s+": "+hole.a[k].l+"("+angle+")"+"="+dir.x+","+dir.y+","+dir.z);
-							
-						var offsetX=dir.x*2;
-						var offsetZ=dir.z*2;
-						if(hole.a[k].l=="0")//centré
-						{
-							offsetX=0;
-							offsetZ=0;
-						}
-						offsetX=offsetX-0.8;
-							
-						var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
-						var TextMesh = new THREE.Mesh( textGeometry, textMaterial );
-						TextMesh.position.x = hole.x-30+offsetX;
-						TextMesh.position.y=2;
-						TextMesh.position.z = hole.y-25-offsetZ;
-						TextMesh.rotateX(-3.14/2);
-						scene.add(TextMesh);
-					}
-				
-				
-				});
-			}
-			//----------------
-			
-			
-		}
-
-	function CreateSubBlockDemo(x,y,z,dx,dy,dz,color)
-	{
-		createBlock2({x: x, y: 0, z: z},{x: dx, y: 2, z: dz}, color,false,1);
-		//createBlock2({x: x, y: 1, z: z},{x: dx, y: 2, z: dz}, color,true);
-	}
-	function CreateBlockDemo(holes)
-	{
-		var Column=[];
-		var h;
-		//var diam=2.3;
-		var diam=2.45;
-		var radius=diam/2.0;
-		var dx=60;
-		var dy=50;
-		var dx_2=30;
-		var dy_2=25;
-		
-		/*
-		for(h=0;h<holes.length;h++)
-		//h=14;
-		{
-			var block1;
-			block1 = new THREE.Mesh(new THREE.BoxBufferGeometry(), new THREE.MeshPhongMaterial({color: 0xa00f04}));
-			block1.position.set(holes[h].x-dx_2, 1, holes[h].y-dy_2);
-			block1.scale.set(diam, 1, diam);
-			//groupGround.add( block1 );
-		}
-		*/
-		//recherche vers le haut
-		for(h=0;h<holes.length;h++)
-		//h=14;
-		{
-			var y=0;
-			var sideL=false;
-			var sideR=false;
-			var top=true;
-			var maxX=0;
-			var minX=45555;
-			
-			for(h2=0;h2<holes.length;h2++)
-			{
-				if(h!=h2)
-				{
-					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+diam)&& (holes[h2].y+diam>holes[h].y))//en cube en haut dand le fuseau a droite
-					{
-						top=false;
-					}
-					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+diam)&& (holes[h2].y+diam<holes[h].y))//en cube en haut dand le fuseau a droite
-					{
-						if(holes[h2].x>maxX)
-						{
-							maxX=holes[h2].x;
-							sideR=true;
-						}
-						if(holes[h2].y+diam>y)
-						{
-							y=holes[h2].y+diam;
-							//console.log("j'ai UP+1"+y);
-						}
-					}
-					if((holes[h2].x+diam>=holes[h].x)&&(holes[h2].x+diam<=holes[h].x+diam)&& (holes[h2].y+diam>holes[h].y))//en cube en haut dand le fuseau a droite
-					{
-						top=false;
-					}
-					if((holes[h2].x+diam>=holes[h].x)&&(holes[h2].x+diam<=holes[h].x+diam)&& (holes[h2].y+diam<holes[h].y))//en cube en haut dans le fuseau a gauche
-					{
-						if(holes[h2].x<minX)
-						{
-							minX=holes[h2].x;
-							sideL=true;
-						}
-						if(holes[h2].y+diam>y)
-						{
-							y=holes[h2].y+diam;
-						//	console.log("j'ai UP-1 "+y);
-						}
-					}
-				}
-			}
-			CreateSubBlockDemo(holes[h].x-dx_2, 1, (holes[h].y-y)/2+y -dy_2-radius,diam, 1, holes[h].y-y,0x00f004);
-			
-			if(sideR==true)
-			{	if(maxX-holes[h].x>0)
-				{
-					CreateSubBlockDemo(holes[h].x-dx_2+radius+((maxX-holes[h].x)/2), 1, (holes[h].y-y)/2+y -dy_2,maxX-holes[h].x, 1, holes[h].y-y+diam,0xf0f004);
-				}			
-			}
-			
-			if(sideL==true)
-			{	if(holes[h].x-minX>0)
-				{
-					CreateSubBlockDemo(holes[h].x-dx_2-radius-((holes[h].x-minX)/2), 1, (holes[h].y-y)/2+y -dy_2,holes[h].x-minX, 1, holes[h].y-y+diam,0xf0f004);
-				}			
-			}
-			if(top==true)
-			{
-				if(minX==45555)
-					minX=holes[h].x;
-				if(maxX==0)
-					maxX=holes[h].x;
-					
-				if((minX!=45555)&&(maxX!=0))
-				{
-					//console.log("j'ai TOP "+minX+"; "+maxX);
-					Column.push({x1:minX,x2:maxX+diam});
-					CreateSubBlockDemo((maxX-minX+diam)/2+minX-dx_2-radius, 1, (dy-holes[h].y-diam)/2+holes[h].y -dy_2+diam,maxX-minX+diam, 1, dy-holes[h].y,0xF0f0F4);
-				}
-			}
-		}
-		
-		
-		//recherche vers le bas
-		for(h=0;h<holes.length;h++)
-		//h=14;
-		{
-			var ymin=0
-			var sideL=false;
-			var sideR=false;
-			var maxX=0;
-			var minX=45555;
-			for(h2=0;h2<holes.length;h2++)
-			{
-				if(h!=h2)
-				{
-				
-					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+diam)&& (holes[h2].y+diam<holes[h].y))//un cube en bas dans le fuseau a droite
-					{
-						if(holes[h2].y+diam>ymin)
-							ymin=holes[h2].y+diam;
-					}
-					if((holes[h2].x>=holes[h].x)&&(holes[h2].x<=holes[h].x+diam)&& (holes[h2].y+diam>holes[h].y))//un cube en bas dans le fuseau a droite
-					{
-						//console.log("j'ai DOWN A");
-						if(holes[h2].x>maxX)
-						{
-							maxX=holes[h2].x;
-							sideR=true;
-						}
-						
-					}
-					if((holes[h2].x+diam>=holes[h].x)&&(holes[h2].x+diam<=holes[h].x+diam)&& (holes[h2].y+diam<holes[h].y))//un cube en bas dans le fuseau a gauche
-					{
-						if(holes[h2].y+diam>ymin)
-							ymin=holes[h2].y+diam;
-					}
-					if((holes[h2].x+diam>=holes[h].x)&&(holes[h2].x+diam<=holes[h].x+diam)&& (holes[h2].y+diam>holes[h].y))//un cube en bas dans le fuseau a gauche
-					{
-						//console.log("j'ai DOWN B");
-						if(holes[h2].x<minX)
-						{
-							minX=holes[h2].x;
-							sideL=true;
-						}
-					}
-					
-				}
-			}
-			var block1;
-			if(sideR==true)
-			{	if(maxX-holes[h].x>0)
-				{
-					//console.log("R "+(maxX-holes[h].x)/2);
-					CreateSubBlockDemo(holes[h].x-dx_2+radius+((maxX-holes[h].x)/2), 1, (holes[h].y-ymin)/2+ymin -dy_2,maxX-holes[h].x, 1, holes[h].y-ymin+diam,0x00f0f4);
-				}			
-			}
-			
-			if(sideL==true)
-			{	if(holes[h].x-minX>0)
-				{
-					//console.log("L "+(holes[h].x-minX)/2);
-					CreateSubBlockDemo(holes[h].x-dx_2-radius-((holes[h].x-minX)/2), 1, (holes[h].y-ymin)/2+ymin -dy_2,holes[h].x-minX, 1,  holes[h].y-ymin+diam,0x00f0f4);
-				}			
-			}
-		}
-		//fill between column
-		Column.sort((a, b) => (a.x1 > b.x1) ? 1 : -1);
-		Column.push({x1:dx+diam,x2:dx+diam});
-		var prevX=0;
-		for(var z=0;z<Column.length;z++)
-		{
-			//console.log("col:"+Column[z].x1+"; "+Column[z].x2);
-			if(Column[z].x1-prevX>0)
-				CreateSubBlockDemo(prevX-dx_2-radius+((Column[z].x1-prevX)/2), 1, 0,Column[z].x1-prevX, 1,  dy+diam,0xf000f4);
-			prevX=Column[z].x2;
-		}
-		
-			
-	}
-	function ExtandHole()
-	{
-		var h=0;
-		/*
-		var Obj = { s:"", ls:0,	le:0};
-*/		
-		for(h=0;h<holes.length;h++)
-		{
-		
-				//,d:"TL,RB"
-				var res = holes[h].l.split(",");
-				if(res.length==1)
-				{
-					var Obj = { l:"",s:"", ls:0,	le:0};
-					Obj.l="0";
-					Obj.s=holes[h].l;
-					Obj.ls=0;
-					Obj.le=360;
-					holes[h].a.push(Obj);
-					/*
-					holes[h].a[0].s=holes[h].l;
-					holes[h].a[0].ls=0;
-					holes[h].a[0].le=360;
-					*/
-				}
-				else
-				{
-					//console.log("nb split d:"+res.length);
-					//console.log("d:"+holes[h].d);
-					
-					var d = holes[h].d.split(",");
-					var label = holes[h].l.split(",");
-					
-					//var k=0;
-					//for(k=0;k<res.length;k++)
-					
-					var l=0;
-					for(l=0;l<d.length;l++)
-					{
-						
-						//var d = holes[h].d.split(",");
-						//var label = holes[h].l.split(",");
-						//for(l=0;l<d.length;l++)
-						{
-							var Obj = { l:"",s:"", ls:0,	le:0};
-							Obj.s=label[l];
-							Obj.l=d[l];
-							if(d[l].length==1)//T,B,L,R
-							{
-								if(d[l]=='T')
-								{
-									Obj.ls=0;
-									Obj.le=180;
-								}
-								else if(d[l]=='B')
-								{
-									Obj.ls=180;
-									Obj.le=360;
-								}
-								else if(d[l]=='L')
-								{
-									Obj.ls=270;
-									Obj.le=90;
-								}
-								else if(d[l]=='R')
-								{
-									Obj.ls=90;
-									Obj.le=270;
-								}
-								else
-								{
-									console.log("unknown hole pos 1:"+d[l]+" for hole "+h+":"+holes[h].l);
-								}
-							}else if(d[l].length==2)//TL,RB
-							{
-								if(d[l]=='TL')
-								{
-									Obj.ls=315;
-									Obj.le=135;
-								}
-								else if(d[l]=='RB')
-								{
-									Obj.ls=135;
-									Obj.le=315;
-								}
-								else if(d[l]=='BL')
-								{
-									Obj.ls=225;
-									Obj.le=45;
-								}
-								else if(d[l]=='TR')
-								{
-									Obj.ls=45;
-									Obj.le=225;
-								}
-								else
-								{
-									console.log("unknown hole pos 1:"+d[l]+" for hole "+h+":"+holes[h].l);
-								}
-							}
-							else
-							{
-								console.log("unknown hole typpe>2:"+d.length+" for hole "+h+":"+holes[h].l);
-							}
-							holes[h].a.push(Obj);
-						}
-					}
-				}
-		}
-	}
-
-		function createGround(material)
-		{
-			let scale = {x: 60, y: 2, z: 50};
-			let mass = 0;
-			let quat = {x: 0, y: 0, z: 0, w: 1};
-			
-			//------------------------
-			/*
-			var blockPlane = new THREE.Mesh(new THREE.BoxBufferGeometry(), material);
-                blockPlane.position.set(10, 10, 10);
-                blockPlane.scale.set(scale.x, scale.y, scale.z);
-				const quaternion = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
-				blockPlane.applyQuaternion(quaternion); // Apply Quaternion
-                blockPlane.castShadow = true;
-                blockPlane.receiveShadow = true;
-				groupGround.add( blockPlane );
-*/
-			
-			//-------------
-			var shape = new THREE.Shape();
-			//...define your shape
-			shape.moveTo( 0,0 );
-			shape.lineTo( 0, 50 );
-			shape.lineTo( 60,50 );
-			shape.lineTo( 60,0 );
-			shape.lineTo( 0,0 );
- 
-			
-	
-			ExtandHole(holes);
-			var h;
-			for(h=0;h<holes.length;h++)
-				AddHole(shape,holes[h],1.15);
-						
-			CreateBlockDemo(holes);
-						
-			const extrudeSettings = {
-			  steps: 2,
-			  depth: 0.5,
-			  bevelEnabled: false,
-			  bevelThickness: 1,
-			  bevelSize: 1,
-			  bevelSegments: 2,
-			  material:0, //material index of the front and back face
-              extrudeMaterial : 1 //material index of the side faces
-			};
-
-			//const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
-			var geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
-			
-			//var materialSide = new THREE.MeshBasicMaterial( { color: woodcolor } );
-			var mesh = new THREE.Mesh( geometry, [material,materialWood] ) ;
-			mesh.rotation.x= THREE.Math.degToRad( 90 );
-			mesh.position.x=-30;
-			mesh.position.z=-25;
-			mesh.position.y=1;
-			
-			mesh.castShadow = true;
-            mesh.receiveShadow = true;
-			//scene.add( mesh );
-			groupGround.add( mesh );
-
-
-			/*
-			//Ammojs Section
-			let transform = new Ammo.btTransform();
-			transform.setIdentity();
-			transform.setOrigin( new Ammo.btVector3(0, 0, 0 ) );
-			transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-			//let motionState = new Ammo.btDefaultMotionState( transform );
-			
-			
-			//var geometry2 = new THREE.Geometry().fromBufferGeometry( geometry );
-			//var colShape1=getMesh(geometry2);
-			//var colShape1=createTriangleShapeByGeometry(geometry2);
-			
-			var colShape1 = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );				
-						
-			
-			colShape1.setMargin( 0.05 );
-			let localInertia = new Ammo.btVector3( 0, 0, 0 );
-			colShape1.calculateLocalInertia( mass, localInertia );
-				
-			//let transform2 = new Ammo.btTransform();
-			//transform2.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-			compoundShapeGround.addChildShape(transform, colShape1);
-			*/
-		}
-
-
-		   function createBall(){
-                
-             
-                let radius = ballRadius;
-                let quat = {x: 0, y: 0, z: 0, w: 1};
-                let mass = 2;
-
-                //threeJS Section
-				
-				let ballMaterial = new THREE.MeshStandardMaterial ({color: 0xECECEC, roughness:0.2, metalness:0.8});
-                ball = new THREE.Mesh(new THREE.SphereBufferGeometry(radius,20,20), ballMaterial);
-
-                ball.position.set(posOrigin.x, posOrigin.y, posOrigin.z);
-                
-                ball.castShadow = true;
-                ball.receiveShadow = true;
-				ball.visible = false;
-                scene.add(ball);
-
-
-                //Ammojs Section
-                let transform = new Ammo.btTransform();
-                transform.setIdentity();
-                transform.setOrigin( new Ammo.btVector3( posOrigin.x, posOrigin.y, posOrigin.z ) );
-                transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-                let motionState = new Ammo.btDefaultMotionState( transform );
-
-                let colShape = new Ammo.btSphereShape( radius );
-                colShape.setMargin( 0.05 );
-			    
-	
-
-                let localInertia = new Ammo.btVector3( 1, 1, 1 );
-                colShape.calculateLocalInertia( mass, localInertia );
-
-                let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, colShape, localInertia );
-                bodyBall = new Ammo.btRigidBody( rbInfo );
-
-				bodyBall.setCollisionFlags( 0 );// 0 is static, 1 is dynamic, 2 is kinematic
-				bodyBall.setActivationState( 4 ); // never sleep, alow physics after a stedy state period
-				 
-				//bodyBall.setFriction(.1);
-				bodyBall.setRestitution(.6);
-				//bodyBall.setDamping(0.2, 0.2);
-				
-                physicsWorld.addRigidBody( bodyBall, colGroupRedBall, colGroupPlane | colGroupGreenBall );
-                
-                ball.userData.physicsBody = bodyBall;
-                rigidBodies.push(ball);
-            }
-
-
-
-            
-
-
-            function updatePhysics( deltaTime ){
-
-                // Step world
-                physicsWorld.stepSimulation( deltaTime, 10 );
-				
-                // Update rigid bodies
-                for ( let i = 0; i < rigidBodies.length; i++ ) {
-                    let objThree = rigidBodies[ i ];
-                    let objAmmo = objThree.userData.physicsBody;
-                    let ms = objAmmo.getMotionState();
-                    if ( ms ) {
-
-                        ms.getWorldTransform( tmpTrans );
-                        let p = tmpTrans.getOrigin();
-                        let q = tmpTrans.getRotation();
-                        objThree.position.set( p.x(), p.y(), p.z() );
-                        objThree.quaternion.set( q.x(), q.y(), q.z(), q.w() );
-
-                    }
-                }
-
-            }
-
-
-
-
-
-	
-	        function setupGraphics(){
-
-                //create clock for timing
-                clock = new THREE.Clock();
-
-                //create the scene
-                scene = new THREE.Scene();
-                scene.background = new THREE.Color( 0xbfd1e5 );
-
-                //create camera
-                camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 5000 );
-                //camera.position.set( 0, 30, 70 );
-				camera.position.set( 0, 80, 20 );
-				
-                camera.lookAt(new THREE.Vector3(0, 0, 0));
-				
-				// create an AudioListener and add it to the camera
-				listener = new THREE.AudioListener();
-				camera.add( listener );
-
-				
-		
-				
-                //Add hemisphere light
-                let hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.1 );
-                hemiLight.color.setHSL( 0.6, 0.6, 0.6 );
-                hemiLight.groundColor.setHSL( 0.1, 1, 0.4 );
-                hemiLight.position.set( 0, 50, 0 );
-                scene.add( hemiLight );
-
-                //Add directional light
-                let dirLight = new THREE.DirectionalLight( 0xffffff , 1);
-                dirLight.color.setHSL( 0.1, 1, 0.95 );
-                dirLight.position.set( -1, 1.75, 1 );
-                dirLight.position.multiplyScalar( 100 );
-                scene.add( dirLight );
-
-                dirLight.castShadow = true;
-
-                dirLight.shadow.mapSize.width = 2048;
-                dirLight.shadow.mapSize.height = 2048;
-
-                let d = 50;
-
-                dirLight.shadow.camera.left = -d;
-                dirLight.shadow.camera.right = d;
-                dirLight.shadow.camera.top = d;
-                dirLight.shadow.camera.bottom = -d;
-
-                dirLight.shadow.camera.far = 13500;
-
-                //Setup the renderer
-                renderer = new THREE.WebGLRenderer( { antialias: true } );
-                renderer.setClearColor( 0xbfd1e5 );
-                renderer.setPixelRatio( window.devicePixelRatio );
-                renderer.setSize( window.innerWidth, window.innerHeight );
-                document.body.appendChild( renderer.domElement );
-
-                renderer.gammaInput = true;
-                renderer.gammaOutput = true;
-
-                renderer.shadowMap.enabled = true;
-				
-				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				controls.enableKeys  = false;
-				controls.maxDistance =200;
-				controls.minDistance =30;
-				controls.minPolarAngle = THREE.Math.degToRad( -45);
-				controls.maxPolarAngle = THREE.Math.degToRad( 80);
-				controls.zoomSpeed=0.2;
-								
-				controls.update();
-				
-
-            }
-			
-			function CacluateScore(hole, speedVector)
-			{
-				var res = hole.l.split(",");
-				if(res.length==1)
-					return parseInt(res[0], 10);
-				else
-				{
-					speedVector.multiply(new THREE.Vector3(-1,0,1));
-					console.log("===>Speed vector" +speedVector.x+","+speedVector.y+","+speedVector.z);
-					console.log("===>a.length="+hole.a.length);
-					var MinError=9999;
-					var MinErrorK=-1;
-					for(k=0;k<hole.a.length;k++)
-					{
-						var angle=(hole.a[k].ls+hole.a[k].le)/2;
-						if(hole.a[k].ls>hole.a[k].le)//on passe par 0
-							angle=angle-180;
-						var dir=new THREE.Vector3(-1, 0, 0)
-						var axis = new THREE.Vector3( 0, 1, 0 );
-						dir.applyAxisAngle( axis, THREE.Math.degToRad( angle ) );
-						
-						var error = dir.distanceTo( speedVector );
-						
-						console.log("===>"+hole.a[k].s+": "+hole.a[k].l+"("+angle+")"+"="+dir.x+","+dir.y+","+dir.z+"------ >"+error);
-						if(error<MinError)
-						{
-							MinError=error;
-							MinErrorK=k;
-						}
-						
-					}
-					console.log("===>Hole selected:="+res[MinErrorK]);
-					return parseInt(res[MinErrorK], 10);
-				}
-			}
-			function CheckStatus()
-			{
-
-				let ms = bodyBall.getMotionState();
-				// var speedVector= = new Ammo.btVector3(100,0,100); bodyBall.getLinearVelocity();
-				var speedVector= bodyBall.getLinearVelocity();
-				
-				//console.log("ammoSpeedVector"+speedVector.x()+"; "+speedVector.y()+"; "+speedVector.z());
-				var tjsSpeedVectorNorm= new THREE.Vector3(speedVector.x(), speedVector.y(), speedVector.z());
-				var speed=tjsSpeedVectorNorm.length();
-				tjsSpeedVectorNorm.normalize ();
-				var speedVectorNorm = new Ammo.btVector3(tjsSpeedVectorNorm.x, tjsSpeedVectorNorm.y, tjsSpeedVectorNorm.z); 
-				var tjsSpeedVectorNormXZ= new THREE.Vector3(speedVector.x(), 0, speedVector.z());
-				var speedXZ=tjsSpeedVectorNormXZ.length();
-				
-				//console.log("ThreeSpeedVector"+tjsSpeedVectorNorm.x+"; "+tjsSpeedVectorNorm.y+"; "+tjsSpeedVectorNorm.z);
-				
-				var nbcol = physicsWorld.getDispatcher().getNumManifolds();
-				
-				
-	
-				if(nbPreviouColision!=nbcol)
-				{
-					console.log("NbCol="+nbPreviouColision +" -> "+nbcol);
-					if(nbcol>nbPreviouColision)
-					{
-						if(speed>1)
-						{
-						//----------------------------
-						for ( i=0;i<nbcol;i++)
-						{
-						
-							var contactManifold =  physicsWorld.getDispatcher().getManifoldByIndexInternal(i);
-							var obA = contactManifold.getBody0();
-							var obB = contactManifold.getBody1();
-							var numContacts = contactManifold.getNumContacts();
-							for (j=0;j<numContacts;j++)
-							{
-								var pt = contactManifold.getContactPoint(j);
-								if (pt.getDistance()<0)
-								{
-									var ptA = pt.getPositionWorldOnA();
-									var ptB = pt.getPositionWorldOnB();
-									var normalOnB = pt.m_normalWorldOnB;
-									console.log("vectN="+normalOnB.x()+", "+normalOnB.y()+", "+normalOnB.z());
-									console.log("vectS="+speedVectorNorm.x()+", "+speedVectorNorm.y()+", "+speedVectorNorm.z());
-									var b=new Ammo.btVector3(normalOnB.x()+speedVectorNorm.x(),normalOnB.y()+speedVectorNorm.y(),normalOnB.z()+speedVectorNorm.z());
-									
-									console.log("vectB="+b.x()+", "+b.y()+", "+b.z());
-									console.log("vectB len="+b.length());
-											//-------------------------
-											if(b.length()<1)
-											{
-									var millis = Date.now() - lastBong;
-									if(millis>200)
-									{
-										console.log("BONG: collision at speed="+speed);
-										lastBong=Date.now();
-										if(soundEnabled==true)
-										{
-											if(soundRolling.isPlaying ==true)
-												soundRolling.stop();									
-											soundBong.play();
-										}
-									}
-									}
-									
-								/*
-									const btVector3& ptA = pt.getPositionWorldOnA();
-									const btVector3& ptB = pt.getPositionWorldOnB();
-									const btVector3& normalOnB = pt.m_normalWorldOnB;
-									*/
-								}
-							}
-						/*
-							btPersistentManifold* contactManifold =  world->getDispatcher()->getManifoldByIndexInternal(i);
-							btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
-							btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-
-							int numContacts = contactManifold->getNumContacts();
-							for (int j=0;j<numContacts;j++)
-							{
-								btManifoldPoint& pt = contactManifold->getContactPoint(j);
-								if (pt.getDistance()<0.f)
-								{
-									const btVector3& ptA = pt.getPositionWorldOnA();
-									const btVector3& ptB = pt.getPositionWorldOnB();
-									const btVector3& normalOnB = pt.m_normalWorldOnB;
-								}
-							}
-							*/
-						}
-						
-						
-				
-						}
-					}
-					nbPreviouColision=nbcol;
-				}
-				/*
-				if(speed>0.05)
-				{
-					//console.log("speed:"+speed);
-					caster.set(ball.position, tjsSpeedVectorNorm);
-					var collisions;
-					caster.far=3;
-					collisions = caster.intersectObjects(scene.children,true);
-					for ( var j = 0; j < collisions.length; j++ ) 
-					{
-						
-						//if(collisions[ j ].object!=undefined)
-						{
-							if (collisions[j].distance <3)
-								console.log("BONG: collision "+j+" d= "+collisions[j].distance+" s = "+speed);
-							//if ((collisions[j].distance >=1)&&(collisions[j].distance <=2.5))//Math.max(speed/2,1.2))) 
-							if ((collisions[j].distance >=1)&&(collisions[j].distance <=Math.max(speed,1.5))) 
-							{
-								//if(collisions[ j ].object!=undefined)
-								//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0x0000F0});
-		
-								var millis = Date.now() - lastBong;
-								if(millis>200)
-								{
-									console.log("BONG: collision comming with something at 32 in speed dir "+j+ " dist="+ collisions[j].distance+ " speed="+speed);
-									lastBong=Date.now();
-									if(soundEnabled==true)
-									{
-										if(soundRolling.isPlaying ==true)
-											soundRolling.stop();									
-										soundBong.play();
-									}
-								}
-							
-							}
-						}
-					}
-				}		
-				*/				
-				var rays = [
-					  new THREE.Vector3(0, 0, 1),
-					  new THREE.Vector3(1, 0, 1),
-					  new THREE.Vector3(1, 0, 0),
-					  new THREE.Vector3(1, 0, -1),
-					  new THREE.Vector3(0, 0, -1),
-					  new THREE.Vector3(-1, 0, -1),
-					  new THREE.Vector3(-1, 0, 0),
-					  new THREE.Vector3(-1, 0, 1),
-					  new THREE.Vector3(0, -1, 0)//en bas
-					];
-					
-				var  distance = 2;
-				var Frotte=false;
-				var i;
-				if(speedXZ>2)
-				{
-				 // For each ray
-					for (i = 0; i < rays.length; i += 1) 
-					{
-						//console.log("loop "+ i);
-						// We reset the raycaster to this direction
-						caster.set(ball.position, rays[i]);
-						// Test if we intersect with any obstacle mesh
-						collisions = caster.intersectObjects(scene.children,true);
-						// And disable that direction if we do
-					  
-						for ( var j = 0; j < collisions.length; j++ ) 
-						{
-						  
-							if (collisions[j].distance <= ballRadius+0.1) 
-							{
-								if(collisions[ j ].object!=undefined)
-								{
-									//collisions[ j ].object.material=new THREE.MeshPhongMaterial({color: 0xF00000});
-								  /*
-									// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
-									if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
-									  this.direction.setZ(0);
-									} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
-									  this.direction.setZ(0);
-									}
-									if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
-									  this.direction.setX(0);
-									} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
-									  this.direction.setX(0);
-									}
-									*/
-							//		console.log("ca frotte!!!! in contact with something at 32 in dir "+ i+" "+j+ " dist="+ collisions[j].distance);
-									Frotte=true;
-					
-								}
-							}
-						}
-					}
-				}
-				if((Frotte==true)&&(previousFrotte==false))
-				{
-					previousFrotte=true;
-					console.log("ca frotte!!!!");
-					if(soundEnabled==true)
-						soundRolling.play();
-				}else if((Frotte==false)&&(previousFrotte==true))
-				{
-					previousFrotte=false;
-					console.log("ca frotte plus!!!!");
-					if(soundEnabled==true)
-						if(soundRolling.isPlaying ==true)
-							soundRolling.stop();									
-						
-				}				
-				if(inhole==false)
-				{
-					if ( ms ) 
-					{
-						//var inhole=false;
-						ms.getWorldTransform( tmpTrans );
-						let p = tmpTrans.getOrigin();
-						var bx=p.x()+30;
-						var bz=p.z()+25;
-						var by=p.y();
-						if(by>-6.5)
-						{
-							//console.log(by);
-							//console.log("CheckStatus:"+bx+", "+by+"    "+(holes[0].x)+", "+(holes[0].y));	
-							for(h=0;h<holes.length;h++)
-							{
-								var dist=((bx-holes[h].x)*(bx-holes[h].x)) + ((bz-holes[h].y)*(bz-holes[h].y));
-								if(dist<1)
-								{
-									console.log("dans le trou "+h+": " +holes[h].l+ "; dist="+dist);
-									
-									Score=CacluateScore(holes[h],tjsSpeedVectorNorm);
-									if(Score>bestScore)
-										bestScore=Score;
-									
-									document.getElementById('info').innerHTML = "You lose!<br>Your score: "+Score;
-									document.getElementById('info').style.display = "inline-block";
-									document.getElementById('score').innerHTML = "Your best score: "+bestScore;
-									inhole=true;
-									break;
-								}
-							}
-							var distFinish=((bx-finish.x)*(bx-finish.x)) + ((by-finish.y)*(by-finish.y));
-							if(distFinish<1)
-							{
-								console.log("Gagné!!!!!!!");
-								document.getElementById('info').innerHTML = "You win!!!";
-								bestScore=61;
-								document.getElementById('score').innerHTML = "Your best score: "+bestScore;
-								
-								document.getElementById('info').style.display = "inline-block";
-							}
-						}
-						
-					
-					}
-				}
-				var posX=((window.innerWidth /2)  - (AngleZ*50)*23) +6;
-				var posY=((window.innerHeight/2)  + (AngleX*50)*23) +6;
-				document.getElementById('TriangleTop').style.left =  posX+'px';				
-				document.getElementById('TriangleLeft').style.top =  posY+'px';				
-				
-			}
-			
-        
-            function renderFrame(){
-
-				if(startGame==true)
-				{
-					let deltaTime = clock.getDelta();
-
-					updatePhysics( deltaTime );
-				}
-				
-				CheckStatus();
-				controls.update();
-                renderer.render( scene, camera );
-
-                requestAnimationFrame( renderFrame );
-
-            }
-			window.addEventListener( 'resize', onWindowResize, false );
-
-			function onWindowResize(){
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-			}
-
-        </script>
-    </body>
+		<script>
+         
+		</script>
+	</body>
 </html>
